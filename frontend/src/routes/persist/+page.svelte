@@ -10,7 +10,7 @@
 	
 	<div class="counter-section">
 		<h2>持久化计数器</h2>
-		<p class="count">当前计数: {counter.state.value}</p>
+		<p class="count">当前计数: {counter.value}</p>
 		
 		<div class="buttons">
 			<button onclick={() => counter.value++}>+1</button>

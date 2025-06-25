@@ -41,8 +41,6 @@ export function createPersistedState(key, defaultValue) {
             save();
         },
         save, 
-        reset,
-        // 直接暴露state以确保响应性
-        state
+        reset 
     };
 } 
