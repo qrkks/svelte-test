@@ -69,7 +69,7 @@
 			<button onclick={addPreference}>添加偏好</button>
 			<button onclick={() => {
 				userInfo.clear();
-				userInfo.value = { name: '', age: 0, preferences: [] };
+				userInfo.value = { name: '', age: '', preferences: [] };
 			}}>清除用户信息</button>
 		</div>
 		
