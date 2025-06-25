@@ -16,31 +16,29 @@ export function createPersistedState(key, defaultValue) {
         }
     }
     
-    // 统一包装成对象
-    const state = $state({ value });
+    // 创建响应式状态对象
+    const stateObj = $state({ current: value });
     
     // 创建保存函数
     const save = () => {
         if (browser) {
-            localStorage.setItem(key, JSON.stringify(state.value));
+            localStorage.setItem(key, JSON.stringify(stateObj.current));
         }
     };
     
-    // 重置函数
-    const reset = () => {
-        if (browser) {
-            localStorage.removeItem(key);
-        }
-        state.value = defaultValue;
-    };
-    
-    return { 
-        get value() { return state.value; },
+    return {
+        get value() { 
+            return stateObj.current; 
+        },
         set value(newValue) { 
-            state.value = newValue; 
+            stateObj.current = newValue; 
             save();
         },
-        save, 
-        reset 
+        save,
+        clear() {
+            if (browser) {
+                localStorage.removeItem(key);
+            }
+        }
     };
 } 
