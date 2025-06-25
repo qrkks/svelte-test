@@ -1,4 +1,4 @@
-import { createLocalState, createSessionState } from './persisted-correct.svelte.js';
+import { createLocalState, createSessionState } from './persisted.svelte.js';
 
 // ========== 应用级全局状态 ==========
 
