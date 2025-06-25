@@ -16,6 +16,6 @@ export const session = sqliteTable('session', {
 });
 
 export const test = sqliteTable('test', {
-	id: text('id').primaryKey(),
+	id: integer('id').primaryKey({ autoIncrement: true }),
 	testInput: text('test_input').notNull()
 });

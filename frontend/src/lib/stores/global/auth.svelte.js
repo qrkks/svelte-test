@@ -1,10 +1,12 @@
-import { createLocalState } from '../../persisted.svelte.js';
-
 // 用户认证状态
-export const authState = createLocalState('auth', {
-    isLoggedIn: false,
-    userId: null,
-    username: '',
-    role: 'user',
-    lastLoginTime: null
-}); 
+export const authState = $state({
+	userId: null,
+	username: '',
+	role: 'user',
+	lastLoginTime: null,
+    get isLoggedIn() {
+        return this.userId !== null;
+    }
+});
+
+// export const isLoggedIn = $derived(authState.userId !== null);

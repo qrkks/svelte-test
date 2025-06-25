@@ -4,8 +4,8 @@
 	import { browser } from '$app/environment';
 	
 	let { data, form } = $props();
-	let pageRenderTime = null;
-	let pageRenderStartTime = null;
+	let pageRenderTime = $state(0);
+	let pageRenderStartTime = $state(0);
 	
 	// 在组件初始化时记录开始时间
 	if (browser) {
