@@ -13,7 +13,7 @@ export const load = async (event) => {
 	console.log('检查用户登录状态:', event.locals.user);
 	if (!event.locals.user) {
 		console.log('用户未登录，重定向到登录页');
-		throw redirect(302, '/settings/lucia/login');
+		throw redirect(302, '/settings/auth/login');
 	}
 	
 	// 🔒 路由守卫：检查用户权限（模拟）
@@ -59,7 +59,7 @@ export const actions = {
 	submit: async (event) => {
 		// 🔒 表单提交时也要检查权限
 		if (!event.locals.user) {
-			throw redirect(302, '/settings/lucia/login');
+			throw redirect(302, '/settings/auth/login');
 		}
 		
 		console.log(event);

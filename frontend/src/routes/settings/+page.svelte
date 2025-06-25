@@ -1,2 +1,2 @@
 <a href="/settings/paraglide">paraglide</a>
-<a href="/settings/lucia">lucia</a>
+<a href="/settings/auth">lucia</a>

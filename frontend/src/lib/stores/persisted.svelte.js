@@ -19,12 +19,12 @@ export function createPersistedState(key, defaultValue) {
     // 创建 $state
     const state = $state(value);
     
-    // 使用 $effect.root 监听变化并持久化
-    $effect.root(() => {
-        if (browser) {
+    // 使用 $effect 监听变化并持久化
+    if (browser) {
+        $effect(() => {
             localStorage.setItem(key, JSON.stringify(state));
-        }
-    });
+        });
+    }
     
     // 添加重置方法
     const reset = () => {
@@ -63,13 +63,13 @@ export function createPersistedStateWithOptions(key, defaultValue, options = {})
     // 创建 $state
     const state = $state(value);
     
-    // 使用 $effect.root 监听变化并持久化
-    $effect.root(() => {
-        if (browser) {
+    // 使用 $effect 监听变化并持久化
+    if (browser) {
+        $effect(() => {
             const storageObj = storage === 'sessionStorage' ? sessionStorage : localStorage;
             storageObj.setItem(key, serialize(state));
-        }
-    });
+        });
+    }
     
     // 添加重置方法
     const reset = () => {
@@ -105,11 +105,11 @@ if (browser) {
 }
 
 // 监听 count 变化并持久化
-$effect.root(() => {
-    if (browser) {
+if (browser) {
+    $effect(() => {
         localStorage.setItem('global-count', JSON.stringify(count.value));
-    }
-});
+    });
+}
 
 // 重置函数
 export const resetCount = () => {
