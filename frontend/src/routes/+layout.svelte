@@ -1,6 +1,7 @@
 <script>
 	import '../app.css';
 	import { authState } from '$lib/stores/global/auth.svelte.js';
+	import Toast from '$lib/components/Toast.svelte';
 
 	let { children, data } = $props();
 
@@ -18,3 +19,6 @@
 </script>
 
 {@render children()}
+
+<!-- Toast 组件 -->
+<Toast />
