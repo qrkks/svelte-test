@@ -55,7 +55,7 @@
                                             onclick={close}
                                         >
                                             <span class="text-base" aria-hidden="true">{item.icon}</span>
-                                            <span>{item.label} 首页</span>
+                                            <span>{item.label}首页</span>
                                         </a>
                                         
                                         <!-- 分割线 -->

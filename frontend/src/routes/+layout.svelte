@@ -12,6 +12,7 @@
 	$effect(() => {
 		$inspect(authState);
 		$inspect({...data.user});
+		console.log(crypto.randomUUID());
 	});
 
 </script>

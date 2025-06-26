@@ -15,8 +15,9 @@
     const dispatch = createEventDispatcher();
     
     let triggerElement;
-    let dropdownElement;
+    let dropdownElement = $state(null);
     let isOpen = $state(open);
+    let closeTimeout = $state(null);
     
     // 响应外部 open 状态变化
     $effect(() => {
@@ -32,17 +33,36 @@
     function toggle() {
         if (disabled) return;
         isOpen = !isOpen;
+        clearCloseTimeout();
     }
     
     // 关闭下拉菜单
     function close() {
         isOpen = false;
+        clearCloseTimeout();
     }
     
     // 打开下拉菜单
     function openDropdown() {
         if (disabled) return;
         isOpen = true;
+        clearCloseTimeout();
+    }
+    
+    // 延迟关闭（给用户时间移动到下拉内容）
+    function delayedClose() {
+        clearCloseTimeout();
+        closeTimeout = setTimeout(() => {
+            isOpen = false;
+        }, 300); // 300ms 延迟
+    }
+    
+    // 清除关闭定时器
+    function clearCloseTimeout() {
+        if (closeTimeout) {
+            clearTimeout(closeTimeout);
+            closeTimeout = null;
+        }
     }
     
     // 处理键盘事件
@@ -91,6 +111,7 @@
             document.addEventListener('click', handleClickOutside);
             return () => {
                 document.removeEventListener('click', handleClickOutside);
+                clearCloseTimeout();
             };
         }
     });
@@ -107,8 +128,8 @@
         aria-disabled={disabled}
         onkeydown={handleKeydown}
         onclick={toggle}
-        onmouseenter={() => isOpen || openDropdown()}
-        onmouseleave={() => close()}
+        onmouseenter={openDropdown}
+        onmouseleave={delayedClose}
         class="cursor-pointer {disabled ? 'opacity-50 cursor-not-allowed' : ''}"
     >
         {@render trigger()}
@@ -118,12 +139,15 @@
     {#if isOpen}
         <div 
             bind:this={dropdownElement}
-            class="absolute {positionClasses} mt-{offset} z-50 min-w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2"
+            class="absolute {positionClasses} z-50 min-w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible"
             class:opacity-100={isOpen}
             class:visible={isOpen}
-            style="transition: opacity 200ms, visibility 200ms, transform 200ms;"
+            style="transition: opacity 200ms, visibility 200ms, transform 200ms; transform: scale({isOpen ? '1' : '0.95'}); margin-top: 2px;"
             role="menu"
+            tabindex="-1"
             aria-labelledby="dropdown-trigger"
+            onmouseenter={clearCloseTimeout}
+            onmouseleave={delayedClose}
         >
             {@render content({ close })}
         </div>
