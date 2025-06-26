@@ -1,4 +1,20 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from en!"
+	"hello_world": "Hello, {name}!",
+	"welcome": "Welcome to our application",
+	"nav_home": "Home",
+	"nav_about": "About",
+	"nav_settings": "Settings",
+	"nav_test": "Test",
+	"language_switcher": "Language Switcher",
+	"current_language": "Current Language: {lang}",
+	"click_count": "Clicked {count} times",
+	"reset_button": "Reset",
+	"increment_button": "Increment",
+	"toast_success": "Success!",
+	"toast_error": "Error, please try again",
+	"toast_warning": "Please check your input",
+	"toast_info": "This is an info message",
+	"about_content": "This is multilingual test content for the about page.",
+	"about_description": "We are a developer-focused company dedicated to building high-quality open source tools."
 }

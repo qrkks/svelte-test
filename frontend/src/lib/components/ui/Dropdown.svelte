@@ -1,5 +1,5 @@
 <script>
-    import { createEventDispatcher, onMount } from 'svelte';
+    import { onMount } from 'svelte';
     
     let { 
         open = false,
@@ -9,10 +9,10 @@
         closeOnClickOutside = true,
         closeOnEscape = true,
         trigger,
-        content
+        content,
+        // Callback props
+        onToggle
     } = $props();
-    
-    const dispatch = createEventDispatcher();
     
     let triggerElement;
     let dropdownElement = $state(null);
@@ -26,7 +26,7 @@
     
     // 通知外部状态变化
     $effect(() => {
-        dispatch('toggle', isOpen);
+        onToggle?.(isOpen);
     });
     
     // 切换下拉菜单

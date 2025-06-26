@@ -1,4 +1,20 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from zh!"
+	"hello_world": "Hello, {name} from zh!",
+	"welcome": "欢迎使用我们的应用",
+	"nav_home": "首页",
+	"nav_about": "关于",
+	"nav_settings": "设置",
+	"nav_test": "测试",
+	"language_switcher": "语言切换",
+	"current_language": "当前语言：{lang}",
+	"click_count": "点击了 {count} 次",
+	"reset_button": "重置",
+	"increment_button": "增加",
+	"toast_success": "操作成功！",
+	"toast_error": "操作失败，请重试",
+	"toast_warning": "请注意检查输入",
+	"toast_info": "这是一条提示信息",
+	"about_content": "这是关于页面的多语言测试内容。",
+	"about_description": "我们是一家以开发者为中心的公司，专注于构建高质量的开源工具。"
 }

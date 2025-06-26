@@ -2,17 +2,48 @@
 	import { enhance } from '$app/forms';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
+	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 
 	let { data, form } = $props();
 
-	// 删除确认函数
-	function confirmDelete(item) {
-		return confirm(`确定要删除这条数据吗？\n内容：${item.testInput}`);
+	// 确认框状态
+	let confirmConfig = $state({
+		open: false,
+		title: '',
+		message: '',
+		onConfirm: null,
+		danger: false
+	});
+
+	// 通用确认函数
+	function showConfirm(config) {
+		confirmConfig = { ...config, open: true };
 	}
 
-	// 清空确认函数
-	function confirmClear() {
-		return confirm('确定要清空所有数据吗？此操作不可恢复！');
+	// 删除确认
+	function confirmDelete(item, formElement) {
+		showConfirm({
+			title: '删除确认',
+			message: `确定要删除这条数据吗？\n内容：${item.testInput}`,
+			danger: true,
+			onConfirm: () => {
+				// 提交删除表单
+				formElement.submit();
+			}
+		});
+	}
+
+	// 清空确认
+	function confirmClear(formElement) {
+		showConfirm({
+			title: '清空所有数据',
+			message: '确定要清空所有数据吗？此操作不可恢复！',
+			danger: true,
+			onConfirm: () => {
+				// 提交清空表单
+				formElement.submit();
+			}
+		});
 	}
 </script>
 
@@ -63,20 +94,11 @@
 					<!-- 删除按钮 -->
 					<div>
 						{#if data.user.username === 'admin'}
-							<form
-								method="post"
-								action="?/delete"
-								use:enhance
-								style="margin: 0;"
-								onsubmit={(e) => {
-									if (!confirmDelete(item)) {
-										e.preventDefault();
-									}
-								}}
-							>
+							<form method="post" action="?/delete" use:enhance style="margin: 0;">
 								<input type="hidden" name="id" value={item.id} />
 								<button
-									type="submit"
+									type="button"
+									onclick={(e) => confirmDelete(item, e.target.closest('form'))}
 									style="
 										background: #dc3545; 
 										color: white; 
@@ -128,18 +150,10 @@
 <div style="background: #fff8f0; padding: 10px; margin: 10px 0; border-radius: 4px;">
 	<h3>清空所有数据:</h3>
 	{#if data.user.username === 'admin'}
-		<form
-			method="post"
-			action="?/clear"
-			use:enhance
-			onsubmit={(e) => {
-				if (!confirmClear()) {
-					e.preventDefault();
-				}
-			}}
-		>
+		<form method="post" action="?/clear" use:enhance>
 			<button
-				type="submit"
+				type="button"
+				onclick={(e) => confirmClear(e.target.closest('form'))}
 				style="background: #ff8800; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;"
 			>
 				清空所有数据
@@ -149,6 +163,15 @@
 		<p style="color: #e74c3c;">❌ 权限不足，只有管理员可以清空所有数据</p>
 	{/if}
 </div>
+
+<!-- 确认框 -->
+<ConfirmDialog
+	bind:open={confirmConfig.open}
+	title={confirmConfig.title}
+	message={confirmConfig.message}
+	danger={confirmConfig.danger}
+	onConfirm={confirmConfig.onConfirm}
+/>
 
 <!-- 调试信息 -->
 <details>
