@@ -2,6 +2,12 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
+@import '@skeletonlabs/skeleton';
+@import '@skeletonlabs/skeleton/optional/presets';
+@import '@skeletonlabs/skeleton/themes/cerberus';
+
+@source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
+
 h1 {
 	@apply text-2xl font-bold;
 }
@@ -29,5 +35,5 @@ h3 {
 
 /* 焦点可见性增强 */
 .focus-visible:focus {
-	@apply outline-none ring-2 ring-blue-500 ring-offset-2;
+	@apply ring-2 ring-blue-500 ring-offset-2 outline-none;
 }
