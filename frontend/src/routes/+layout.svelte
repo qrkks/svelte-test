@@ -6,15 +6,17 @@
 
 	let { children, data } = $props();
 
+	// 单文件Toast引用
+	let globalToastRef;
+
 	// 一次性更新多个属性
-	Object.assign(authState, {...data.user});
+	Object.assign(authState, { ...data.user });
 
 	// $effect(() => {
 	// 	$inspect(authState);
 	// 	$inspect({...data.user});
 	// 	console.log(crypto.randomUUID());
 	// });
-
 </script>
 
 <!-- 导航栏 -->

@@ -1,57 +1,226 @@
-<script>
-	import { toastState, removeToast } from '$lib/stores/global/toast.svelte.js';
-	import { fly } from 'svelte/transition';
+<!-- ToastComplete.svelte - 完整Toast解决方案 -->
+<!-- 
+使用方法：
+1. 复制这个文件到目标项目
+2. 在layout中添加 <ToastComplete />
+3. 直接调用 toast.success('消息')
+
+无需额外依赖！
+-->
+<script module>
+	// 全局状态和方法，但都在这一个文件里
+	let toasts = $state([]);
+	let idCounter = $state(0);
 	
-	// 获取图标
-	function getIcon(type) {
-		switch (type) {
-			case 'success': return '✅';
-			case 'error': return '❌';
-			case 'warning': return '⚠️';
-			case 'info': 
-			default: return 'ℹ️';
+	function addToast(message, type = 'info', duration = 3000) {
+		const id = idCounter++;
+		const toast = {
+			id,
+			message,
+			type,
+			duration,
+			visible: true
+		};
+		
+		toasts.push(toast);
+		
+		// 自动移除
+		if (duration > 0) {
+			setTimeout(() => {
+				hideToast(id);
+			}, duration);
+		}
+		
+		return id;
+	}
+	
+	function hideToast(id) {
+		const index = toasts.findIndex(t => t.id === id);
+		if (index > -1) {
+			toasts[index].visible = false;
+			// 动画结束后移除
+			setTimeout(() => {
+				const removeIndex = toasts.findIndex(t => t.id === id);
+				if (removeIndex > -1) {
+					toasts.splice(removeIndex, 1);
+				}
+			}, 300);
 		}
 	}
 	
-	// 获取样式类
-	function getTypeClass(type) {
-		switch (type) {
-			case 'success': return 'bg-green-100 border-green-500 text-green-800';
-			case 'error': return 'bg-red-100 border-red-500 text-red-800';
-			case 'warning': return 'bg-yellow-100 border-yellow-500 text-yellow-800';
-			case 'info':
-			default: return 'bg-blue-100 border-blue-500 text-blue-800';
-		}
+	function clearToasts() {
+		toasts.forEach(toast => {
+			toast.visible = false;
+		});
+		setTimeout(() => {
+			toasts.length = 0;
+		}, 300);
 	}
+	
+	// 导出的全局API
+	export const toast = {
+		show: addToast,
+		hide: hideToast,
+		clear: clearToasts,
+		success: (message, duration = 3000) => addToast(message, 'success', duration),
+		error: (message, duration = 5000) => addToast(message, 'error', duration),
+		warning: (message, duration = 4000) => addToast(message, 'warning', duration),
+		info: (message, duration = 3000) => addToast(message, 'info', duration),
+		
+		// 工具函数
+		utils: {
+			getCount: () => toasts.length,
+			getToasts: () => toasts,
+			hasToasts: () => toasts.length > 0
+		}
+	};
 </script>
 
-<!-- Toast 容器 -->
-<div class="fixed top-4 right-4 z-50 space-y-2">
-	{#each toastState.items as item (item.id)}
+<script>
+	// 组件脚本（可以为空，状态在module中管理）
+</script>
+
+<!-- Toast容器 -->
+<div class="toast-container">
+	{#each toasts as toastItem (toastItem.id)}
 		<div 
-			class="flex items-center p-4 rounded-lg border-l-4 shadow-lg max-w-sm {getTypeClass(item.type)}"
-			transition:fly={{ x: 300, duration: 200 }}
+			class="toast toast-{toastItem.type}"
+			class:visible={toastItem.visible}
+			role="alert"
+			aria-live="polite"
 		>
-			<!-- 图标 -->
-			<span class="text-lg mr-3">
-				{getIcon(item.type)}
-			</span>
-			
-			<!-- 消息内容 -->
-			<div class="flex-1">
-				<p class="font-medium">{item.message}</p>
+			<div class="toast-content">
+				<span class="toast-icon">
+					{#if toastItem.type === 'success'}
+						✓
+					{:else if toastItem.type === 'error'}
+						✕
+					{:else if toastItem.type === 'warning'}
+						⚠
+					{:else}
+						ℹ
+					{/if}
+				</span>
+				<span class="toast-message">{toastItem.message}</span>
+				<button 
+					class="toast-close"
+					onclick={() => hideToast(toastItem.id)}
+					aria-label="关闭通知"
+				>
+					×
+				</button>
 			</div>
-			
-			<!-- 关闭按钮 -->
-			<button 
-				class="ml-3 text-gray-500 hover:text-gray-700"
-				onclick={() => removeToast(item.id)}
-				aria-label="Close"
-			>
-				<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-					<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-				</svg>
-			</button>
 		</div>
 	{/each}
-</div> 
+</div>
+
+<style>
+	.toast-container {
+		position: fixed;
+		top: 20px;
+		right: 20px;
+		z-index: 1000;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		pointer-events: none;
+	}
+	
+	.toast {
+		min-width: 300px;
+		max-width: 500px;
+		padding: 0;
+		border-radius: 8px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		transform: translateX(100%);
+		opacity: 0;
+		transition: all 0.3s ease-in-out;
+		pointer-events: auto;
+		overflow: hidden;
+	}
+	
+	.toast.visible {
+		transform: translateX(0);
+		opacity: 1;
+	}
+	
+	.toast-content {
+		display: flex;
+		align-items: center;
+		padding: 12px 16px;
+		gap: 12px;
+	}
+	
+	.toast-icon {
+		flex-shrink: 0;
+		width: 20px;
+		height: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: bold;
+		font-size: 16px;
+	}
+	
+	.toast-message {
+		flex: 1;
+		font-size: 14px;
+		line-height: 1.4;
+	}
+	
+	.toast-close {
+		flex-shrink: 0;
+		background: none;
+		border: none;
+		font-size: 18px;
+		font-weight: bold;
+		cursor: pointer;
+		padding: 0;
+		width: 20px;
+		height: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		transition: background-color 0.2s;
+	}
+	
+	.toast-close:hover {
+		background-color: rgba(255, 255, 255, 0.2);
+	}
+	
+	/* 不同类型的样式 */
+	.toast-success {
+		background: #10b981;
+		color: white;
+	}
+	
+	.toast-error {
+		background: #ef4444;
+		color: white;
+	}
+	
+	.toast-warning {
+		background: #f59e0b;
+		color: white;
+	}
+	
+	.toast-info {
+		background: #3b82f6;
+		color: white;
+	}
+	
+	/* 响应式 */
+	@media (max-width: 640px) {
+		.toast-container {
+			top: 10px;
+			right: 10px;
+			left: 10px;
+		}
+		
+		.toast {
+			min-width: auto;
+			max-width: none;
+		}
+	}
+</style> 

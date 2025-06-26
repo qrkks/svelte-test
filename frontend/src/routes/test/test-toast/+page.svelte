@@ -1,11 +1,15 @@
 <script>
-	import { onMount } from 'svelte';
-	import { toast, clearToasts } from '$lib/stores/global/toast.svelte.js';
+	import { onMount, onDestroy } from 'svelte';
+	import { toast } from '$lib/components/ui/Toast.svelte';
 	
 	onMount(() => {
 		if (import.meta.env.DEV) {
-			toast.success('页面的初始化操作', 3000);
+			toast.success('页面的初始化操作', 500);
 		}
+	});
+
+	onDestroy(() => {
+		toast.info('页面销毁', 500);
 	});
 </script>
 
@@ -50,7 +54,7 @@
 		
 		<button 
 			class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-			onclick={() => clearToasts()}
+			onclick={() => toast.clear()}
 		>
 			清空所有
 		</button>
