@@ -1,5 +1,12 @@
 <script>
+	import { onMount } from 'svelte';
 	import { toast, clearToasts } from '$lib/stores/global/toast.svelte.js';
+	
+	onMount(() => {
+		if (import.meta.env.DEV) {
+			toast.success('页面的初始化操作', 3000);
+		}
+	});
 </script>
 
 <div class="p-8 max-w-lg mx-auto">
