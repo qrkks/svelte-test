@@ -445,8 +445,9 @@
     }
 
     function cleanHTML(html) {
-      // 🖼️ 只保护图片和音频等媒体内容
+      // 🖼️ 分别保护图片和音频等媒体内容
       const imgPlaceholders = [];
+      const soundPlaceholders = [];
       let tempHtml = html;
       
       // 保护 <img> 标签
@@ -458,8 +459,8 @@
       
       // 保护音频文件引用
       tempHtml = tempHtml.replace(/\[sound:[^\]]+\]/gi, function(match) {
-        const placeholder = `__SOUND_PLACEHOLDER_${imgPlaceholders.length}__`;
-        imgPlaceholders.push(match);
+        const placeholder = `__SOUND_PLACEHOLDER_${soundPlaceholders.length}__`;
+        soundPlaceholders.push(match);
         return placeholder;
       });
       
@@ -536,7 +537,7 @@
         return placeholder;
       });
       
-      // 🧹 简单直接的HTML清理
+      // 🧹 智能HTML清理和Markdown转换
       let cleaned = tempHtml
         // 先清理HTML实体，防止HTML标签被编码
         .replace(/&lt;/gi, "<")
@@ -545,10 +546,30 @@
         .replace(/&nbsp;/gi, " ")
         .replace(/&tab;/gi, "\t")
         .replace(/&mdash;/gi, "—")
+        .replace(/&ndash;/gi, "–")
+        .replace(/&quot;/gi, '"')
+        .replace(/&#39;/gi, "'")
+        .replace(/&hellip;/gi, "...")
         // 特殊处理：清理连续的div标签（Anki常见格式）
         .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
         .replace(/<\/div>/gi, "\n")
         .replace(/<div[^>]*>/gi, "\n")
+        // 🔧 正确处理富文本标签转换为Markdown
+        .replace(/<strong[^>]*>(.*?)<\/strong>/gi, "**$1**")  // <strong>text</strong> → **text**
+        .replace(/<b[^>]*>(.*?)<\/b>/gi, "**$1**")           // <b>text</b> → **text**
+        .replace(/<em[^>]*>(.*?)<\/em>/gi, "*$1*")           // <em>text</em> → *text*
+        .replace(/<i[^>]*>(.*?)<\/i>/gi, "*$1*")             // <i>text</i> → *text*
+        .replace(/<u[^>]*>(.*?)<\/u>/gi, "$1")               // 移除下划线标签但保留内容
+        // 🔧 处理标题标签
+        .replace(/<h([1-6])[^>]*>(.*?)<\/h\1>/gi, function(match, level, text) {
+          return "#".repeat(parseInt(level)) + " " + text + "\n";
+        })
+        // 🔧 处理链接标签
+        .replace(/<a[^>]*href=["']([^"']*)["'][^>]*>(.*?)<\/a>/gi, "[$2]($1)")
+        // 🔧 处理列表标签
+        .replace(/<ul[^>]*>/gi, "").replace(/<\/ul>/gi, "")
+        .replace(/<ol[^>]*>/gi, "").replace(/<\/ol>/gi, "")
+        .replace(/<li[^>]*>(.*?)<\/li>/gi, "- $1\n")
         // 清理其他HTML标签
         .replace(/<br\s*\/?>/gi, "\n")
         .replace(/<p[^>]*>/gi, "\n")
@@ -559,12 +580,11 @@
         .replace(/<\/code>/gi, "`")
         .replace(/<pre[^>]*>/gi, "")
         .replace(/<\/pre>/gi, "")
-        .replace(/<[\/]?i[^>]*>/gi, "")
-        .replace(/<[\/]?em[^>]*>/gi, "")
-        .replace(/<[\/]?strong[^>]*>/gi, "**")
-        .replace(/<[\/]?b[^>]*>/gi, "**")
         // 清理任何剩余的HTML标签
         .replace(/<[^>]*>/gi, "")
+        // 清理多余的Markdown格式重复
+        .replace(/\*{3,}/g, "**")  // ***+ → **
+        .replace(/\*\*\s*\*\*/g, "")  // ** ** → 空
         // 清理多余空行和空白
         .replace(/\n\s*\n\s*\n/g, "\n\n")
         .replace(/^\s+|\s+$/g, ""); // trim
@@ -598,7 +618,7 @@
         result = result.replace(placeholder, original);
       });
       
-      imgPlaceholders.forEach((original, index) => {
+      soundPlaceholders.forEach((original, index) => {
         const placeholder = `__SOUND_PLACEHOLDER_${index}__`;
         result = result.replace(placeholder, original);
       });
