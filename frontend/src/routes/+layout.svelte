@@ -3,6 +3,7 @@
 	import { authState } from '$lib/stores/global/auth.svelte.js';
 	import Toast from '$lib/components/ui/Toast.svelte';
 	import Navbar from '$lib/components/navigation/Navbar.svelte';
+	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 
 	let { children, data } = $props();
 
@@ -29,3 +30,6 @@
 
 <!-- Toast 组件 -->
 <Toast />
+
+<!-- ConfirmDialog 组件 -->
+<ConfirmDialog />

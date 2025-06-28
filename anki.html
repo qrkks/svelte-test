@@ -1,0 +1,1085 @@
+<style>
+  /* 全局字体设置 */
+  #front,
+  #back,
+  #front *,
+  #back * {
+    font-family: "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Arial,
+      sans-serif;
+  }
+
+  /* 保持代码等宽字体 */
+  #front pre,
+  #back pre,
+  #front code,
+  #back code,
+  #front pre *,
+  #back pre *,
+  #front code *,
+  #back code * {
+    font-family: "Consolas", "Monaco", "Courier New", monospace;
+  }
+
+  /* 正常样式 */
+  #front,
+  #back {
+    font-size: 20px;
+    color: black;
+    background-color: white;
+    line-height: 1.6;
+  }
+  .card {
+    color: black;
+    background-color: white;
+  }
+
+  /* 代码块样式 */
+  pre {
+    position: relative;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px 0;
+    overflow: auto;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre-wrap !important;  /* 强制保持换行并允许自动折行 */
+    word-wrap: break-word;              /* 长行自动折行 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  pre code {
+    background: transparent;
+    padding: 0;
+    border: none;
+    font-size: 18px;
+    line-height: 1.5;
+    white-space: pre-wrap !important;  /* 确保代码内容保持换行 */
+    word-wrap: break-word;              /* 确保长行能正确折行 */
+    display: block;                     /* 确保是块级元素 */
+  }
+
+  /* 语言标识符样式 */
+  .code-lang-label {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #5f8f55;
+    color: white;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 0 4px 0 4px;
+    text-transform: uppercase;
+    font-family: "Consolas", "Monaco", "Courier New", monospace;
+    z-index: 100;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+
+  .code-lang-label:hover {
+    background: #10b981;
+    box-shadow: 0 2px 8px rgba(52, 211, 153, 0.3);
+  }
+
+  .code-lang-label:active {
+    background: #059669;
+    box-shadow: 0 1px 4px rgba(52, 211, 153, 0.5);
+  }
+
+  .code-lang-label.copied {
+    background: #10b981;
+    animation: pulse 0.3s ease;
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 rgba(52, 211, 153, 0.7); }
+    50% { box-shadow: 0 0 20px rgba(52, 211, 153, 0.7); }
+    100% { box-shadow: 0 0 0 rgba(52, 211, 153, 0.7); }
+  }
+
+  /* 行内代码 */
+  code {
+    background: #f1f1f1;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: #333; /* 改为深灰色，不要红色 */
+  }
+
+  /* 标签样式 */
+  .tags {
+    text-align: center;
+    margin-top: 10px;
+  }
+  .tag::before {
+    content: "#";
+  }
+  .tag:empty {
+    display: none;
+  }
+  .tag {
+    color: white;
+    background-color: #9f2bff;
+    border: none;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 8px;
+    margin: 0px 3px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 14px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  /* cloze 高亮 */
+  .cloze {
+    font-weight: bold;
+    color: blue;
+  }
+  .nightMode .cloze {
+    color: lightblue;
+  }
+
+  /* 图片样式 */
+  img {
+    max-width: 100%;
+    max-height: 80vh;  /* 限制最大高度为视窗高度的80% */
+    height: auto;
+    width: auto;       /* 确保宽度也能自动调整 */
+    display: block;
+    margin: 10px auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    object-fit: contain; /* 确保图片完整显示，保持比例 */
+  }
+
+  /* 暗黑模式 */
+  .nightMode #front,
+  .nightMode #back,
+  .nightMode .card {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+  }
+  .nightMode img {
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+  }
+  .nightMode pre {
+    background: #2d2d2d !important;
+    border: 1px solid #444;
+    box-shadow: none;
+    white-space: pre-wrap !important;  /* 确保暗黑模式下也保持换行 */
+    word-wrap: break-word;
+  }
+  .nightMode code {
+    background: #3a3a3a;
+    color: #ffb86c;
+  }
+  .nightMode pre code {
+    color: #e8e8e8;
+    white-space: pre-wrap !important;  /* 确保暗黑模式下代码内容保持换行 */
+    word-wrap: break-word;
+  }
+  .nightMode .tag {
+    background-color: #ffffff33;
+    color: #ffffff;
+  }
+  .nightMode .code-lang-label {
+    background: #4ade80;
+    color: #ffffff;
+  }
+
+  /* 三线表样式 */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 12px 0;
+    font-size: 18px;
+  }
+  table thead tr {
+    border-bottom: 2px solid #000;
+  }
+  table tbody tr:last-child {
+    border-bottom: 2px solid #000;
+  }
+  table th {
+    border-top: 2px solid #000;
+    padding: 8px 12px;
+    text-align: left;
+  }
+  table td {
+    border: none;
+    padding: 8px 12px;
+  }
+  .nightMode table thead tr {
+    border-bottom: 2px solid #aaa;
+  }
+  .nightMode table tbody tr:last-child {
+    border-bottom: 2px solid #aaa;
+  }
+  .nightMode table th {
+    border-top: 2px solid #aaa;
+  }
+
+  /* 错误提示样式 */
+  .error-message {
+    background: #ffebee;
+    border: 1px solid #ffcdd2;
+    border-radius: 4px;
+    padding: 12px;
+    margin: 8px 0;
+    color: #c62828;
+    font-size: 14px;
+  }
+  .nightMode .error-message {
+    background: #3d1a1a;
+    border: 1px solid #8b2635;
+    color: #ff6b6b;
+  }
+</style>
+
+  <script>
+    // 🛡️ 安全的编辑模式检测函数
+    function isEditModeSafe() {
+      try {
+        return !!(
+          window.location.href.includes("editor") ||
+          window.location.href.includes("browse") ||
+          document.querySelector('[contenteditable="true"]') || 
+          document.activeElement?.tagName === 'TEXTAREA' ||
+          document.activeElement?.tagName === 'INPUT' ||
+          document.querySelector('.note-editing-area') || 
+          document.querySelector('.card-fields') ||
+          document.querySelector('.editor-field') ||
+          document.querySelector('#fields') ||
+          document.body?.classList?.contains('editor') ||
+          document.title.includes('编辑') ||
+          document.title.includes('Edit') ||
+          document.title.includes('Browser') ||
+          document.title.includes('浏览')
+        );
+      } catch (e) {
+        console.warn('🚨 编辑模式检测出错，为安全起见假设为编辑模式:', e);
+        return true; // 出错时为安全起见，假设是编辑模式
+      }
+    }
+    
+         // ⚡ 快速智能检测函数
+     function smartEditModeCheck(callback) {
+       // 第一次立即检测
+       if (isEditModeSafe()) {
+         console.log('🛑 立即检测：发现编辑模式，停止初始化');
+         return;
+       }
+       
+       // 如果URL明确不是编辑器，直接启动
+       if (!window.location.href.includes("editor") && 
+           !window.location.href.includes("browse")) {
+         console.log('✅ URL检测：明确非编辑模式，立即启动');
+         callback();
+         return;
+       }
+       
+       // 对于可能的编辑模式，快速检测几次
+       let checkCount = 0;
+       const maxChecks = 3;        // 减少到3次
+       const checkInterval = 20;   // 减少到20ms
+       
+       function quickCheck() {
+         checkCount++;
+         
+         if (isEditModeSafe()) {
+           console.log(`🛑 第${checkCount}次快速检测：发现编辑模式，停止初始化`);
+           return;
+         }
+         
+         if (checkCount >= maxChecks) {
+           console.log('✅ 快速检测确认：非编辑模式，开始初始化');
+           callback();
+           return;
+         }
+         
+         setTimeout(quickCheck, checkInterval);
+       }
+       
+       quickCheck();
+     }
+    
+         // 🚀 使用智能快速检测启动
+     console.log("⚡ 开始快速编辑模式检测");
+     
+     smartEditModeCheck(() => {
+    (function () {
+      // 强制重新初始化，忽略缓存
+      window.ankiMarkdownInitialized = false;
+
+    if (window.ankiMarkdownInitialized) return;
+    window.ankiMarkdownInitialized = true;
+
+    // 强制清除缓存，确保使用新代码
+    console.log("🔄 Anki Markdown 重新初始化 - Version 2.0");
+
+    const RESOURCES = {
+      css: [
+        [
+          "_katex-0.16.22.css",
+          "https://npm.elemecdn.com/katex@0.16.22/dist/katex.min.css",
+        ],
+        [
+          "_highlight-11.11.1.css",
+          "https://lib.baomitu.com/highlight.js/11.11.1/styles/default.min.css",
+        ],
+      ],
+      scripts: [
+        [
+          "_highlight-11.11.1.js",
+          "https://lib.baomitu.com/highlight.js/11.11.1/highlight.min.js",
+        ],
+        [
+          "_katex-0.16.22.min.js",
+          "https://npm.elemecdn.com/katex@0.16.22/dist/katex.min.js",
+        ],
+        [
+          "_auto-render-0.16.22.js",
+          "https://npm.elemecdn.com/katex@0.16.22/dist/contrib/auto-render.min.js",
+        ],
+        [
+          "_markdown-it-14.1.0.min.js",
+          "https://lib.baomitu.com/markdown-it/14.1.0/markdown-it.min.js",
+        ],
+        [
+          "_markdown-it-mark.js",
+          "https://jsd.ink/gh/Jwrede/Anki-KaTeX-Markdown/_markdown-it-mark.js",
+        ],
+        [
+          "_mhchem-0.16.22.js",
+          "https://npm.elemecdn.com/katex@0.16.22/dist/contrib/mhchem.min.js",
+        ],
+      ],
+    };
+
+
+    function loadCSS([path, cdn]) {
+      return new Promise((resolve, reject) => {
+        if (document.querySelector(`link[href="${path}"], link[href="${cdn}"]`))
+          return resolve();
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = path;
+        link.onload = () => {
+          window.resourceStatus = window.resourceStatus || {};
+          window.resourceStatus[path] = '📁 本地';
+          resolve();
+        };
+        link.onerror = () => {
+          const fallback = document.createElement("link");
+          fallback.rel = "stylesheet";
+          fallback.href = cdn;
+          fallback.onload = () => {
+            window.resourceStatus = window.resourceStatus || {};
+            window.resourceStatus[path] = '🌐 CDN';
+            resolve();
+          };
+          fallback.onerror = reject;
+          document.head.appendChild(fallback);
+        };
+        document.head.appendChild(link);
+      });
+    }
+
+    function loadScript([path, cdn]) {
+      return new Promise((resolve, reject) => {
+        if (cdn.includes("highlight") && window.hljs) {
+          window.resourceStatus = window.resourceStatus || {};
+          window.resourceStatus[path] = '💾 缓存';
+          return resolve();
+        }
+        if (cdn.includes("katex") && window.katex) {
+          window.resourceStatus = window.resourceStatus || {};
+          window.resourceStatus[path] = '💾 缓存';
+          return resolve();
+        }
+        if (cdn.includes("auto-render") && window.renderMathInElement) {
+          window.resourceStatus = window.resourceStatus || {};
+          window.resourceStatus[path] = '💾 缓存';
+          return resolve();
+        }
+        if (cdn.includes("mhchem") && window.katex?.__chemParse) {
+          window.resourceStatus = window.resourceStatus || {};
+          window.resourceStatus[path] = '💾 缓存';
+          return resolve();
+        }
+        if (cdn.includes("markdown-it") && window.markdownit) {
+          window.resourceStatus = window.resourceStatus || {};
+          window.resourceStatus[path] = '💾 缓存';
+          return resolve();
+        }
+        if (cdn.includes("markdown-it-mark") && window.markdownItMark) {
+          window.resourceStatus = window.resourceStatus || {};
+          window.resourceStatus[path] = '💾 缓存';
+          return resolve();
+        }
+        const script = document.createElement("script");
+        script.src = path;
+        script.onload = () => {
+          window.resourceStatus = window.resourceStatus || {};
+          window.resourceStatus[path] = '📁 本地';
+          resolve();
+        };
+        script.onerror = () => {
+          const fallback = document.createElement("script");
+          fallback.src = cdn;
+          fallback.onload = () => {
+            window.resourceStatus = window.resourceStatus || {};
+            window.resourceStatus[path] = '🌐 CDN';
+            resolve();
+          };
+          fallback.onerror = reject;
+          document.head.appendChild(fallback);
+        };
+        document.head.appendChild(script);
+      });
+    }
+
+    function cleanHTML(html) {
+      // 🖼️ 只保护图片和音频等媒体内容
+      const imgPlaceholders = [];
+      let tempHtml = html;
+      
+      // 保护 <img> 标签
+      tempHtml = tempHtml.replace(/<img[^>]*>/gi, function(match) {
+        const placeholder = `__IMG_PLACEHOLDER_${imgPlaceholders.length}__`;
+        imgPlaceholders.push(match);
+        return placeholder;
+      });
+      
+      // 保护音频文件引用
+      tempHtml = tempHtml.replace(/\[sound:[^\]]+\]/gi, function(match) {
+        const placeholder = `__SOUND_PLACEHOLDER_${imgPlaceholders.length}__`;
+        imgPlaceholders.push(match);
+        return placeholder;
+      });
+      
+      // 💻 只保护Markdown格式的代码块（不保护HTML格式）
+      const codeBlockPlaceholders = [];
+      
+      // 🔧 新增：自动修复富文本代码块（```包围的内容）
+      tempHtml = tempHtml.replace(/```(\w+)?(<br>|<br\s*\/?>|&nbsp;|\s)*([^`]*?)```/gi, 
+        function(match, lang, whitespace, content) {
+          console.log('🔧 发现富文本代码块，正在清理:', lang || '未指定语言');
+          
+          // 清理代码块内的HTML标签和实体，特别注意保留换行符
+          const cleanContent = content
+            .replace(/<br\s*\/?>/gi, "\n")      // <br> → 换行
+            .replace(/<\/div>\s*<div[^>]*>/gi, "\n")  // div换行 → 换行符
+            .replace(/<div[^>]*>/gi, "\n")      // div开始 → 换行符  
+            .replace(/<\/div>/gi, "")           // div结束 → 清除
+            .replace(/&nbsp;/gi, " ")           // &nbsp; → 空格
+            .replace(/&lt;/gi, "<")             // &lt; → <
+            .replace(/&gt;/gi, ">")             // &gt; → >
+            .replace(/&amp;/gi, "&")            // &amp; → &
+            .replace(/&quot;/gi, '"')           // &quot; → "
+            .replace(/&#39;/gi, "'")            // &#39; → '
+            .replace(/<\/?[^>]+(>|$)/gi, "")    // 移除其他HTML标签
+            .replace(/\n{3,}/g, "\n\n")         // 连续3个以上换行 → 2个换行
+            .replace(/^\s+|\s+$/g, "");         // 去除首尾空白，但保留内部换行
+          
+          const placeholder = `__FIXED_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
+          codeBlockPlaceholders.push("```" + (lang || "") + "\n" + cleanContent + "\n```");
+          console.log('✅ 代码块清理完成，保留了换行符');
+          return placeholder;
+        }
+      );
+      
+      // 🔧 特殊处理：不完整的代码块（```开始但被div分割）
+      tempHtml = tempHtml.replace(/```(\w+)?\s*(<\/div>\s*<div[^>]*>[\s\S]*?)```/gi, function(match, lang, content) {
+        console.log('🔧 发现被div分割的代码块，正在清理:', lang || '未指定语言');
+        
+        // 清理代码块内的div标签
+        const cleanContent = content
+          .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
+          .replace(/<\/div>/gi, "\n")
+          .replace(/<div[^>]*>/gi, "\n")
+          .replace(/&gt;/gi, ">")
+          .replace(/&lt;/gi, "<")
+          .replace(/&amp;/gi, "&")
+          .replace(/<[^>]*>/gi, "")
+          .trim();
+        
+        const placeholder = `__DIV_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
+        codeBlockPlaceholders.push("```" + (lang || "") + "\n" + cleanContent + "\n```");
+        console.log('✅ div分割代码块清理完成');
+        return placeholder;
+      });
+      
+      // 保护完整的Markdown代码块
+      tempHtml = tempHtml.replace(/```[\s\S]*?```/gi, function(match) {
+        const placeholder = `__COMPLETE_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
+        codeBlockPlaceholders.push(match);
+        return placeholder;
+      });
+      
+      // 🔧 保护行内代码，避免HTML清理过程影响其内容
+      tempHtml = tempHtml.replace(/`([^`\n]*)`/gi, function(match, content) {
+        // 保护行内代码内容，使用特殊编码避免被HTML清理影响
+        const protectedContent = content
+          .replace(/&lt;/gi, '____LT____')    // 临时保护&lt;
+          .replace(/&gt;/gi, '____GT____')    // 临时保护&gt;
+          .replace(/&amp;/gi, '____AMP____'); // 临时保护&amp;
+        
+        const protectedMatch = '`' + protectedContent + '`';
+        const placeholder = `__MD_INLINE_CODE_${codeBlockPlaceholders.length}__`;
+        codeBlockPlaceholders.push(protectedMatch);
+        return placeholder;
+      });
+      
+      // 🧹 简单直接的HTML清理
+      let cleaned = tempHtml
+        // 先清理HTML实体，防止HTML标签被编码
+        .replace(/&lt;/gi, "<")
+        .replace(/&gt;/gi, ">")
+        .replace(/&amp;/gi, "&")
+        .replace(/&nbsp;/gi, " ")
+        .replace(/&tab;/gi, "\t")
+        .replace(/&mdash;/gi, "—")
+        // 特殊处理：清理连续的div标签（Anki常见格式）
+        .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
+        .replace(/<\/div>/gi, "\n")
+        .replace(/<div[^>]*>/gi, "\n")
+        // 清理其他HTML标签
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<p[^>]*>/gi, "\n")
+        .replace(/<\/p>/gi, "\n")
+        .replace(/<span[^>]*>/gi, "")
+        .replace(/<\/span>/gi, "")
+        .replace(/<code[^>]*>/gi, "`")
+        .replace(/<\/code>/gi, "`")
+        .replace(/<pre[^>]*>/gi, "")
+        .replace(/<\/pre>/gi, "")
+        .replace(/<[\/]?i[^>]*>/gi, "")
+        .replace(/<[\/]?em[^>]*>/gi, "")
+        .replace(/<[\/]?strong[^>]*>/gi, "**")
+        .replace(/<[\/]?b[^>]*>/gi, "**")
+        // 清理任何剩余的HTML标签
+        .replace(/<[^>]*>/gi, "")
+        // 清理多余空行和空白
+        .replace(/\n\s*\n\s*\n/g, "\n\n")
+        .replace(/^\s+|\s+$/g, ""); // trim
+      
+      // 🔧 特殊处理表格：移除表格行之间的空行
+      const lines = cleaned.split(/\r?\n/);
+      const tableRowPattern = /^\s*\|.*\|\s*$/;
+      let processedLines = [];
+      
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i].trim();
+        
+        if (line) {
+          processedLines.push(line);
+        } else {
+          // 空行处理：如果前后都是表格行，跳过空行
+          const prevLine = processedLines[processedLines.length - 1];
+          const nextLine = lines[i + 1]?.trim();
+          
+          if (!(tableRowPattern.test(prevLine) && tableRowPattern.test(nextLine))) {
+            processedLines.push("");
+          }
+        }
+      }
+      
+      let result = processedLines.join('\n');
+      
+      // 🖼️ 恢复保护的媒体内容
+      imgPlaceholders.forEach((original, index) => {
+        const placeholder = `__IMG_PLACEHOLDER_${index}__`;
+        result = result.replace(placeholder, original);
+      });
+      
+      imgPlaceholders.forEach((original, index) => {
+        const placeholder = `__SOUND_PLACEHOLDER_${index}__`;
+        result = result.replace(placeholder, original);
+      });
+      
+      // 💻 恢复Markdown代码块
+      codeBlockPlaceholders.forEach((original, index) => {
+        const placeholder = `__FIXED_CODE_BLOCK_${index}__`;
+        result = result.replace(placeholder, original);
+      });
+      
+      codeBlockPlaceholders.forEach((original, index) => {
+        const placeholder = `__DIV_CODE_BLOCK_${index}__`;
+        result = result.replace(placeholder, original);
+      });
+      
+      codeBlockPlaceholders.forEach((original, index) => {
+        const placeholder = `__COMPLETE_CODE_BLOCK_${index}__`;
+        result = result.replace(placeholder, original);
+      });
+      
+      codeBlockPlaceholders.forEach((original, index) => {
+        const placeholder = `__MD_INLINE_CODE_${index}__`;
+        // 🔧 恢复特殊编码为原始字符，让markdown-it自己处理HTML转义
+        const restoredOriginal = original
+          .replace(/____LT____/gi, '<')      // 恢复为<字符
+          .replace(/____GT____/gi, '>')      // 恢复为>字符  
+          .replace(/____AMP____/gi, '&');    // 恢复为&字符
+        
+        result = result.replace(placeholder, restoredOriginal);
+      });
+      
+      console.log("✅ HTML清理完成");
+      return result;
+    }
+
+          // 🔒 安全的HTML转义函数
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // 🔒 安全地设置HTML内容（防止脚本执行）
+    function safeSetHTML(element, htmlContent) {
+      // 创建一个临时容器
+      const temp = document.createElement('div');
+      temp.innerHTML = htmlContent;
+      
+      // 移除所有可能执行的脚本标签和事件处理器
+      const scripts = temp.querySelectorAll('script');
+      scripts.forEach(script => script.remove());
+      
+      // 移除所有事件属性
+      const allElements = temp.querySelectorAll('*');
+      allElements.forEach(el => {
+        // 移除所有以 'on' 开头的属性（如 onclick, onload 等）
+        Array.from(el.attributes).forEach(attr => {
+          if (attr.name.toLowerCase().startsWith('on')) {
+            el.removeAttribute(attr.name);
+          }
+        });
+        
+        // 移除 javascript: 链接
+        if (el.href && el.href.toLowerCase().startsWith('javascript:')) {
+          el.removeAttribute('href');
+        }
+        if (el.src && el.src.toLowerCase().startsWith('javascript:')) {
+          el.removeAttribute('src');
+        }
+      });
+      
+      // 安全地设置内容
+      element.innerHTML = temp.innerHTML;
+    }
+
+    // 🔒 安全的代码高亮函数（防止代码执行）
+    function addCodeHighlight(container) {
+      const codeBlocks = container.querySelectorAll("pre code");
+      if (codeBlocks.length === 0) return;
+      
+      console.log(`🎨 安全处理 ${codeBlocks.length} 个代码块`);
+
+      codeBlocks.forEach((block, index) => {
+        try {
+          // 🔒 安全地获取代码内容（只获取文本，不执行）
+          let code = block.textContent || block.innerText || "";
+          
+          // 🔧 确保换行符被正确保留
+          if (!code.includes('\n') && block.innerHTML.includes('<br')) {
+            // 如果textContent没有换行但HTML中有<br>，手动转换
+            code = block.innerHTML
+              .replace(/<br\s*\/?>/gi, '\n')
+              .replace(/<[^>]*>/g, '') // 移除其他HTML标签
+              .replace(/&lt;/g, '<')
+              .replace(/&gt;/g, '>')
+              .replace(/&amp;/g, '&')
+              .replace(/&quot;/g, '"')
+              .replace(/&#39;/g, "'");
+          }
+          
+          // 🛡️ 额外安全检查：如果代码包含可疑内容，直接跳过高亮
+          // 临时注释掉安全检查进行测试
+          /*
+          if (code.includes('<script') || code.includes('javascript:') || code.includes('eval(')) {
+            console.warn(`🚨 检测到可疑代码，跳过高亮处理`);
+            addLanguageLabel(block.parentElement, "text");
+            return;
+          }
+          */
+
+                      // 🚀 获取语言信息的优先级：注释 > CSS类名
+          let lang = "";
+          let alreadyHighlighted = false;
+          
+          // 从CSS类名获取语言
+          if (block.className) {
+            const match = block.className.match(/language-(\w+)/);
+            if (match) {
+              lang = match[1];
+            }
+          }
+
+          // 🔒 简化的高亮处理逻辑
+          let highlightedCode;
+          let finalLanguage;
+          
+          if (lang && window.hljs) {
+            // 有指定语言 → 使用 highlightAuto
+            try {
+              const result = window.hljs.highlightAuto(code, [lang]);
+              highlightedCode = result.value;
+              finalLanguage = lang;
+            } catch (e) {
+              highlightedCode = escapeHtml(code);
+              finalLanguage = lang;
+            }
+          } else if (window.hljs) {
+            // 没有指定语言 → 自动检测
+            try {
+              const result = window.hljs.highlightAuto(code);
+              highlightedCode = result.value;
+              finalLanguage = result.language || "auto";
+            } catch (e) {
+              highlightedCode = escapeHtml(code);
+              finalLanguage = "text";
+            }
+          } else {
+            // highlight.js 未加载
+            highlightedCode = escapeHtml(code);
+            finalLanguage = lang || "text";
+          }
+
+          // 🔒 安全地应用高亮结果
+          safeSetHTML(block, highlightedCode);
+
+          // 添加语言标识符
+          addLanguageLabel(block.parentElement, finalLanguage);
+        } catch (error) {
+          console.warn(`⚠️ 代码高亮失败，使用原始文本:`, error.message);
+          // 安全回退：使用转义的原始文本
+          const safeCode = escapeHtml(block.textContent || block.innerText || "");
+          block.innerHTML = safeCode;
+          addLanguageLabel(block.parentElement, "text");
+        }
+      });
+    }
+
+    // 复制到剪贴板函数
+    async function copyToClipboard(text, button) {
+      const originalText = button.textContent;
+      
+      try {
+        await navigator.clipboard.writeText(text);
+        
+        // 视觉反馈
+        button.classList.add('copied');
+        button.textContent = '已复制';
+        
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.textContent = originalText;
+        }, 1000);
+        
+        console.log('📋 代码已复制到剪贴板');
+      } catch (err) {
+        // 备用方案：使用旧的 execCommand
+        try {
+          const textArea = document.createElement('textarea');
+          textArea.value = text;
+          textArea.style.position = 'fixed';
+          textArea.style.opacity = '0';
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          
+          // 同样的视觉反馈
+          button.classList.add('copied');
+          button.textContent = '已复制';
+          
+          setTimeout(() => {
+            button.classList.remove('copied');
+            button.textContent = originalText;
+          }, 1000);
+          
+          console.log('📋 代码已复制到剪贴板 (fallback)');
+        } catch (fallbackErr) {
+          console.warn('❌ 复制失败:', fallbackErr);
+          button.textContent = '复制失败';
+          setTimeout(() => {
+            button.textContent = originalText;
+          }, 1000);
+        }
+      }
+    }
+
+    // 添加语言标识符函数
+    function addLanguageLabel(preElement, language) {
+      // 检查pre元素是否已经被包装
+      let wrapper = preElement.parentElement;
+      if (!wrapper.classList.contains('code-wrapper')) {
+        // 创建包装容器
+        wrapper = document.createElement('div');
+        wrapper.className = 'code-wrapper';
+        wrapper.style.position = 'relative';
+        wrapper.style.display = 'block';
+        
+        // 将pre元素包装起来
+        preElement.parentNode.insertBefore(wrapper, preElement);
+        wrapper.appendChild(preElement);
+      }
+
+      // 检查是否已经有标签
+      const existingLabel = wrapper.querySelector(".code-lang-label");
+      if (existingLabel) {
+        existingLabel.remove();
+      }
+
+      // 创建语言标签
+      const langLabel = document.createElement("div");
+      langLabel.className = "code-lang-label";
+      langLabel.textContent = language;
+      langLabel.title = "点击复制代码";
+
+      // 添加点击复制功能
+      langLabel.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // 获取代码块内容
+        const codeElement = preElement.querySelector('code');
+        if (codeElement) {
+          const codeText = codeElement.textContent || codeElement.innerText || '';
+          await copyToClipboard(codeText, langLabel);
+        }
+      });
+
+      // 添加到包装容器而不是pre元素
+      wrapper.appendChild(langLabel);
+    }
+
+          function renderMarkdown(ID) {
+
+      const el = document.getElementById(ID);
+      if (!el || el.dataset.markdownProcessed === "true") return;
+
+      // 🔒 安全预检查
+      const original = el.innerHTML;
+      if (original.includes('<script') || original.includes('javascript:')) {
+        console.warn(`🚨 检测到可疑内容，跳过处理: ${ID}`);
+        return;
+      }
+
+      // 创建安全的markdown-it实例
+      const md = window.markdownit({
+        html: true,
+        breaks: true,
+        typographer: true,
+        linkify: true,
+        // 🔒 安全的代码块处理，确保HTML被正确转义
+        highlight: function (str, lang) {
+          if (typeof str !== 'string') return str || '';
+          
+          const escapeHtml = (text) => {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+          };
+          
+          let highlightedCode = "";
+          let actualLang = lang || "";
+          
+          if (lang && window.hljs) {
+            try {
+              const result = window.hljs.highlightAuto(str, [lang]);
+              highlightedCode = result.value;
+              actualLang = lang;
+            } catch (e) {
+              highlightedCode = escapeHtml(str);
+              actualLang = lang || "text";
+            }
+          } else {
+            highlightedCode = escapeHtml(str);
+            actualLang = lang || "text";
+          }
+          
+          return `<!-- lang:${actualLang} -->${highlightedCode}`;
+        },
+      });
+
+      if (window.markdownItMark) md.use(window.markdownItMark);
+
+      try {
+        const text = cleanHTML(original);
+        const rendered = md.render(text);
+
+        // 🔒 使用安全的方式设置HTML内容
+        safeSetHTML(el, rendered);
+        el.dataset.markdownProcessed = "true";
+
+        // ✅ 安全的代码高亮功能
+        addCodeHighlight(el);
+
+      } catch (error) {
+        console.error(`❌ 渲染失败 ${ID}:`, error.message);
+        // 安全回退：显示错误信息而不是可能的恶意内容
+        el.innerHTML = `<p style="color: red;">❌ 内容渲染失败</p>`;
+      }
+    }
+
+    function renderMath(ID) {
+      const el = document.getElementById(ID);
+      if (
+        !el ||
+        el.dataset.katexRendered === "true" ||
+        !window.renderMathInElement
+      )
+        return;
+      renderMathInElement(el, {
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false},
+        ],
+        throwOnError: false,
+        macros: {
+          "\\ce": "\\ce",
+        },
+      });
+      el.dataset.katexRendered = "true";
+    }
+
+    function renderAll() {
+      console.log("🎯 开始渲染所有元素");
+      ["front", "back"].forEach((id) => {
+        renderMarkdown(id);
+        renderMath(id);
+      });
+    }
+
+    async function init() {
+      try {
+        console.log("✅ 预览模式，启用Markdown渲染器");
+        await Promise.all([
+          ...RESOURCES.css.map(loadCSS),
+          ...RESOURCES.scripts.map(loadScript),
+        ]);
+        
+        // ✨ 手动注册Svelte语言支持（永久方案）
+        if (window.hljs && !window.hljs.getLanguage('svelte')) {
+          console.log('🔧 注册Svelte语言定义');
+          window.hljs.registerLanguage('svelte', function(hljs) {
+            return {
+              name: 'Svelte',
+              aliases: ['svelte'],
+              case_insensitive: false,
+              subLanguage: 'xml',
+              contains: [
+                // Svelte表达式 {expression}
+                {
+                  className: 'template-variable',
+                  begin: /\{/, end: /\}/,
+                  excludeBegin: true,
+                  excludeEnd: true,
+                  contains: [
+                    {
+                      subLanguage: 'javascript',
+                      begin: /[^}]+/
+                    }
+                  ]
+                },
+                // Svelte指令 {#if} {#each} etc
+                {
+                  className: 'template-tag',
+                  begin: /\{[#:/]/, end: /\}/,
+                  contains: [
+                    {
+                      className: 'name',
+                      begin: /[#:/]\w+/
+                    },
+                    {
+                      subLanguage: 'javascript',
+                      begin: /\s+/, end: /$/
+                    }
+                  ]
+                },
+                // HTML注释
+                hljs.COMMENT('<!--', '-->', {
+                  relevance: 10
+                }),
+                // HTML标签
+                {
+                  className: 'tag',
+                  begin: /<\/?[A-Za-z_]/, end: />/,
+                  contains: [
+                    {
+                      className: 'name',
+                      begin: /[A-Za-z_][\w:]*/
+                    },
+                    {
+                      className: 'attr',
+                      begin: /\s[A-Za-z_][\w:]*(?=\s*=)/
+                    },
+                    {
+                      begin: /=/, end: /$/,
+                      contains: [
+                        hljs.APOS_STRING_MODE,
+                        hljs.QUOTE_STRING_MODE,
+                        {
+                          className: 'template-variable',
+                          begin: /\{/, end: /\}/,
+                          subLanguage: 'javascript'
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            };
+          });
+          
+          // 验证注册并记录状态
+          if (window.hljs.getLanguage('svelte')) {
+            window.resourceStatus = window.resourceStatus || {};
+            window.resourceStatus['svelte.js'] = '🔧 手动注册';
+            console.log('✅ Svelte语言注册成功，现在可用！');
+          } else {
+            window.resourceStatus = window.resourceStatus || {};
+            window.resourceStatus['svelte.js'] = '❌ 注册失败';
+            console.log('❌ Svelte语言注册失败');
+          }
+        } else if (window.hljs?.getLanguage?.('svelte')) {
+          window.resourceStatus = window.resourceStatus || {};
+          window.resourceStatus['svelte.js'] = '✅ 已存在';
+          console.log('✅ Svelte语言已存在，无需重复注册');
+        } else {
+          window.resourceStatus = window.resourceStatus || {};
+          window.resourceStatus['svelte.js'] = '❌ hljs未加载';
+          console.log('❌ highlight.js未加载，无法注册Svelte语言');
+        }
+        
+        // 显示资源加载状态
+        if (window.resourceStatus) {
+          console.log("📦 资源加载状态:");
+          Object.entries(window.resourceStatus).forEach(([resource, status]) => {
+            console.log(`   ${resource}: ${status}`);
+          });
+        }
+        
+        renderAll();
+        console.log("✅ Markdown渲染器初始化完成");
+      } catch (e) {
+        console.error("❌ Initialization failed:", e);
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      setTimeout(init, 100);
+    }
+  })();
+  }); // 结束 delayedEditModeCheck 回调
+</script>
+</rewritten_file>
