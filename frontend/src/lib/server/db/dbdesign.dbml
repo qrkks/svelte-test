@@ -1,0 +1,17 @@
+Table user {
+  id text [primary key]
+  age int
+  username text [not null, unique]
+  password_hash text [not null]
+}
+
+Table session {
+  id text [primary key]
+  user_id text [not null, ref: > user.id]
+  expires_at int [not null, note: "timestamp (Unix)"]
+}
+
+Table test {
+  id int [primary key, increment]
+  test_input text [not null]
+}

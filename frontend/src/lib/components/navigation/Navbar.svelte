@@ -1,19 +1,13 @@
 <script>
     import { navbarState, navbarActions } from './navbar.svelte.js';
-    import { authState } from '$lib/stores/global/auth.svelte.js';
     import NavLink from './NavLink.svelte';
     import MobileMenu from './MobileMenu.svelte';
+    import UserMenu from './UserMenu.svelte';
     import Dropdown from '$lib/components/ui/Dropdown.svelte';
     
     // 汉堡菜单切换
     function toggleMobileMenu() {
         navbarActions.toggleMobileMenu();
-    }
-    
-    // 处理登出
-    function handleLogout() {
-        // TODO: 实现登出逻辑
-        console.log('登出');
     }
 </script>
 
@@ -87,50 +81,10 @@
                 </nav>
             </div>
             
-            <!-- 右侧：用户信息 和 汉堡菜单 -->
+            <!-- 右侧：用户菜单 和 汉堡菜单 -->
             <div class="flex items-center gap-4">
-                <!-- 桌面端用户信息 -->
-                {#if authState.isLoggedIn}
-                    <div class="hidden lg:flex items-center gap-3">
-                        <!-- 用户头像 -->
-                        <button 
-                            class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-                            aria-label="用户菜单"
-                            aria-expanded="false"
-                        >
-                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                                {authState.username.charAt(0).toUpperCase()}
-                            </div>
-                            <div class="hidden sm:block">
-                                <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                    {authState.username}
-                                </div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">
-                                    {authState.role}
-                                </div>
-                            </div>
-                        </button>
-                        
-                        <!-- 登出按钮 -->
-                        <button 
-                            onclick={handleLogout}
-                            class="flex items-center gap-2 px-3 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                            aria-label="登出账户"
-                        >
-                            <span aria-hidden="true">🚪</span>
-                            <span class="hidden sm:inline">登出</span>
-                        </button>
-                    </div>
-                {:else}
-                    <!-- 登录按钮 -->
-                    <div class="hidden lg:block">
-                        <NavLink 
-                            href="/settings/auth/login"
-                            label="登录"
-                            icon="🔑"
-                        />
-                    </div>
-                {/if}
+                <!-- 🎯 使用新的用户组件 -->
+                <UserMenu />
                 
                 <!-- 汉堡菜单按钮 -->
                 <button 
