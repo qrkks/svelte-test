@@ -34,18 +34,20 @@
 		dialogState.cancelText = cancelText;
 		dialogState.variant = variant;
 
-		// 返回 Promise
+		// 返回 Promise，resolve 时自动关闭对话框
 		return new Promise((resolve) => {
-			resolvePromise = resolve;
+			resolvePromise = (result) => {
+				dialogState.isOpen = false; // 自动关闭对话框
+				resolve(result);
+				resolvePromise = null;
+			};
 		});
 	}
 
 	// 隐藏对话框的内部函数
 	function hideConfirm() {
-		dialogState.isOpen = false;
 		if (resolvePromise) {
-			resolvePromise(false);
-			resolvePromise = null;
+			resolvePromise(false); // 自动处理状态更新
 		}
 	}
 
@@ -56,7 +58,7 @@
 		hide: hideConfirm,
 		
 		// 便捷方法
-		delete: (message = '您确定要删除这个项目吗？这个操作无法撤销。', title = '确认删除') =>
+		quickDelete: (message = '您确定要删除这个项目吗？这个操作无法撤销。', title = '确认删除') =>
 			showConfirm({
 				message,
 				title,
@@ -65,7 +67,7 @@
 				variant: 'danger'
 			}),
 		
-		save: (message = '您确定要保存更改吗？', title = '保存更改') =>
+		quickSave: (message = '您确定要保存更改吗？', title = '保存更改') =>
 			showConfirm({
 				message,
 				title,
@@ -74,7 +76,7 @@
 				variant: 'save'
 			}),
 		
-		danger: (message = '您确定要执行这个危险操作吗？', title = '危险操作') =>
+		quickDanger: (message = '您确定要执行这个危险操作吗？', title = '危险操作') =>
 			showConfirm({
 				message,
 				title,
@@ -86,21 +88,17 @@
 </script>
 
 <script>
-	// 确认操作 - 组件实例级函数
+	// 确认操作 - 只需 resolve Promise，状态自动更新
 	function handleConfirm() {
-		dialogState.isOpen = false;
 		if (resolvePromise) {
 			resolvePromise(true);
-			resolvePromise = null;
 		}
 	}
 
-	// 取消操作 - 组件实例级函数
+	// 取消操作 - 只需 resolve Promise，状态自动更新
 	function handleCancel() {
-		dialogState.isOpen = false;
 		if (resolvePromise) {
 			resolvePromise(false);
-			resolvePromise = null;
 		}
 	}
 

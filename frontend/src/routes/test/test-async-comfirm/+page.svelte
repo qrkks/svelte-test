@@ -13,7 +13,7 @@
 			message: `确定要删除这条数据吗？\n内容：${item.testInput}`,
 			confirmText: '删除',
 			cancelText: '取消',
-			danger: true
+			variant: 'danger'
 		});
 
 		if (result) {
@@ -29,7 +29,7 @@
 			message: '确定要清空所有数据吗？此操作不可恢复！',
 			confirmText: '清空',
 			cancelText: '取消',
-			danger: true
+			variant: 'danger'
 		});
 
 		if (result) {
@@ -40,13 +40,15 @@
 
 	// 也可以使用便捷方法
 	async function quickDelete(item, formElement) {
-		if (await confirm.delete(`确定要删除"${item.testInput}"吗？`)) {
+		if (await confirm.quickDelete(`确定要删除"${item.testInput}"吗？`)) {
 			formElement.requestSubmit();
 		}
 	}
 </script>
 
 <h1>{data.title}</h1>
+
+<button onclick={() => confirm.quickDelete()}>最简测试</button>
 
 <!-- 新组件说明 -->
 <div
