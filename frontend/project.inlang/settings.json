@@ -1,0 +1,13 @@
+{
+  "$schema": "https://inlang.com/schema/project-settings",
+  "sourceLanguageTag": "zh",
+  "languageTags": ["zh", "en"],
+  "modules": [
+    "@inlang/paraglide-js-adapter-sveltekit"
+  ],
+  "messageLintRuleLevels": {
+    "missingMessage": "error",
+    "duplicateId": "error"
+  },
+  "messagesDirectory": "./messages"
+} 

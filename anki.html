@@ -224,6 +224,37 @@
     border-top: 2px solid #aaa;
   }
 
+  /* 列表样式 */
+  ul, ol {
+    margin: 12px 0;
+    padding-left: 24px;
+    line-height: 1.6;
+  }
+  ul ul, ol ol, ul ol, ol ul {
+    margin: 4px 0;
+  }
+  li {
+    margin: 4px 0;
+  }
+  ul > li {
+    list-style-type: disc;
+  }
+  ul ul > li {
+    list-style-type: circle;
+  }
+  ul ul ul > li {
+    list-style-type: square;
+  }
+  ol > li {
+    list-style-type: decimal;
+  }
+  ol ol > li {
+    list-style-type: lower-alpha;
+  }
+  ol ol ol > li {
+    list-style-type: lower-roman;
+  }
+
   /* 错误提示样式 */
   .error-message {
     background: #ffebee;
@@ -445,9 +476,12 @@
     }
 
     function cleanHTML(html) {
-      // 🖼️ 分别保护图片和音频等媒体内容
+      // 🖼️ 分别保护图片、音频、表格、列表和内联样式等内容
       const imgPlaceholders = [];
       const soundPlaceholders = [];
+      const tablePlaceholders = [];
+      const listPlaceholders = [];
+      const inlineStylePlaceholders = [];
       let tempHtml = html;
       
       // 保护 <img> 标签
@@ -462,6 +496,45 @@
         const placeholder = `__SOUND_PLACEHOLDER_${soundPlaceholders.length}__`;
         soundPlaceholders.push(match);
         return placeholder;
+      });
+      
+      // 🏁 保护HTML表格结构
+      tempHtml = tempHtml.replace(/<table[\s\S]*?<\/table>/gi, function(match) {
+        const placeholder = `__TABLE_PLACEHOLDER_${tablePlaceholders.length}__`;
+        tablePlaceholders.push(match);
+        console.log('🏁 保护表格结构:', placeholder);
+        return placeholder;
+      });
+      
+      // 📝 保护HTML列表结构（包括嵌套列表）
+      tempHtml = tempHtml.replace(/<[ou]l[\s\S]*?<\/[ou]l>/gi, function(match) {
+        const placeholder = `__LIST_PLACEHOLDER_${listPlaceholders.length}__`;
+        listPlaceholders.push(match);
+        console.log('📝 保护列表结构:', placeholder);
+        return placeholder;
+      });
+      
+      // 🎨 保护常用内联样式标签
+      const inlineStyleTags = [
+        /<span[^>]*style[^>]*>[\s\S]*?<\/span>/gi,        // <span style="...">
+        /<font[^>]*(?:color|size|face)[^>]*>[\s\S]*?<\/font>/gi,  // <font color/size/face="...">
+        /<mark[^>]*>[\s\S]*?<\/mark>/gi,                  // <mark>
+        /<small[^>]*>[\s\S]*?<\/small>/gi,                // <small>
+        /<big[^>]*>[\s\S]*?<\/big>/gi,                    // <big>
+        /<sup[^>]*>[\s\S]*?<\/sup>/gi,                    // <sup>
+        /<sub[^>]*>[\s\S]*?<\/sub>/gi,                    // <sub>
+        /<del[^>]*>[\s\S]*?<\/del>/gi,                    // <del>
+        /<strike[^>]*>[\s\S]*?<\/strike>/gi,              // <strike>
+        /<s[^>]*>[\s\S]*?<\/s>/gi                         // <s>
+      ];
+      
+      inlineStyleTags.forEach(regex => {
+        tempHtml = tempHtml.replace(regex, function(match) {
+          const placeholder = `__INLINE_STYLE_${inlineStylePlaceholders.length}__`;
+          inlineStylePlaceholders.push(match);
+          console.log('🎨 保护内联样式:', placeholder, match.substring(0, 50) + '...');
+          return placeholder;
+        });
       });
       
       // 💻 只保护Markdown格式的代码块（不保护HTML格式）
@@ -566,10 +639,7 @@
         })
         // 🔧 处理链接标签
         .replace(/<a[^>]*href=["']([^"']*)["'][^>]*>(.*?)<\/a>/gi, "[$2]($1)")
-        // 🔧 处理列表标签
-        .replace(/<ul[^>]*>/gi, "").replace(/<\/ul>/gi, "")
-        .replace(/<ol[^>]*>/gi, "").replace(/<\/ol>/gi, "")
-        .replace(/<li[^>]*>(.*?)<\/li>/gi, "- $1\n")
+        // 📝 列表标签已被保护，不再进行转换
         // 清理其他HTML标签
         .replace(/<br\s*\/?>/gi, "\n")
         .replace(/<p[^>]*>/gi, "\n")
@@ -580,7 +650,7 @@
         .replace(/<\/code>/gi, "`")
         .replace(/<pre[^>]*>/gi, "")
         .replace(/<\/pre>/gi, "")
-        // 清理任何剩余的HTML标签
+        // 🎨 清理任何剩余的HTML标签（内联样式已被保护，不会被清理）
         .replace(/<[^>]*>/gi, "")
         // 清理多余的Markdown格式重复
         .replace(/\*{3,}/g, "**")  // ***+ → **
@@ -621,6 +691,27 @@
       soundPlaceholders.forEach((original, index) => {
         const placeholder = `__SOUND_PLACEHOLDER_${index}__`;
         result = result.replace(placeholder, original);
+      });
+      
+      // 🏁 恢复表格结构
+      tablePlaceholders.forEach((original, index) => {
+        const placeholder = `__TABLE_PLACEHOLDER_${index}__`;
+        result = result.replace(placeholder, original);
+        console.log('🏁 恢复表格结构:', placeholder);
+      });
+      
+      // 📝 恢复列表结构
+      listPlaceholders.forEach((original, index) => {
+        const placeholder = `__LIST_PLACEHOLDER_${index}__`;
+        result = result.replace(placeholder, original);
+        console.log('📝 恢复列表结构:', placeholder);
+      });
+      
+      // 🎨 恢复内联样式
+      inlineStylePlaceholders.forEach((original, index) => {
+        const placeholder = `__INLINE_STYLE_${index}__`;
+        result = result.replace(placeholder, original);
+        console.log('🎨 恢复内联样式:', placeholder, original.substring(0, 50) + '...');
       });
       
       // 💻 恢复Markdown代码块
@@ -694,93 +785,42 @@
       element.innerHTML = temp.innerHTML;
     }
 
-    // 🔒 安全的代码高亮函数（防止代码执行）
+    // 🏷️ 简单的代码块标签处理函数
     function addCodeHighlight(container) {
       const codeBlocks = container.querySelectorAll("pre code");
       if (codeBlocks.length === 0) return;
       
-      console.log(`🎨 安全处理 ${codeBlocks.length} 个代码块`);
+      console.log(`🏷️ 为 ${codeBlocks.length} 个代码块添加语言标签`);
 
       codeBlocks.forEach((block, index) => {
         try {
-          // 🔒 安全地获取代码内容（只获取文本，不执行）
-          let code = block.textContent || block.innerText || "";
-          
-          // 🔧 确保换行符被正确保留
-          if (!code.includes('\n') && block.innerHTML.includes('<br')) {
-            // 如果textContent没有换行但HTML中有<br>，手动转换
-            code = block.innerHTML
-              .replace(/<br\s*\/?>/gi, '\n')
-              .replace(/<[^>]*>/g, '') // 移除其他HTML标签
-              .replace(/&lt;/g, '<')
-              .replace(/&gt;/g, '>')
-              .replace(/&amp;/g, '&')
-              .replace(/&quot;/g, '"')
-              .replace(/&#39;/g, "'");
-          }
-          
-          // 🛡️ 额外安全检查：如果代码包含可疑内容，直接跳过高亮
-          // 临时注释掉安全检查进行测试
-          /*
-          if (code.includes('<script') || code.includes('javascript:') || code.includes('eval(')) {
-            console.warn(`🚨 检测到可疑代码，跳过高亮处理`);
-            addLanguageLabel(block.parentElement, "text");
-            return;
-          }
-          */
-
-                      // 🚀 获取语言信息的优先级：注释 > CSS类名
-          let lang = "";
-          let alreadyHighlighted = false;
+          // 🚀 获取语言信息
+          let finalLanguage = "text";
           
           // 从CSS类名获取语言
           if (block.className) {
             const match = block.className.match(/language-(\w+)/);
             if (match) {
-              lang = match[1];
+              finalLanguage = match[1];
             }
           }
-
-          // 🔒 简化的高亮处理逻辑
-          let highlightedCode;
-          let finalLanguage;
           
-          if (lang && window.hljs) {
-            // 有指定语言 → 使用 highlightAuto
-            try {
-              const result = window.hljs.highlightAuto(code, [lang]);
-              highlightedCode = result.value;
-              finalLanguage = lang;
-            } catch (e) {
-              highlightedCode = escapeHtml(code);
-              finalLanguage = lang;
+          // 从markdown-it生成的注释中提取语言信息
+          const htmlContent = block.innerHTML;
+          if (htmlContent.includes('<!-- lang:')) {
+            const start = htmlContent.indexOf('<!-- lang:') + 10;
+            const end = htmlContent.indexOf(' -->', start);
+            if (end > start) {
+              finalLanguage = htmlContent.substring(start, end);
+              // 移除语言注释
+              block.innerHTML = htmlContent.replace(/<!-- lang:\w+ -->/, '');
             }
-          } else if (window.hljs) {
-            // 没有指定语言 → 自动检测
-            try {
-              const result = window.hljs.highlightAuto(code);
-              highlightedCode = result.value;
-              finalLanguage = result.language || "auto";
-            } catch (e) {
-              highlightedCode = escapeHtml(code);
-              finalLanguage = "text";
-            }
-          } else {
-            // highlight.js 未加载
-            highlightedCode = escapeHtml(code);
-            finalLanguage = lang || "text";
           }
-
-          // 🔒 安全地应用高亮结果
-          safeSetHTML(block, highlightedCode);
 
           // 添加语言标识符
           addLanguageLabel(block.parentElement, finalLanguage);
         } catch (error) {
-          console.warn(`⚠️ 代码高亮失败，使用原始文本:`, error.message);
-          // 安全回退：使用转义的原始文本
-          const safeCode = escapeHtml(block.textContent || block.innerText || "");
-          block.innerHTML = safeCode;
+          console.warn(`⚠️ 添加代码块标签失败:`, error.message);
           addLanguageLabel(block.parentElement, "text");
         }
       });
@@ -902,30 +942,48 @@
         highlight: function (str, lang) {
           if (typeof str !== 'string') return str || '';
           
+          console.log('🎯 正常流程：markdown-it highlight处理代码块');
+          
           const escapeHtml = (text) => {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
           };
           
+          // 🔧 关键：确保所有HTML内容都被转义，这是正常流程！
+          const safeCode = escapeHtml(str);
+          
           let highlightedCode = "";
           let actualLang = lang || "";
           
           if (lang && window.hljs) {
             try {
-              const result = window.hljs.highlightAuto(str, [lang]);
+              // highlight.js处理已转义的代码，这样HTML标签会被正确高亮但不会被执行
+              const result = window.hljs.highlightAuto(safeCode, [lang]);
               highlightedCode = result.value;
               actualLang = lang;
             } catch (e) {
-              highlightedCode = escapeHtml(str);
+              highlightedCode = safeCode;
               actualLang = lang || "text";
             }
+          } else if (window.hljs) {
+            try {
+              const result = window.hljs.highlightAuto(safeCode);
+              highlightedCode = result.value;
+              actualLang = result.language || "auto";
+            } catch (e) {
+              highlightedCode = safeCode;
+              actualLang = "text";
+            }
           } else {
-            highlightedCode = escapeHtml(str);
+            highlightedCode = safeCode;
             actualLang = lang || "text";
           }
           
-          return `<!-- lang:${actualLang} -->${highlightedCode}`;
+          // 返回安全的、已高亮的代码内容
+          // markdown-it会自动将其包装在<pre><code>标签中
+          console.log('✅ 返回安全的高亮代码，无需后续动态处理');
+          return highlightedCode;
         },
       });
 

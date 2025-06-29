@@ -10,11 +10,27 @@
 
 	let { children, data } = $props();
 
-	// 单文件Toast引用
-	let globalToastRef;
 
-	// 一次性更新多个属性
-	Object.assign(authState, { ...data.user });
+	// 🔧 修复：使用响应式更新用户状态
+	$effect(() => {
+		if (data.user) {
+			// 用户已登录，更新认证状态
+			Object.assign(authState, {
+				id: data.user.id,
+				username: data.user.username,
+				role: data.user.role || 'user',
+				lastLoginTime: data.user.lastLoginTime || null
+			});
+		} else {
+			// 用户未登录，清空认证状态
+			Object.assign(authState, {
+				id: null,
+				username: '',
+				role: 'user',
+				lastLoginTime: null
+			});
+		}
+	});
 
 	// 开发工具状态
 	let showDevTools = $state(false);
