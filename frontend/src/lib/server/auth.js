@@ -79,6 +79,7 @@ export function setSessionTokenCookie(event, token, expiresAt) {
 	event.cookies.set(sessionCookieName, token, {
 		expires: expiresAt,
 		path: '/'
+		// CHECK: 要不要加secure，httpOnly，sameSite等属性？小程序兼容性问题，需要考虑。可以上线后再决定。另外，要不要考虑使用.env文件来管理cookie的配置？
 	});
 }
 

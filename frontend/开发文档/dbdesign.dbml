@@ -1,0 +1,50 @@
+Table user {
+  id integer [primary key, increment]
+  username text [not null, unique]
+  password text [not null, note: "明文密码，仅开发环境使用，生产环境需移除"]
+  password_hash text [not null]
+  mobile text [unique]
+  email text [unique]
+  age integer
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+  last_login_at timestamp
+}
+
+Table session {
+  id text [primary key]
+  user_id integer [not null, ref: > user.id]
+  expires_at timestamp [not null]
+}
+
+// 角色表
+Table role {
+  id integer [primary key, increment]
+  name text [not null, unique]
+  description text
+}
+
+// 用户-角色关联表
+Table user_role {
+  user_id integer [not null, ref: > user.id]
+  role_id integer [not null, ref: > role.id]
+  
+  indexes {
+    (user_id, role_id) [pk] // 复合主键
+  }
+}
+
+// 角色-权限关联表
+Table role_permission {
+  role_id integer [not null, ref: > role.id]
+  permission text [not null, note: "权限字符串，如 'member:create'"]
+  
+  indexes {
+    (role_id, permission) [pk] // 复合主键
+  }
+}
+
+Table test {
+  id integer [primary key, increment]
+  test_input text [not null]
+}

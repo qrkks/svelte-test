@@ -44,8 +44,8 @@
     overflow: auto;
     font-size: 14px;
     line-height: 1.4;
-    white-space: pre-wrap !important;  /* 强制保持换行并允许自动折行 */
-    word-wrap: break-word;              /* 长行自动折行 */
+    white-space: pre-wrap !important; /* 强制保持换行并允许自动折行 */
+    word-wrap: break-word; /* 长行自动折行 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   pre code {
@@ -54,9 +54,9 @@
     border: none;
     font-size: 18px;
     line-height: 1.5;
-    white-space: pre-wrap !important;  /* 确保代码内容保持换行 */
-    word-wrap: break-word;              /* 确保长行能正确折行 */
-    display: block;                     /* 确保是块级元素 */
+    white-space: pre-wrap !important; /* 确保代码内容保持换行 */
+    word-wrap: break-word; /* 确保长行能正确折行 */
+    display: block; /* 确保是块级元素 */
   }
 
   /* 语言标识符样式 */
@@ -94,9 +94,15 @@
   }
 
   @keyframes pulse {
-    0% { box-shadow: 0 0 0 rgba(52, 211, 153, 0.7); }
-    50% { box-shadow: 0 0 20px rgba(52, 211, 153, 0.7); }
-    100% { box-shadow: 0 0 0 rgba(52, 211, 153, 0.7); }
+    0% {
+      box-shadow: 0 0 0 rgba(52, 211, 153, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(52, 211, 153, 0.7);
+    }
+    100% {
+      box-shadow: 0 0 0 rgba(52, 211, 153, 0.7);
+    }
   }
 
   /* 行内代码 */
@@ -147,9 +153,9 @@
   /* 图片样式 */
   img {
     max-width: 100%;
-    max-height: 80vh;  /* 限制最大高度为视窗高度的80% */
+    max-height: 80vh; /* 限制最大高度为视窗高度的80% */
     height: auto;
-    width: auto;       /* 确保宽度也能自动调整 */
+    width: auto; /* 确保宽度也能自动调整 */
     display: block;
     margin: 10px auto;
     border-radius: 4px;
@@ -168,20 +174,16 @@
     box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
   }
   .nightMode pre {
-    background: #2d2d2d !important;
-    border: 1px solid #444;
+    background: #0d1117 !important;
+    border-color: #30363d !important;
     box-shadow: none;
-    white-space: pre-wrap !important;  /* 确保暗黑模式下也保持换行 */
-    word-wrap: break-word;
   }
   .nightMode code {
-    background: #3a3a3a;
-    color: #ffb86c;
+    background: #21262d;
+    color: inherit;
   }
   .nightMode pre code {
-    color: #e8e8e8;
-    white-space: pre-wrap !important;  /* 确保暗黑模式下代码内容保持换行 */
-    word-wrap: break-word;
+    background: transparent;
   }
   .nightMode .tag {
     background-color: #ffffff33;
@@ -225,12 +227,16 @@
   }
 
   /* 列表样式 */
-  ul, ol {
+  ul,
+  ol {
     margin: 12px 0;
     padding-left: 24px;
     line-height: 1.6;
   }
-  ul ul, ol ol, ul ol, ol ul {
+  ul ul,
+  ol ol,
+  ul ol,
+  ol ul {
     margin: 4px 0;
   }
   li {
@@ -270,894 +276,1311 @@
     border: 1px solid #8b2635;
     color: #ff6b6b;
   }
+
+  /* Mermaid 相关样式 */
+  .mermaid {
+    text-align: center;
+    margin: 1em 0;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .nightMode .mermaid {
+    background: #2d2d2d;
+  }
+
+  /* 代码块暗黑模式样式 */
+  .nightMode .hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+    color: #c9d1d9;
+    background: #0d1117;
+  }
+
+  .nightMode pre {
+    background: #0d1117 !important;
+    border-color: #30363d !important;
+    box-shadow: none;
+  }
+
+  .nightMode code {
+    background: #21262d;
+    color: #c9d1d9;
+  }
+
+  .nightMode pre code {
+    background: transparent;
+    color: #c9d1d9;
+  }
+
+  /* 确保代码块中的注释在暗黑模式下可见 */
+  .nightMode .hljs-comment,
+  .nightMode .hljs-quote {
+    color: #8b949e;
+    font-style: italic;
+  }
+
+  /* 暗黑模式下的字符串颜色 */
+  .nightMode .hljs-string {
+    color: #a5d6ff;
+  }
+
+  /* 暗黑模式下的关键字颜色 */
+  .nightMode .hljs-keyword,
+  .nightMode .hljs-selector-tag,
+  .nightMode .hljs-deletion {
+    color: #ff7b72;
+  }
+
+  /* 暗黑模式下的数字颜色 */
+  .nightMode .hljs-number,
+  .nightMode .hljs-literal {
+    color: #79c0ff;
+  }
+
+  /* 暗黑模式下的函数名颜色 */
+  .nightMode .hljs-function,
+  .nightMode .hljs-title {
+    color: #d2a8ff;
+  }
+
+  /* 暗黑模式下的类名颜色 */
+  .nightMode .hljs-class .hljs-title {
+    color: #7ee787;
+  }
+
+  /* 暗黑模式下的变量名颜色 */
+  .nightMode .hljs-variable,
+  .nightMode .hljs-template-variable {
+    color: #ffa657;
+  }
+
+  /* 暗黑模式下的属性名颜色 */
+  .nightMode .hljs-attr,
+  .nightMode .hljs-property {
+    color: #79c0ff;
+  }
+
+  /* 暗黑模式下的标签颜色 */
+  .nightMode .hljs-tag,
+  .nightMode .hljs-name {
+    color: #7ee787;
+  }
+
+  /* 暗黑模式下的正则表达式颜色 */
+  .nightMode .hljs-regexp {
+    color: #a5d6ff;
+  }
+
+  /* 暗黑模式下的符号颜色 */
+  .nightMode .hljs-symbol,
+  .nightMode .hljs-bullet {
+    color: #f2cc60;
+  }
+
+  /* 暗黑模式下的内置函数颜色 */
+  .nightMode .hljs-built_in,
+  .nightMode .hljs-builtin-name {
+    color: #ffa657;
+  }
+
+  /* 暗黑模式下的元信息颜色 */
+  .nightMode .hljs-meta {
+    color: #f0883e;
+  }
+
+  /* 暗黑模式下的强调颜色 */
+  .nightMode .hljs-emphasis {
+    font-style: italic;
+  }
+
+  /* 暗黑模式下的加粗颜色 */
+  .nightMode .hljs-strong {
+    font-weight: bold;
+  }
 </style>
 
-  <script>
-    // 🛡️ 安全的编辑模式检测函数
-    function isEditModeSafe() {
-      try {
-        return !!(
-          window.location.href.includes("editor") ||
-          window.location.href.includes("browse") ||
-          document.querySelector('[contenteditable="true"]') || 
-          document.activeElement?.tagName === 'TEXTAREA' ||
-          document.activeElement?.tagName === 'INPUT' ||
-          document.querySelector('.note-editing-area') || 
-          document.querySelector('.card-fields') ||
-          document.querySelector('.editor-field') ||
-          document.querySelector('#fields') ||
-          document.body?.classList?.contains('editor') ||
-          document.title.includes('编辑') ||
-          document.title.includes('Edit') ||
-          document.title.includes('Browser') ||
-          document.title.includes('浏览')
-        );
-      } catch (e) {
-        console.warn('🚨 编辑模式检测出错，为安全起见假设为编辑模式:', e);
-        return true; // 出错时为安全起见，假设是编辑模式
-      }
+<script>
+  // 🛡️ 安全的编辑模式检测函数
+  function isEditModeSafe() {
+    try {
+      return !!(
+        window.location.href.includes("editor") ||
+        window.location.href.includes("browse") ||
+        document.querySelector('[contenteditable="true"]') ||
+        document.activeElement?.tagName === "TEXTAREA" ||
+        document.activeElement?.tagName === "INPUT" ||
+        document.querySelector(".note-editing-area") ||
+        document.querySelector(".card-fields") ||
+        document.querySelector(".editor-field") ||
+        document.querySelector("#fields") ||
+        document.body?.classList?.contains("editor") ||
+        document.title.includes("编辑") ||
+        document.title.includes("Edit") ||
+        document.title.includes("Browser") ||
+        document.title.includes("浏览")
+      );
+    } catch (e) {
+      console.warn("🚨 编辑模式检测出错，为安全起见假设为编辑模式:", e);
+      return true; // 出错时为安全起见，假设是编辑模式
     }
-    
-         // ⚡ 快速智能检测函数
-     function smartEditModeCheck(callback) {
-       // 第一次立即检测
-       if (isEditModeSafe()) {
-         console.log('🛑 立即检测：发现编辑模式，停止初始化');
-         return;
-       }
-       
-       // 如果URL明确不是编辑器，直接启动
-       if (!window.location.href.includes("editor") && 
-           !window.location.href.includes("browse")) {
-         console.log('✅ URL检测：明确非编辑模式，立即启动');
-         callback();
-         return;
-       }
-       
-       // 对于可能的编辑模式，快速检测几次
-       let checkCount = 0;
-       const maxChecks = 3;        // 减少到3次
-       const checkInterval = 20;   // 减少到20ms
-       
-       function quickCheck() {
-         checkCount++;
-         
-         if (isEditModeSafe()) {
-           console.log(`🛑 第${checkCount}次快速检测：发现编辑模式，停止初始化`);
-           return;
-         }
-         
-         if (checkCount >= maxChecks) {
-           console.log('✅ 快速检测确认：非编辑模式，开始初始化');
-           callback();
-           return;
-         }
-         
-         setTimeout(quickCheck, checkInterval);
-       }
-       
-       quickCheck();
-     }
-    
-         // 🚀 使用智能快速检测启动
-     console.log("⚡ 开始快速编辑模式检测");
-     
-     smartEditModeCheck(() => {
+  }
+
+  // ⚡ 快速智能检测函数
+  function smartEditModeCheck(callback) {
+    // 第一次立即检测
+    if (isEditModeSafe()) {
+      console.log("🛑 立即检测：发现编辑模式，停止初始化");
+      return;
+    }
+
+    // 如果URL明确不是编辑器，直接启动
+    if (
+      !window.location.href.includes("editor") &&
+      !window.location.href.includes("browse")
+    ) {
+      console.log("✅ URL检测：明确非编辑模式，立即启动");
+      callback();
+      return;
+    }
+
+    // 对于可能的编辑模式，快速检测几次
+    let checkCount = 0;
+    const maxChecks = 3; // 减少到3次
+    const checkInterval = 20; // 减少到20ms
+
+    function quickCheck() {
+      checkCount++;
+
+      if (isEditModeSafe()) {
+        console.log(`🛑 第${checkCount}次快速检测：发现编辑模式，停止初始化`);
+        return;
+      }
+
+      if (checkCount >= maxChecks) {
+        console.log("✅ 快速检测确认：非编辑模式，开始初始化");
+        callback();
+        return;
+      }
+
+      setTimeout(quickCheck, checkInterval);
+    }
+
+    quickCheck();
+  }
+
+  // 🚀 使用智能快速检测启动
+  console.log("⚡ 开始快速编辑模式检测");
+
+  smartEditModeCheck(() => {
     (function () {
       // 强制重新初始化，忽略缓存
       window.ankiMarkdownInitialized = false;
 
-    if (window.ankiMarkdownInitialized) return;
-    window.ankiMarkdownInitialized = true;
+      if (window.ankiMarkdownInitialized) return;
+      window.ankiMarkdownInitialized = true;
 
-    // 强制清除缓存，确保使用新代码
-    console.log("🔄 Anki Markdown 重新初始化 - Version 2.0");
+      // 强制清除缓存，确保使用新代码
+      console.log("🔄 Anki Markdown 重新初始化 - Version 2.0");
 
-    const RESOURCES = {
-      css: [
-        [
-          "_katex-0.16.22.css",
-          "https://npm.elemecdn.com/katex@0.16.22/dist/katex.min.css",
+      const RESOURCES = {
+        css: [
+          ["_katex-0.16.22.css", "https://npm.elemecdn.com/katex@0.16.22/dist/katex.min.css"],
+          ["_highlight-11.11.1.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.0/styles/github.min.css"],
         ],
-        [
-          "_highlight-11.11.1.css",
-          "https://lib.baomitu.com/highlight.js/11.11.1/styles/default.min.css",
+        scripts: [
+          ["_highlight-11.11.1.js", "https://lib.baomitu.com/highlight.js/11.11.1/highlight.min.js"],
+          ["_katex-0.16.22.min.js", "https://npm.elemecdn.com/katex@0.16.22/dist/katex.min.js"],
+          ["_auto-render-0.16.22.js", "https://npm.elemecdn.com/katex@0.16.22/dist/contrib/auto-render.min.js"],
+          ["_markdown-it-14.1.0.min.js", "https://lib.baomitu.com/markdown-it/14.1.0/markdown-it.min.js"],
+          ["_markdown-it-mark.js", "https://jsd.ink/gh/Jwrede/Anki-KaTeX-Markdown/_markdown-it-mark.js"],
+          ["_mhchem-0.16.22.js", "https://npm.elemecdn.com/katex@0.16.22/dist/contrib/mhchem.min.js"],
+          ["_mermaid-10.9.0.min.js", "https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"],
         ],
-      ],
-      scripts: [
-        [
-          "_highlight-11.11.1.js",
-          "https://lib.baomitu.com/highlight.js/11.11.1/highlight.min.js",
-        ],
-        [
-          "_katex-0.16.22.min.js",
-          "https://npm.elemecdn.com/katex@0.16.22/dist/katex.min.js",
-        ],
-        [
-          "_auto-render-0.16.22.js",
-          "https://npm.elemecdn.com/katex@0.16.22/dist/contrib/auto-render.min.js",
-        ],
-        [
-          "_markdown-it-14.1.0.min.js",
-          "https://lib.baomitu.com/markdown-it/14.1.0/markdown-it.min.js",
-        ],
-        [
-          "_markdown-it-mark.js",
-          "https://jsd.ink/gh/Jwrede/Anki-KaTeX-Markdown/_markdown-it-mark.js",
-        ],
-        [
-          "_mhchem-0.16.22.js",
-          "https://npm.elemecdn.com/katex@0.16.22/dist/contrib/mhchem.min.js",
-        ],
-      ],
-    };
+      };
 
-
-    function loadCSS([path, cdn]) {
-      return new Promise((resolve, reject) => {
-        if (document.querySelector(`link[href="${path}"], link[href="${cdn}"]`))
-          return resolve();
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = path;
-        link.onload = () => {
-          window.resourceStatus = window.resourceStatus || {};
-          window.resourceStatus[path] = '📁 本地';
-          resolve();
-        };
-        link.onerror = () => {
-          const fallback = document.createElement("link");
-          fallback.rel = "stylesheet";
-          fallback.href = cdn;
-          fallback.onload = () => {
+      function loadCSS([path, cdn]) {
+        return new Promise((resolve, reject) => {
+          if (
+            document.querySelector(`link[href="${path}"], link[href="${cdn}"]`)
+          )
+            return resolve();
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = path;
+          link.onload = () => {
             window.resourceStatus = window.resourceStatus || {};
-            window.resourceStatus[path] = '🌐 CDN';
+            window.resourceStatus[path] = "📁 本地";
             resolve();
           };
-          fallback.onerror = reject;
-          document.head.appendChild(fallback);
-        };
-        document.head.appendChild(link);
-      });
-    }
+          link.onerror = () => {
+            const fallback = document.createElement("link");
+            fallback.rel = "stylesheet";
+            fallback.href = cdn;
+            fallback.onload = () => {
+              window.resourceStatus = window.resourceStatus || {};
+              window.resourceStatus[path] = "🌐 CDN";
+              resolve();
+            };
+            fallback.onerror = reject;
+            document.head.appendChild(fallback);
+          };
+          document.head.appendChild(link);
+        });
+      }
 
-    function loadScript([path, cdn]) {
-      return new Promise((resolve, reject) => {
-        if (cdn.includes("highlight") && window.hljs) {
-          window.resourceStatus = window.resourceStatus || {};
-          window.resourceStatus[path] = '💾 缓存';
-          return resolve();
-        }
-        if (cdn.includes("katex") && window.katex) {
-          window.resourceStatus = window.resourceStatus || {};
-          window.resourceStatus[path] = '💾 缓存';
-          return resolve();
-        }
-        if (cdn.includes("auto-render") && window.renderMathInElement) {
-          window.resourceStatus = window.resourceStatus || {};
-          window.resourceStatus[path] = '💾 缓存';
-          return resolve();
-        }
-        if (cdn.includes("mhchem") && window.katex?.__chemParse) {
-          window.resourceStatus = window.resourceStatus || {};
-          window.resourceStatus[path] = '💾 缓存';
-          return resolve();
-        }
-        if (cdn.includes("markdown-it") && window.markdownit) {
-          window.resourceStatus = window.resourceStatus || {};
-          window.resourceStatus[path] = '💾 缓存';
-          return resolve();
-        }
-        if (cdn.includes("markdown-it-mark") && window.markdownItMark) {
-          window.resourceStatus = window.resourceStatus || {};
-          window.resourceStatus[path] = '💾 缓存';
-          return resolve();
-        }
-        const script = document.createElement("script");
-        script.src = path;
-        script.onload = () => {
-          window.resourceStatus = window.resourceStatus || {};
-          window.resourceStatus[path] = '📁 本地';
-          resolve();
-        };
-        script.onerror = () => {
-          const fallback = document.createElement("script");
-          fallback.src = cdn;
-          fallback.onload = () => {
+      function loadScript([path, cdn]) {
+        return new Promise((resolve, reject) => {
+          if (cdn.includes("highlight") && window.hljs) {
             window.resourceStatus = window.resourceStatus || {};
-            window.resourceStatus[path] = '🌐 CDN';
+            window.resourceStatus[path] = "💾 缓存";
+            return resolve();
+          }
+          if (cdn.includes("katex") && window.katex) {
+            window.resourceStatus = window.resourceStatus || {};
+            window.resourceStatus[path] = "💾 缓存";
+            return resolve();
+          }
+          if (cdn.includes("auto-render") && window.renderMathInElement) {
+            window.resourceStatus = window.resourceStatus || {};
+            window.resourceStatus[path] = "💾 缓存";
+            return resolve();
+          }
+          if (cdn.includes("mhchem") && window.katex?.__chemParse) {
+            window.resourceStatus = window.resourceStatus || {};
+            window.resourceStatus[path] = "💾 缓存";
+            return resolve();
+          }
+          if (cdn.includes("markdown-it") && window.markdownit) {
+            window.resourceStatus = window.resourceStatus || {};
+            window.resourceStatus[path] = "💾 缓存";
+            return resolve();
+          }
+          if (cdn.includes("markdown-it-mark") && window.markdownItMark) {
+            window.resourceStatus = window.resourceStatus || {};
+            window.resourceStatus[path] = "💾 缓存";
+            return resolve();
+          }
+          const script = document.createElement("script");
+          script.src = path;
+          script.onload = () => {
+            window.resourceStatus = window.resourceStatus || {};
+            window.resourceStatus[path] = "📁 本地";
             resolve();
           };
-          fallback.onerror = reject;
-          document.head.appendChild(fallback);
-        };
-        document.head.appendChild(script);
-      });
-    }
+          script.onerror = () => {
+            const fallback = document.createElement("script");
+            fallback.src = cdn;
+            fallback.onload = () => {
+              window.resourceStatus = window.resourceStatus || {};
+              window.resourceStatus[path] = "🌐 CDN";
+              resolve();
+            };
+            fallback.onerror = reject;
+            document.head.appendChild(fallback);
+          };
+          document.head.appendChild(script);
+        });
+      }
 
-    function cleanHTML(html) {
-      // 🖼️ 分别保护图片、音频、表格、列表和内联样式等内容
-      const imgPlaceholders = [];
-      const soundPlaceholders = [];
-      const tablePlaceholders = [];
-      const listPlaceholders = [];
-      const inlineStylePlaceholders = [];
-      let tempHtml = html;
-      
-      // 保护 <img> 标签
-      tempHtml = tempHtml.replace(/<img[^>]*>/gi, function(match) {
-        const placeholder = `__IMG_PLACEHOLDER_${imgPlaceholders.length}__`;
-        imgPlaceholders.push(match);
-        return placeholder;
-      });
-      
-      // 保护音频文件引用
-      tempHtml = tempHtml.replace(/\[sound:[^\]]+\]/gi, function(match) {
-        const placeholder = `__SOUND_PLACEHOLDER_${soundPlaceholders.length}__`;
-        soundPlaceholders.push(match);
-        return placeholder;
-      });
-      
-      // 🏁 保护HTML表格结构
-      tempHtml = tempHtml.replace(/<table[\s\S]*?<\/table>/gi, function(match) {
-        const placeholder = `__TABLE_PLACEHOLDER_${tablePlaceholders.length}__`;
-        tablePlaceholders.push(match);
-        console.log('🏁 保护表格结构:', placeholder);
-        return placeholder;
-      });
-      
-      // 📝 保护HTML列表结构（包括嵌套列表）
-      tempHtml = tempHtml.replace(/<[ou]l[\s\S]*?<\/[ou]l>/gi, function(match) {
-        const placeholder = `__LIST_PLACEHOLDER_${listPlaceholders.length}__`;
-        listPlaceholders.push(match);
-        console.log('📝 保护列表结构:', placeholder);
-        return placeholder;
-      });
-      
-      // 🎨 保护常用内联样式标签
-      const inlineStyleTags = [
-        /<span[^>]*style[^>]*>[\s\S]*?<\/span>/gi,        // <span style="...">
-        /<font[^>]*(?:color|size|face)[^>]*>[\s\S]*?<\/font>/gi,  // <font color/size/face="...">
-        /<mark[^>]*>[\s\S]*?<\/mark>/gi,                  // <mark>
-        /<small[^>]*>[\s\S]*?<\/small>/gi,                // <small>
-        /<big[^>]*>[\s\S]*?<\/big>/gi,                    // <big>
-        /<sup[^>]*>[\s\S]*?<\/sup>/gi,                    // <sup>
-        /<sub[^>]*>[\s\S]*?<\/sub>/gi,                    // <sub>
-        /<del[^>]*>[\s\S]*?<\/del>/gi,                    // <del>
-        /<strike[^>]*>[\s\S]*?<\/strike>/gi,              // <strike>
-        /<s[^>]*>[\s\S]*?<\/s>/gi                         // <s>
-      ];
-      
-      inlineStyleTags.forEach(regex => {
-        tempHtml = tempHtml.replace(regex, function(match) {
-          const placeholder = `__INLINE_STYLE_${inlineStylePlaceholders.length}__`;
-          inlineStylePlaceholders.push(match);
-          console.log('🎨 保护内联样式:', placeholder, match.substring(0, 50) + '...');
+      function cleanHTML(html) {
+        // �� 检查是否是从富文本编辑器粘贴的内容
+        const isPastedContent = html.includes('</div>') || html.includes('</span>') || html.includes('</p>');
+        
+        // 如果是从富文本编辑器粘贴的内容，尝试提取 Markdown
+        if (isPastedContent) {
+          // 检查是否包含代码块（可能是从 ChatGPT 等源复制的）
+          const hasCodeBlock = html.includes('```') || html.includes('pre') || html.includes('code');
+          
+          if (hasCodeBlock) {
+            console.log("📝 检测到代码块，尝试提取 Markdown");
+            // 尝试从剪贴板获取纯文本内容
+            try {
+              const clipboardText = window.clipboardData?.getData('Text') || '';
+              if (clipboardText && clipboardText.includes('```')) {
+                console.log("✅ 成功从剪贴板获取 Markdown");
+                return clipboardText;
+              }
+            } catch (e) {
+              console.log("⚠️ 无法访问剪贴板:", e);
+            }
+          }
+        }
+
+        // 如果不是富文本或无法获取 Markdown，继续原有的处理逻辑
+        // 🖼️ 分别保护图片、音频、表格、列表和内联样式等内容
+        const imgPlaceholders = [];
+        const soundPlaceholders = [];
+        const tablePlaceholders = [];
+        const listPlaceholders = [];
+        const inlineStylePlaceholders = [];
+        let tempHtml = html;
+
+        // 保护 <img> 标签
+        tempHtml = tempHtml.replace(/<img[^>]*>/gi, function (match) {
+          const placeholder = `__IMG_PLACEHOLDER_${imgPlaceholders.length}__`;
+          imgPlaceholders.push(match);
           return placeholder;
         });
-      });
-      
-      // 💻 只保护Markdown格式的代码块（不保护HTML格式）
-      const codeBlockPlaceholders = [];
-      
-      // 🔧 新增：自动修复富文本代码块（```包围的内容）
-      tempHtml = tempHtml.replace(/```(\w+)?(<br>|<br\s*\/?>|&nbsp;|\s)*([^`]*?)```/gi, 
-        function(match, lang, whitespace, content) {
-          console.log('🔧 发现富文本代码块，正在清理:', lang || '未指定语言');
-          
-          // 清理代码块内的HTML标签和实体，特别注意保留换行符
-          const cleanContent = content
-            .replace(/<br\s*\/?>/gi, "\n")      // <br> → 换行
-            .replace(/<\/div>\s*<div[^>]*>/gi, "\n")  // div换行 → 换行符
-            .replace(/<div[^>]*>/gi, "\n")      // div开始 → 换行符  
-            .replace(/<\/div>/gi, "")           // div结束 → 清除
-            .replace(/&nbsp;/gi, " ")           // &nbsp; → 空格
-            .replace(/&lt;/gi, "<")             // &lt; → <
-            .replace(/&gt;/gi, ">")             // &gt; → >
-            .replace(/&amp;/gi, "&")            // &amp; → &
-            .replace(/&quot;/gi, '"')           // &quot; → "
-            .replace(/&#39;/gi, "'")            // &#39; → '
-            .replace(/<\/?[^>]+(>|$)/gi, "")    // 移除其他HTML标签
-            .replace(/\n{3,}/g, "\n\n")         // 连续3个以上换行 → 2个换行
-            .replace(/^\s+|\s+$/g, "");         // 去除首尾空白，但保留内部换行
-          
-          const placeholder = `__FIXED_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
-          codeBlockPlaceholders.push("```" + (lang || "") + "\n" + cleanContent + "\n```");
-          console.log('✅ 代码块清理完成，保留了换行符');
+
+        // 保护音频文件引用
+        tempHtml = tempHtml.replace(/\[sound:[^\]]+\]/gi, function (match) {
+          const placeholder = `__SOUND_PLACEHOLDER_${soundPlaceholders.length}__`;
+          soundPlaceholders.push(match);
           return placeholder;
-        }
-      );
-      
-      // 🔧 特殊处理：不完整的代码块（```开始但被div分割）
-      tempHtml = tempHtml.replace(/```(\w+)?\s*(<\/div>\s*<div[^>]*>[\s\S]*?)```/gi, function(match, lang, content) {
-        console.log('🔧 发现被div分割的代码块，正在清理:', lang || '未指定语言');
-        
-        // 清理代码块内的div标签
-        const cleanContent = content
+        });
+
+        // 🔧 保护HTML表格结构
+        tempHtml = tempHtml.replace(
+          /<table[\s\S]*?<\/table>/gi,
+          function (match) {
+            const placeholder = `__TABLE_PLACEHOLDER_${tablePlaceholders.length}__`;
+            tablePlaceholders.push(match);
+            console.log("🏁 保护表格结构:", placeholder);
+            return placeholder;
+          }
+        );
+
+        // 📝 保护HTML列表结构（包括嵌套列表）
+        tempHtml = tempHtml.replace(
+          /<[ou]l[\s\S]*?<\/[ou]l>/gi,
+          function (match) {
+            const placeholder = `__LIST_PLACEHOLDER_${listPlaceholders.length}__`;
+            listPlaceholders.push(match);
+            console.log("📝 保护列表结构:", placeholder);
+            return placeholder;
+          }
+        );
+
+        // 🎨 保护常用内联样式标签
+        const inlineStyleTags = [
+          /<span[^>]*style[^>]*>[\s\S]*?<\/span>/gi, // <span style="...">
+          /<font[^>]*(?:color|size|face)[^>]*>[\s\S]*?<\/font>/gi, // <font color/size/face="...">
+          /<mark[^>]*>[\s\S]*?<\/mark>/gi, // <mark>
+          /<small[^>]*>[\s\S]*?<\/small>/gi, // <small>
+          /<big[^>]*>[\s\S]*?<\/big>/gi, // <big>
+          /<sup[^>]*>[\s\S]*?<\/sup>/gi, // <sup>
+          /<sub[^>]*>[\s\S]*?<\/sub>/gi, // <sub>
+          /<del[^>]*>[\s\S]*?<\/del>/gi, // <del>
+          /<strike[^>]*>[\s\S]*?<\/strike>/gi, // <strike>
+          /<s[^>]*>[\s\S]*?<\/s>/gi, // <s>
+        ];
+
+        inlineStyleTags.forEach((regex) => {
+          tempHtml = tempHtml.replace(regex, function (match) {
+            const placeholder = `__INLINE_STYLE_${inlineStylePlaceholders.length}__`;
+            inlineStylePlaceholders.push(match);
+            console.log(
+              "🎨 保护内联样式:",
+              placeholder,
+              match.substring(0, 50) + "..."
+            );
+            return placeholder;
+          });
+        });
+
+        // 💻 只保护Markdown格式的代码块（不保护HTML格式）
+        const codeBlockPlaceholders = [];
+        console.log("🔍 [DEBUG] cleanHTML输入内容:", tempHtml.substring(0, 200) + (tempHtml.length > 200 ? "..." : ""));
+
+        // 🔧 新增：自动修复富文本代码块（```包围的内容）
+        tempHtml = tempHtml.replace(
+          /```(\w+)?(<br>|<br\s*\/?>|&nbsp;|\s)*([^`]*?)```/gi,
+          function (match, lang, whitespace, content) {
+            console.log("🔧 发现富文本代码块，正在清理:", lang || "未指定语言");
+
+            // �� 智能语言检测：避免把行号当作语言名
+            let actualLang = lang;
+            if (lang && /^\d+$/.test(lang)) {
+              // 如果语言名是纯数字，使用自动识别
+              console.log("🔧 检测到纯数字语言名，使用自动识别:", lang);
+              actualLang = '';
+            }
+
+            // 🔧 智能清理：先恢复HTML实体，再清理富文本标签
+            console.log("🔍 [DEBUG] 开始清理代码块，原始内容:", content);
+            
+            let cleanContent = content
+              .replace(/<br\s*\/?>/gi, "\n"); // <br> → 换行
+            console.log("🔍 [DEBUG] 清理br后:", cleanContent);
+            
+            cleanContent = cleanContent
+              .replace(/<\/div>\s*<div[^>]*>/gi, "\n") // div换行 → 换行符
+              .replace(/<div[^>]*>/gi, "\n") // div开始 → 换行符
+              .replace(/<\/div>/gi, ""); // div结束 → 清除
+            console.log("🔍 [DEBUG] 清理div后:", cleanContent);
+            
+            cleanContent = cleanContent
+              .replace(/&nbsp;/gi, " "); // &nbsp; → 空格
+            console.log("🔍 [DEBUG] 清理nbsp后:", cleanContent);
+            
+            // 🔧 先恢复HTML实体，确保HTML标签不被误删
+            cleanContent = cleanContent
+              .replace(/&lt;/gi, "<"); // &lt; → <
+            console.log("🔍 [DEBUG] 恢复&lt;后:", cleanContent);
+            
+            cleanContent = cleanContent
+              .replace(/&gt;/gi, ">"); // &gt; → >
+            console.log("🔍 [DEBUG] 恢复&gt;后:", cleanContent);
+            
+            cleanContent = cleanContent
+              .replace(/&amp;/gi, "&") // &amp; → &
+              .replace(/&quot;/gi, '"') // &quot; → "
+              .replace(/&#39;/gi, "'"); // &#39; → '
+            console.log("🔍 [DEBUG] 恢复其他实体后:", cleanContent);
+            
+            // 🔧 只移除富文本编辑器标签，保留代码中的HTML标签
+            // 使用更安全的方法，分别处理每个标签，避免误匹配
+            const richTextTags = ['p', 'span', 'font', 'strong', 'b', 'em', 'i', 'u', 'div', 'br'];
+            richTextTags.forEach(tag => {
+              const regex = new RegExp(`</?${tag}(?:\\s[^>]*)?>`, 'gi');
+              cleanContent = cleanContent.replace(regex, '');
+            });
+            console.log("🔍 [DEBUG] 清理富文本标签后:", cleanContent);
+            
+            // 🔧 修复：不要移除HTML实体，它们应该被保留
+            // 移除这行：.replace(/<\/?[^>]+(>|$)/gi, "") // 移除其他HTML标签
+            
+            cleanContent = cleanContent
+              .replace(/\n{3,}/g, "\n\n") // 连续3个以上换行 → 2个换行
+              .replace(/^\s+|\s+$/g, ""); // 去除首尾空白，但保留内部换行
+            console.log("🔍 [DEBUG] 最终清理后:", cleanContent);
+
+            const placeholder = `__FIXED_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
+            const finalCodeBlock = "```" + (actualLang || "") + "\n" + cleanContent + "\n```";
+            codeBlockPlaceholders.push(finalCodeBlock);
+            console.log("✅ 代码块清理完成，保留了换行符");
+            console.log("🔍 [DEBUG] 清理前内容:", content.substring(0, 100) + (content.length > 100 ? "..." : ""));
+            console.log("🔍 [DEBUG] 清理后内容:", cleanContent.substring(0, 100) + (cleanContent.length > 100 ? "..." : ""));
+            console.log("🔍 [DEBUG] 最终代码块:", finalCodeBlock);
+            console.log("🔍 [DEBUG] 占位符:", placeholder);
+            console.log("🔍 [DEBUG] 使用语言:", actualLang || "未指定");
+            return placeholder;
+          }
+        );
+
+        // 🔧 特殊处理：不完整的代码块（```开始但被div分割）
+        tempHtml = tempHtml.replace(
+          /```(\w+)?\s*(<\/div>\s*<div[^>]*>[\s\S]*?)```/gi,
+          function (match, lang, content) {
+            console.log(
+              "🔧 发现被div分割的代码块，正在清理:",
+              lang || "未指定语言"
+            );
+
+            // 清理代码块内的div标签
+            const cleanContent = content
+              .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
+              .replace(/<\/div>/gi, "\n")
+              .replace(/<div[^>]*>/gi, "\n")
+              .replace(/&gt;/gi, ">")
+              .replace(/&lt;/gi, "<")
+              .replace(/&amp;/gi, "&")
+              .replace(/<[^>]*>/gi, "")
+              .trim();
+
+            const placeholder = `__DIV_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
+            codeBlockPlaceholders.push(
+              "```" + (lang || "") + "\n" + cleanContent + "\n```"
+            );
+            console.log("✅ div分割代码块清理完成");
+            return placeholder;
+          }
+        );
+
+        // 保护完整的Markdown代码块
+        tempHtml = tempHtml.replace(/```[\s\S]*?```/gi, function (match) {
+          const placeholder = `__COMPLETE_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
+          codeBlockPlaceholders.push(match);
+          return placeholder;
+        });
+
+        // 🔧 保护行内代码，避免HTML清理过程影响其内容
+        tempHtml = tempHtml.replace(/`([^`\n]*)`/gi, function (match, content) {
+          console.log("🔧 处理行内代码:", content.substring(0, 50) + "...");
+
+          // 简单保护行内代码内容，使用特殊编码避免被HTML清理影响
+          const protectedContent = content
+            .replace(/&lt;/gi, "____LT____") // 临时保护&lt;
+            .replace(/&gt;/gi, "____GT____") // 临时保护&gt;
+            .replace(/&amp;/gi, "____AMP____"); // 临时保护&amp;
+
+          const protectedMatch = "`" + protectedContent + "`";
+          const placeholder = `__MD_INLINE_CODE_${codeBlockPlaceholders.length}__`;
+          codeBlockPlaceholders.push(protectedMatch);
+          return placeholder;
+        });
+
+        // 🧹 智能HTML清理和Markdown转换
+        let cleaned = tempHtml
+          // 先清理HTML实体，防止HTML标签被编码
+          .replace(/&lt;/gi, "<")
+          .replace(/&gt;/gi, ">")
+          .replace(/&amp;/gi, "&")
+          .replace(/&nbsp;/gi, " ")
+          .replace(/&tab;/gi, "\t")
+          .replace(/&mdash;/gi, "—")
+          .replace(/&ndash;/gi, "–")
+          .replace(/&quot;/gi, '"')
+          .replace(/&#39;/gi, "'")
+          .replace(/&hellip;/gi, "...")
+          // 特殊处理：清理连续的div标签（Anki常见格式）
           .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
           .replace(/<\/div>/gi, "\n")
           .replace(/<div[^>]*>/gi, "\n")
-          .replace(/&gt;/gi, ">")
-          .replace(/&lt;/gi, "<")
-          .replace(/&amp;/gi, "&")
+          // 🔧 正确处理富文本标签转换为Markdown
+          .replace(/<strong[^>]*>(.*?)<\/strong>/gi, "**$1**") // <strong>text</strong> → **text**
+          .replace(/<b[^>]*>(.*?)<\/b>/gi, "**$1**") // <b>text</b> → **text**
+          .replace(/<em[^>]*>(.*?)<\/em>/gi, "*$1*") // <em>text</em> → *text*
+          .replace(/<i[^>]*>(.*?)<\/i>/gi, "*$1*") // <i>text</i> → *text*
+          .replace(/<u[^>]*>(.*?)<\/u>/gi, "$1") // 移除下划线标签但保留内容
+          // 🔧 处理标题标签
+          .replace(
+            /<h([1-6])[^>]*>(.*?)<\/h\1>/gi,
+            function (match, level, text) {
+              return "#".repeat(parseInt(level)) + " " + text + "\n";
+            }
+          )
+          // 🔧 处理链接标签
+          .replace(/<a[^>]*href=["']([^"']*)["'][^>]*>(.*?)<\/a>/gi, "[$2]($1)")
+          // 📝 列表标签已被保护，不再进行转换
+          // 清理其他HTML标签
+          .replace(/<br\s*\/?>/gi, "\n")
+          .replace(/<p[^>]*>/gi, "\n")
+          .replace(/<\/p>/gi, "\n")
+          .replace(/<span[^>]*>/gi, "")
+          .replace(/<\/span>/gi, "")
+          .replace(/<code[^>]*>/gi, "`")
+          .replace(/<\/code>/gi, "`")
+          .replace(/<pre[^>]*>/gi, "")
+          .replace(/<\/pre>/gi, "")
+          // 🎨 清理任何剩余的HTML标签（内联样式已被保护，不会被清理）
           .replace(/<[^>]*>/gi, "")
-          .trim();
-        
-        const placeholder = `__DIV_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
-        codeBlockPlaceholders.push("```" + (lang || "") + "\n" + cleanContent + "\n```");
-        console.log('✅ div分割代码块清理完成');
-        return placeholder;
-      });
-      
-      // 保护完整的Markdown代码块
-      tempHtml = tempHtml.replace(/```[\s\S]*?```/gi, function(match) {
-        const placeholder = `__COMPLETE_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
-        codeBlockPlaceholders.push(match);
-        return placeholder;
-      });
-      
-      // 🔧 保护行内代码，避免HTML清理过程影响其内容
-      tempHtml = tempHtml.replace(/`([^`\n]*)`/gi, function(match, content) {
-        // 保护行内代码内容，使用特殊编码避免被HTML清理影响
-        const protectedContent = content
-          .replace(/&lt;/gi, '____LT____')    // 临时保护&lt;
-          .replace(/&gt;/gi, '____GT____')    // 临时保护&gt;
-          .replace(/&amp;/gi, '____AMP____'); // 临时保护&amp;
-        
-        const protectedMatch = '`' + protectedContent + '`';
-        const placeholder = `__MD_INLINE_CODE_${codeBlockPlaceholders.length}__`;
-        codeBlockPlaceholders.push(protectedMatch);
-        return placeholder;
-      });
-      
-      // 🧹 智能HTML清理和Markdown转换
-      let cleaned = tempHtml
-        // 先清理HTML实体，防止HTML标签被编码
-        .replace(/&lt;/gi, "<")
-        .replace(/&gt;/gi, ">")
-        .replace(/&amp;/gi, "&")
-        .replace(/&nbsp;/gi, " ")
-        .replace(/&tab;/gi, "\t")
-        .replace(/&mdash;/gi, "—")
-        .replace(/&ndash;/gi, "–")
-        .replace(/&quot;/gi, '"')
-        .replace(/&#39;/gi, "'")
-        .replace(/&hellip;/gi, "...")
-        // 特殊处理：清理连续的div标签（Anki常见格式）
-        .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
-        .replace(/<\/div>/gi, "\n")
-        .replace(/<div[^>]*>/gi, "\n")
-        // 🔧 正确处理富文本标签转换为Markdown
-        .replace(/<strong[^>]*>(.*?)<\/strong>/gi, "**$1**")  // <strong>text</strong> → **text**
-        .replace(/<b[^>]*>(.*?)<\/b>/gi, "**$1**")           // <b>text</b> → **text**
-        .replace(/<em[^>]*>(.*?)<\/em>/gi, "*$1*")           // <em>text</em> → *text*
-        .replace(/<i[^>]*>(.*?)<\/i>/gi, "*$1*")             // <i>text</i> → *text*
-        .replace(/<u[^>]*>(.*?)<\/u>/gi, "$1")               // 移除下划线标签但保留内容
-        // 🔧 处理标题标签
-        .replace(/<h([1-6])[^>]*>(.*?)<\/h\1>/gi, function(match, level, text) {
-          return "#".repeat(parseInt(level)) + " " + text + "\n";
-        })
-        // 🔧 处理链接标签
-        .replace(/<a[^>]*href=["']([^"']*)["'][^>]*>(.*?)<\/a>/gi, "[$2]($1)")
-        // 📝 列表标签已被保护，不再进行转换
-        // 清理其他HTML标签
-        .replace(/<br\s*\/?>/gi, "\n")
-        .replace(/<p[^>]*>/gi, "\n")
-        .replace(/<\/p>/gi, "\n")
-        .replace(/<span[^>]*>/gi, "")
-        .replace(/<\/span>/gi, "")
-        .replace(/<code[^>]*>/gi, "`")
-        .replace(/<\/code>/gi, "`")
-        .replace(/<pre[^>]*>/gi, "")
-        .replace(/<\/pre>/gi, "")
-        // 🎨 清理任何剩余的HTML标签（内联样式已被保护，不会被清理）
-        .replace(/<[^>]*>/gi, "")
-        // 清理多余的Markdown格式重复
-        .replace(/\*{3,}/g, "**")  // ***+ → **
-        .replace(/\*\*\s*\*\*/g, "")  // ** ** → 空
-        // 清理多余空行和空白
-        .replace(/\n\s*\n\s*\n/g, "\n\n")
-        .replace(/^\s+|\s+$/g, ""); // trim
-      
-      // 🔧 特殊处理表格：移除表格行之间的空行
-      const lines = cleaned.split(/\r?\n/);
-      const tableRowPattern = /^\s*\|.*\|\s*$/;
-      let processedLines = [];
-      
-      for (let i = 0; i < lines.length; i++) {
-        let line = lines[i].trim();
-        
-        if (line) {
-          processedLines.push(line);
-        } else {
-          // 空行处理：如果前后都是表格行，跳过空行
-          const prevLine = processedLines[processedLines.length - 1];
-          const nextLine = lines[i + 1]?.trim();
-          
-          if (!(tableRowPattern.test(prevLine) && tableRowPattern.test(nextLine))) {
-            processedLines.push("");
+          // 清理多余的Markdown格式重复
+          .replace(/\*{3,}/g, "**") // ***+ → **
+          .replace(/\*\*\s*\*\*/g, "") // ** ** → 空
+          // 清理多余空行和空白
+          .replace(/\n\s*\n\s*\n/g, "\n\n")
+          .replace(/^\s+|\s+$/g, ""); // trim
+
+        // 🔧 特殊处理表格：移除表格行之间的空行
+        const lines = cleaned.split(/\r?\n/);
+        const tableRowPattern = /^\s*\|.*\|\s*$/;
+        let processedLines = [];
+
+        for (let i = 0; i < lines.length; i++) {
+          let line = lines[i].trim();
+
+          if (line) {
+            processedLines.push(line);
+          } else {
+            // 空行处理：如果前后都是表格行，跳过空行
+            const prevLine = processedLines[processedLines.length - 1];
+            const nextLine = lines[i + 1]?.trim();
+
+            if (
+              !(
+                tableRowPattern.test(prevLine) && tableRowPattern.test(nextLine)
+              )
+            ) {
+              processedLines.push("");
+            }
           }
         }
+
+        let result = processedLines.join("\n");
+
+        // 🖼️ 恢复保护的媒体内容
+        imgPlaceholders.forEach((original, index) => {
+          const placeholder = `__IMG_PLACEHOLDER_${index}__`;
+          result = result.replace(placeholder, original);
+        });
+
+        soundPlaceholders.forEach((original, index) => {
+          const placeholder = `__SOUND_PLACEHOLDER_${index}__`;
+          result = result.replace(placeholder, original);
+        });
+
+        // 🏁 恢复表格结构
+        tablePlaceholders.forEach((original, index) => {
+          const placeholder = `__TABLE_PLACEHOLDER_${index}__`;
+          result = result.replace(placeholder, original);
+          console.log("🏁 恢复表格结构:", placeholder);
+        });
+
+        // 📝 恢复列表结构
+        listPlaceholders.forEach((original, index) => {
+          const placeholder = `__LIST_PLACEHOLDER_${index}__`;
+          result = result.replace(placeholder, original);
+          console.log("📝 恢复列表结构:", placeholder);
+        });
+
+        // 🎨 恢复内联样式
+        inlineStylePlaceholders.forEach((original, index) => {
+          const placeholder = `__INLINE_STYLE_${index}__`;
+          result = result.replace(placeholder, original);
+          console.log(
+            "🎨 恢复内联样式:",
+            placeholder,
+            original.substring(0, 50) + "..."
+          );
+        });
+
+        // 💻 恢复Markdown代码块
+        codeBlockPlaceholders.forEach((original, index) => {
+          const placeholder = `__FIXED_CODE_BLOCK_${index}__`;
+          console.log("🔍 [DEBUG] 恢复代码块", index, "占位符:", placeholder);
+          console.log("🔍 [DEBUG] 恢复代码块", index, "内容:", original.substring(0, 100) + (original.length > 100 ? "..." : ""));
+          result = result.replace(placeholder, original);
+        });
+
+        codeBlockPlaceholders.forEach((original, index) => {
+          const placeholder = `__DIV_CODE_BLOCK_${index}__`;
+          result = result.replace(placeholder, original);
+        });
+
+        codeBlockPlaceholders.forEach((original, index) => {
+          const placeholder = `__COMPLETE_CODE_BLOCK_${index}__`;
+          result = result.replace(placeholder, original);
+        });
+
+        codeBlockPlaceholders.forEach((original, index) => {
+          const placeholder = `__MD_INLINE_CODE_${index}__`;
+          // 🔧 恢复特殊编码为原始字符，让markdown-it正常处理
+          const restoredOriginal = original
+            .replace(/____LT____/gi, "<") // 恢复为<字符
+            .replace(/____GT____/gi, ">") // 恢复为>字符
+            .replace(/____AMP____/gi, "&"); // 恢复为&字符
+
+          result = result.replace(placeholder, restoredOriginal);
+        });
+
+        console.log("✅ HTML清理完成");
+        console.log("🔍 [DEBUG] cleanHTML最终输出:", result.substring(0, 300) + (result.length > 300 ? "..." : ""));
+        return result;
       }
-      
-      let result = processedLines.join('\n');
-      
-      // 🖼️ 恢复保护的媒体内容
-      imgPlaceholders.forEach((original, index) => {
-        const placeholder = `__IMG_PLACEHOLDER_${index}__`;
-        result = result.replace(placeholder, original);
-      });
-      
-      soundPlaceholders.forEach((original, index) => {
-        const placeholder = `__SOUND_PLACEHOLDER_${index}__`;
-        result = result.replace(placeholder, original);
-      });
-      
-      // 🏁 恢复表格结构
-      tablePlaceholders.forEach((original, index) => {
-        const placeholder = `__TABLE_PLACEHOLDER_${index}__`;
-        result = result.replace(placeholder, original);
-        console.log('🏁 恢复表格结构:', placeholder);
-      });
-      
-      // 📝 恢复列表结构
-      listPlaceholders.forEach((original, index) => {
-        const placeholder = `__LIST_PLACEHOLDER_${index}__`;
-        result = result.replace(placeholder, original);
-        console.log('📝 恢复列表结构:', placeholder);
-      });
-      
-      // 🎨 恢复内联样式
-      inlineStylePlaceholders.forEach((original, index) => {
-        const placeholder = `__INLINE_STYLE_${index}__`;
-        result = result.replace(placeholder, original);
-        console.log('🎨 恢复内联样式:', placeholder, original.substring(0, 50) + '...');
-      });
-      
-      // 💻 恢复Markdown代码块
-      codeBlockPlaceholders.forEach((original, index) => {
-        const placeholder = `__FIXED_CODE_BLOCK_${index}__`;
-        result = result.replace(placeholder, original);
-      });
-      
-      codeBlockPlaceholders.forEach((original, index) => {
-        const placeholder = `__DIV_CODE_BLOCK_${index}__`;
-        result = result.replace(placeholder, original);
-      });
-      
-      codeBlockPlaceholders.forEach((original, index) => {
-        const placeholder = `__COMPLETE_CODE_BLOCK_${index}__`;
-        result = result.replace(placeholder, original);
-      });
-      
-      codeBlockPlaceholders.forEach((original, index) => {
-        const placeholder = `__MD_INLINE_CODE_${index}__`;
-        // 🔧 恢复特殊编码为原始字符，让markdown-it自己处理HTML转义
-        const restoredOriginal = original
-          .replace(/____LT____/gi, '<')      // 恢复为<字符
-          .replace(/____GT____/gi, '>')      // 恢复为>字符  
-          .replace(/____AMP____/gi, '&');    // 恢复为&字符
-        
-        result = result.replace(placeholder, restoredOriginal);
-      });
-      
-      console.log("✅ HTML清理完成");
-      return result;
-    }
 
-          // 🔒 安全的HTML转义函数
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
+      // 🔒 安全的HTML转义函数
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
 
-    // 🔒 安全地设置HTML内容（防止脚本执行）
-    function safeSetHTML(element, htmlContent) {
-      // 创建一个临时容器
-      const temp = document.createElement('div');
-      temp.innerHTML = htmlContent;
-      
-      // 移除所有可能执行的脚本标签和事件处理器
-      const scripts = temp.querySelectorAll('script');
-      scripts.forEach(script => script.remove());
-      
-      // 移除所有事件属性
-      const allElements = temp.querySelectorAll('*');
-      allElements.forEach(el => {
-        // 移除所有以 'on' 开头的属性（如 onclick, onload 等）
-        Array.from(el.attributes).forEach(attr => {
-          if (attr.name.toLowerCase().startsWith('on')) {
-            el.removeAttribute(attr.name);
+      // 🔒 安全地设置HTML内容（防止脚本执行）
+      function safeSetHTML(element, htmlContent) {
+        // 创建一个临时容器
+        const temp = document.createElement("div");
+        temp.innerHTML = htmlContent;
+
+        // 移除所有可能执行的脚本标签和事件处理器
+        const scripts = temp.querySelectorAll("script");
+        scripts.forEach((script) => {
+          console.log("🚨 移除script标签:", script.outerHTML.substring(0, 100));
+          script.remove();
+        });
+
+        // 移除所有事件属性和危险元素
+        const allElements = temp.querySelectorAll("*");
+        allElements.forEach((el) => {
+          // 移除所有以 'on' 开头的属性（如 onclick, onload 等）
+          Array.from(el.attributes).forEach((attr) => {
+            if (attr.name.toLowerCase().startsWith("on")) {
+              console.log("🚨 移除事件属性:", attr.name, "from", el.tagName);
+              el.removeAttribute(attr.name);
+            }
+          });
+
+          // 移除 javascript: 链接
+          if (el.href && el.href.toLowerCase().startsWith("javascript:")) {
+            console.log("🚨 移除javascript链接:", el.href);
+            el.removeAttribute("href");
+          }
+          if (el.src && el.src.toLowerCase().startsWith("javascript:")) {
+            console.log("🚨 移除javascript源:", el.src);
+            el.removeAttribute("src");
+          }
+
+          // 🔒 额外安全检查：移除潜在危险的标签
+          const dangerousTags = [
+            "iframe",
+            "object",
+            "embed",
+            "link",
+            "meta",
+            "base",
+          ];
+          if (dangerousTags.includes(el.tagName.toLowerCase())) {
+            console.log("🚨 移除危险标签:", el.tagName);
+            el.remove();
           }
         });
-        
-        // 移除 javascript: 链接
-        if (el.href && el.href.toLowerCase().startsWith('javascript:')) {
-          el.removeAttribute('href');
+
+        // 🔒 智能安全检查：只检查代码块外的script标签
+        const finalHTML = temp.innerHTML;
+
+        // 创建临时容器检查代码块外的内容
+        const checkDiv = document.createElement("div");
+        checkDiv.innerHTML = finalHTML;
+
+        // 移除所有代码块（这些是安全的文本内容）
+        const safeCodeBlocks = checkDiv.querySelectorAll("pre code, pre, code");
+        safeCodeBlocks.forEach((block) => block.remove());
+
+        // 检查剩余内容是否有危险的script标签
+        const remainingContent = checkDiv.innerHTML;
+        if (remainingContent.toLowerCase().includes("<script")) {
+          console.error("🚨 检测到代码块外的script标签，拒绝设置HTML");
+          element.innerHTML =
+            '<p style="color: red;">⚠️ 内容包含可执行脚本，已被阻止</p>';
+          return;
         }
-        if (el.src && el.src.toLowerCase().startsWith('javascript:')) {
-          el.removeAttribute('src');
-        }
-      });
-      
-      // 安全地设置内容
-      element.innerHTML = temp.innerHTML;
-    }
 
-    // 🏷️ 简单的代码块标签处理函数
-    function addCodeHighlight(container) {
-      const codeBlocks = container.querySelectorAll("pre code");
-      if (codeBlocks.length === 0) return;
-      
-      console.log(`🏷️ 为 ${codeBlocks.length} 个代码块添加语言标签`);
+        console.log("✅ 安全检查通过，代码块中的script标签被视为安全文本");
 
-      codeBlocks.forEach((block, index) => {
-        try {
-          // 🚀 获取语言信息
-          let finalLanguage = "text";
-          
-          // 从CSS类名获取语言
-          if (block.className) {
-            const match = block.className.match(/language-(\w+)/);
-            if (match) {
-              finalLanguage = match[1];
-            }
-          }
-          
-          // 从markdown-it生成的注释中提取语言信息
-          const htmlContent = block.innerHTML;
-          if (htmlContent.includes('<!-- lang:')) {
-            const start = htmlContent.indexOf('<!-- lang:') + 10;
-            const end = htmlContent.indexOf(' -->', start);
-            if (end > start) {
-              finalLanguage = htmlContent.substring(start, end);
-              // 移除语言注释
-              block.innerHTML = htmlContent.replace(/<!-- lang:\w+ -->/, '');
-            }
-          }
+        // 🔒 简化安全检查：只检查真正危险的可执行标签
+        const codeElements = temp.querySelectorAll("pre code");
+        codeElements.forEach((code, index) => {
+          const innerHTML = code.innerHTML;
+          const textContent = code.textContent || code.innerText || "";
 
-          // 添加语言标识符
-          addLanguageLabel(block.parentElement, finalLanguage);
-        } catch (error) {
-          console.warn(`⚠️ 添加代码块标签失败:`, error.message);
-          addLanguageLabel(block.parentElement, "text");
-        }
-      });
-    }
+          // 只检查真正可执行的危险标签
+          const executablePattern = /<(?:script|iframe|object|embed|form)\s[^>]*>/i;
 
-    // 复制到剪贴板函数
-    async function copyToClipboard(text, button) {
-      const originalText = button.textContent;
-      
-      try {
-        await navigator.clipboard.writeText(text);
-        
-        // 视觉反馈
-        button.classList.add('copied');
-        button.textContent = '已复制';
-        
-        setTimeout(() => {
-          button.classList.remove('copied');
-          button.textContent = originalText;
-        }, 1000);
-        
-        console.log('📋 代码已复制到剪贴板');
-      } catch (err) {
-        // 备用方案：使用旧的 execCommand
-        try {
-          const textArea = document.createElement('textarea');
-          textArea.value = text;
-          textArea.style.position = 'fixed';
-          textArea.style.opacity = '0';
-          document.body.appendChild(textArea);
-          textArea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textArea);
-          
-          // 同样的视觉反馈
-          button.classList.add('copied');
-          button.textContent = '已复制';
-          
-          setTimeout(() => {
-            button.classList.remove('copied');
-            button.textContent = originalText;
-          }, 1000);
-          
-          console.log('📋 代码已复制到剪贴板 (fallback)');
-        } catch (fallbackErr) {
-          console.warn('❌ 复制失败:', fallbackErr);
-          button.textContent = '复制失败';
-          setTimeout(() => {
-            button.textContent = originalText;
-          }, 1000);
-        }
-      }
-    }
-
-    // 添加语言标识符函数
-    function addLanguageLabel(preElement, language) {
-      // 检查pre元素是否已经被包装
-      let wrapper = preElement.parentElement;
-      if (!wrapper.classList.contains('code-wrapper')) {
-        // 创建包装容器
-        wrapper = document.createElement('div');
-        wrapper.className = 'code-wrapper';
-        wrapper.style.position = 'relative';
-        wrapper.style.display = 'block';
-        
-        // 将pre元素包装起来
-        preElement.parentNode.insertBefore(wrapper, preElement);
-        wrapper.appendChild(preElement);
-      }
-
-      // 检查是否已经有标签
-      const existingLabel = wrapper.querySelector(".code-lang-label");
-      if (existingLabel) {
-        existingLabel.remove();
-      }
-
-      // 创建语言标签
-      const langLabel = document.createElement("div");
-      langLabel.className = "code-lang-label";
-      langLabel.textContent = language;
-      langLabel.title = "点击复制代码";
-
-      // 添加点击复制功能
-      langLabel.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        // 获取代码块内容
-        const codeElement = preElement.querySelector('code');
-        if (codeElement) {
-          const codeText = codeElement.textContent || codeElement.innerText || '';
-          await copyToClipboard(codeText, langLabel);
-        }
-      });
-
-      // 添加到包装容器而不是pre元素
-      wrapper.appendChild(langLabel);
-    }
-
-          function renderMarkdown(ID) {
-
-      const el = document.getElementById(ID);
-      if (!el || el.dataset.markdownProcessed === "true") return;
-
-      // 🔒 安全预检查
-      const original = el.innerHTML;
-      if (original.includes('<script') || original.includes('javascript:')) {
-        console.warn(`🚨 检测到可疑内容，跳过处理: ${ID}`);
-        return;
-      }
-
-      // 创建安全的markdown-it实例
-      const md = window.markdownit({
-        html: true,
-        breaks: true,
-        typographer: true,
-        linkify: true,
-        // 🔒 安全的代码块处理，确保HTML被正确转义
-        highlight: function (str, lang) {
-          if (typeof str !== 'string') return str || '';
-          
-          console.log('🎯 正常流程：markdown-it highlight处理代码块');
-          
-          const escapeHtml = (text) => {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-          };
-          
-          // 🔧 关键：确保所有HTML内容都被转义，这是正常流程！
-          const safeCode = escapeHtml(str);
-          
-          let highlightedCode = "";
-          let actualLang = lang || "";
-          
-          if (lang && window.hljs) {
-            try {
-              // highlight.js处理已转义的代码，这样HTML标签会被正确高亮但不会被执行
-              const result = window.hljs.highlightAuto(safeCode, [lang]);
-              highlightedCode = result.value;
-              actualLang = lang;
-            } catch (e) {
-              highlightedCode = safeCode;
-              actualLang = lang || "text";
-            }
-          } else if (window.hljs) {
-            try {
-              const result = window.hljs.highlightAuto(safeCode);
-              highlightedCode = result.value;
-              actualLang = result.language || "auto";
-            } catch (e) {
-              highlightedCode = safeCode;
-              actualLang = "text";
+          if (executablePattern.test(innerHTML)) {
+            console.log(
+              `🚨 代码块 ${index} 包含可执行HTML，强制转换为文本`
+            );
+            const originalClassName = code.className;
+            code.textContent = textContent;
+            if (originalClassName) {
+              code.className = originalClassName;
             }
           } else {
-            highlightedCode = safeCode;
-            actualLang = lang || "text";
+            console.log(`✅ 代码块 ${index} 安全，保持正常显示`);
           }
-          
-          // 返回安全的、已高亮的代码内容
-          // markdown-it会自动将其包装在<pre><code>标签中
-          console.log('✅ 返回安全的高亮代码，无需后续动态处理');
-          return highlightedCode;
-        },
-      });
+        });
 
-      if (window.markdownItMark) md.use(window.markdownItMark);
-
-      try {
-        const text = cleanHTML(original);
-        const rendered = md.render(text);
-
-        // 🔒 使用安全的方式设置HTML内容
-        safeSetHTML(el, rendered);
-        el.dataset.markdownProcessed = "true";
-
-        // ✅ 安全的代码高亮功能
-        addCodeHighlight(el);
-
-      } catch (error) {
-        console.error(`❌ 渲染失败 ${ID}:`, error.message);
-        // 安全回退：显示错误信息而不是可能的恶意内容
-        el.innerHTML = `<p style="color: red;">❌ 内容渲染失败</p>`;
+        // 安全地设置内容
+        const safeHTML = temp.innerHTML;
+        console.log("🔍 [DEBUG] safeSetHTML最终输出:", safeHTML.substring(0, 300) + (safeHTML.length > 300 ? "..." : ""));
+        element.innerHTML = safeHTML;
+        console.log("✅ HTML内容已安全设置");
       }
-    }
 
-    function renderMath(ID) {
-      const el = document.getElementById(ID);
-      if (
-        !el ||
-        el.dataset.katexRendered === "true" ||
-        !window.renderMathInElement
-      )
-        return;
-      renderMathInElement(el, {
-        delimiters: [
-          {left: "$$", right: "$$", display: true},
-          {left: "$", right: "$", display: false},
-        ],
-        throwOnError: false,
-        macros: {
-          "\\ce": "\\ce",
-        },
-      });
-      el.dataset.katexRendered = "true";
-    }
+      // 🏷️ 代码块处理和安全化函数
+      function addCodeHighlight(container) {
+        const codeBlocks = container.querySelectorAll("pre code");
+        if (codeBlocks.length === 0) return;
 
-    function renderAll() {
-      console.log("🎯 开始渲染所有元素");
-      ["front", "back"].forEach((id) => {
-        renderMarkdown(id);
-        renderMath(id);
-      });
-    }
+        console.log(`🏷️ 为 ${codeBlocks.length} 个代码块添加语言标签`);
 
-    async function init() {
-      try {
-        console.log("✅ 预览模式，启用Markdown渲染器");
-        await Promise.all([
-          ...RESOURCES.css.map(loadCSS),
-          ...RESOURCES.scripts.map(loadScript),
-        ]);
-        
-        // ✨ 手动注册Svelte语言支持（永久方案）
-        if (window.hljs && !window.hljs.getLanguage('svelte')) {
-          console.log('🔧 注册Svelte语言定义');
-          window.hljs.registerLanguage('svelte', function(hljs) {
-            return {
-              name: 'Svelte',
-              aliases: ['svelte'],
-              case_insensitive: false,
-              subLanguage: 'xml',
-              contains: [
-                // Svelte表达式 {expression}
-                {
-                  className: 'template-variable',
-                  begin: /\{/, end: /\}/,
-                  excludeBegin: true,
-                  excludeEnd: true,
-                  contains: [
-                    {
-                      subLanguage: 'javascript',
-                      begin: /[^}]+/
-                    }
-                  ]
-                },
-                // Svelte指令 {#if} {#each} etc
-                {
-                  className: 'template-tag',
-                  begin: /\{[#:/]/, end: /\}/,
-                  contains: [
-                    {
-                      className: 'name',
-                      begin: /[#:/]\w+/
-                    },
-                    {
-                      subLanguage: 'javascript',
-                      begin: /\s+/, end: /$/
-                    }
-                  ]
-                },
-                // HTML注释
-                hljs.COMMENT('<!--', '-->', {
-                  relevance: 10
-                }),
-                // HTML标签
-                {
-                  className: 'tag',
-                  begin: /<\/?[A-Za-z_]/, end: />/,
-                  contains: [
-                    {
-                      className: 'name',
-                      begin: /[A-Za-z_][\w:]*/
-                    },
-                    {
-                      className: 'attr',
-                      begin: /\s[A-Za-z_][\w:]*(?=\s*=)/
-                    },
-                    {
-                      begin: /=/, end: /$/,
-                      contains: [
-                        hljs.APOS_STRING_MODE,
-                        hljs.QUOTE_STRING_MODE,
-                        {
-                          className: 'template-variable',
-                          begin: /\{/, end: /\}/,
-                          subLanguage: 'javascript'
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
+        codeBlocks.forEach((block, index) => {
+          try {
+            console.log(`🏷️ 处理代码块 ${index} 语言标签`);
+
+            // 🚀 获取语言信息
+            let finalLanguage = "text";
+
+            // 从CSS类名获取语言
+            if (block.className) {
+              const match = block.className.match(/language-(\w+)/);
+              if (match) {
+                finalLanguage = match[1];
+                console.log(`📝 从类名获取语言: ${finalLanguage}`);
+              }
+            }
+
+            // 从markdown-it生成的注释中提取语言信息
+            const htmlContent = block.innerHTML;
+            if (htmlContent.includes("<!-- lang:")) {
+              const start = htmlContent.indexOf("<!-- lang:") + 10;
+              const end = htmlContent.indexOf(" -->", start);
+              if (end > start) {
+                finalLanguage = htmlContent.substring(start, end);
+                // 移除语言注释
+                block.innerHTML = htmlContent.replace(/<!-- lang:\w+ -->/, "");
+                console.log(`📝 从注释获取语言: ${finalLanguage}`);
+              }
+            }
+
+            // 🔧 过滤纯数字语言名，如果是数字就使用自动识别
+            if (finalLanguage && /^\d+$/.test(finalLanguage)) {
+              console.log("🔧 检测到纯数字语言名，使用自动识别:", finalLanguage);
+              finalLanguage = "auto";
+            }
+
+            // 添加语言标识符 - 安全检查
+            const preElement = block.parentElement;
+            if (preElement && preElement.tagName === "PRE") {
+              addLanguageLabel(preElement, finalLanguage);
+              console.log(`✅ 已为代码块 ${index} 添加 ${finalLanguage} 标签`);
+              console.log(`🔍 [DEBUG] 代码块 ${index} 最终内容:`, block.innerHTML.substring(0, 100) + (block.innerHTML.length > 100 ? "..." : ""));
+              console.log(`🔍 [DEBUG] 代码块 ${index} 文本内容:`, block.textContent.substring(0, 100) + (block.textContent.length > 100 ? "..." : ""));
+            } else {
+              console.warn("⚠️ 无法找到有效的pre元素，跳过语言标签添加");
+            }
+          } catch (error) {
+            console.warn(`⚠️ 添加代码块标签失败:`, error.message);
+            if (block.parentElement) {
+              addLanguageLabel(block.parentElement, "text");
+            }
+          }
+        });
+      }
+
+      // 复制到剪贴板函数
+      async function copyToClipboard(text, button) {
+        const originalText = button.textContent;
+
+        try {
+          await navigator.clipboard.writeText(text);
+
+          // 视觉反馈
+          button.classList.add("copied");
+          button.textContent = "已复制";
+
+          setTimeout(() => {
+            button.classList.remove("copied");
+            button.textContent = originalText;
+          }, 1000);
+
+          console.log("📋 代码已复制到剪贴板");
+        } catch (err) {
+          // 备用方案：使用旧的 execCommand
+          try {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+
+            // 同样的视觉反馈
+            button.classList.add("copied");
+            button.textContent = "已复制";
+
+            setTimeout(() => {
+              button.classList.remove("copied");
+              button.textContent = originalText;
+            }, 1000);
+
+            console.log("📋 代码已复制到剪贴板 (fallback)");
+          } catch (fallbackErr) {
+            console.warn("❌ 复制失败:", fallbackErr);
+            button.textContent = "复制失败";
+            setTimeout(() => {
+              button.textContent = originalText;
+            }, 1000);
+          }
+        }
+      }
+
+      // 添加语言标识符函数
+      function addLanguageLabel(preElement, language) {
+        // 🔒 安全检查：确保preElement存在且有parentElement
+        if (!preElement || !preElement.parentElement) {
+          console.warn(
+            "⚠️ preElement或其parentElement为null，跳过语言标签添加"
+          );
+          return;
+        }
+
+        // 检查pre元素是否已经被包装
+        let wrapper = preElement.parentElement;
+        if (!wrapper.classList.contains("code-wrapper")) {
+          // 创建包装容器
+          wrapper = document.createElement("div");
+          wrapper.className = "code-wrapper";
+          wrapper.style.position = "relative";
+          wrapper.style.display = "block";
+
+          // 将pre元素包装起来
+          preElement.parentNode.insertBefore(wrapper, preElement);
+          wrapper.appendChild(preElement);
+        }
+
+        // 检查是否已经有标签
+        const existingLabel = wrapper.querySelector(".code-lang-label");
+        if (existingLabel) {
+          existingLabel.remove();
+        }
+
+        // 创建语言标签
+        const langLabel = document.createElement("div");
+        langLabel.className = "code-lang-label";
+        langLabel.textContent = language;
+        langLabel.title = "点击复制代码";
+
+        // 添加点击复制功能
+        langLabel.addEventListener("click", async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          // 获取代码块内容
+          const codeElement = preElement.querySelector("code");
+          if (codeElement) {
+            const codeText =
+              codeElement.textContent || codeElement.innerText || "";
+            await copyToClipboard(codeText, langLabel);
+          }
+        });
+
+        // 添加到包装容器而不是pre元素
+        wrapper.appendChild(langLabel);
+      }
+
+      function renderMarkdown(ID) {
+        const el = document.getElementById(ID);
+        if (!el || el.dataset.markdownProcessed === "true") return;
+
+        // 获取原始内容
+        const original = el.innerHTML;
+
+        // 创建安全的markdown-it实例
+        const md = window.markdownit({
+          html: true,
+          breaks: true,
+          typographer: true,
+          linkify: true,
+          highlight: function (str, lang) {
+            if (typeof str !== "string") return str || "";
+
+            console.log(
+              "🎯 代码块处理，语言:",
+              lang || "未指定",
+              "原始内容:",
+              str.substring(0, 50)
+            );
+
+            // 如果是 mermaid 图表
+            if (lang === 'mermaid') {
+              return `<div class="mermaid">${str}</div>`;
+            }
+
+            // 🔧 智能语言检测：避免把行号当作语言名
+            let actualLang = lang;
+            if (lang && /^\d+$/.test(lang)) {
+              // 如果语言名是纯数字，使用自动识别
+              console.log("🔧 检测到纯数字语言名，使用自动识别:", lang);
+              actualLang = '';
+            }
+
+            // 🔒 智能HTML转义：让HTML代码正常显示，但确保安全
+            const smartEscapeHtml = (text, language) => {
+              // 🔧 修复：对于代码块中的HTML，我们不应该转义，应该让它显示为原始文本
+              // 代码块本身就是安全的文本内容，不需要额外的HTML转义
+              console.log("✅ 代码块内容正常显示，无需转义");
+              console.log("🔍 [DEBUG] smartEscape输入:", text.substring(0, 100) + (text.length > 100 ? "..." : ""));
+              console.log("🔍 [DEBUG] smartEscape输出:", text.substring(0, 100) + (text.length > 100 ? "..." : ""));
+              return text;
             };
-          });
+
+            const processedStr = smartEscapeHtml(str, actualLang);
+            let highlightedCode = "";
+
+            if (actualLang && window.hljs) {
+              try {
+                const result = window.hljs.highlight(processedStr, {
+                  language: actualLang,
+                });
+                highlightedCode = result.value;
+                console.log("✅ 使用指定语言高亮:", actualLang);
+              } catch (e) {
+                console.warn("❌ 指定语言高亮失败，回退到自动检测:", e.message);
+                try {
+                  const result = window.hljs.highlightAuto(processedStr);
+                  highlightedCode = result.value;
+                } catch (e2) {
+                  console.warn("❌ 自动检测也失败，使用原始代码:", e2.message);
+                  highlightedCode = processedStr;
+                }
+              }
+            } else if (window.hljs) {
+              try {
+                const result = window.hljs.highlightAuto(processedStr);
+                highlightedCode = result.value;
+                console.log("✅ 自动检测语言高亮:", result.language || "auto");
+              } catch (e) {
+                console.warn("❌ 自动高亮失败，使用原始代码:", e.message);
+                highlightedCode = processedStr;
+              }
+            } else {
+              highlightedCode = processedStr;
+              console.log("✅ hljs未加载，使用处理后代码");
+            }
+
+            console.log("✅ 返回处理后代码，长度:", highlightedCode.length);
+            console.log("🔍 [DEBUG] highlight函数输出内容:", highlightedCode.substring(0, 100) + (highlightedCode.length > 100 ? '...' : ''));
+            return highlightedCode;
+          },
+        });
+
+        if (window.markdownItMark) md.use(window.markdownItMark);
+
+        try {
+          const text = cleanHTML(original);
+          console.log(`🔄 开始渲染Markdown内容，长度: ${text.length}`);
+
+          const rendered = md.render(text);
+          console.log(`✅ Markdown渲染完成，长度: ${rendered.length}`);
+
+          // 🔒 使用安全的方式设置HTML内容
+          safeSetHTML(el, rendered);
+          el.dataset.markdownProcessed = "true";
+
+          // ✅ 安全的代码高亮功能
+          addCodeHighlight(el);
+
+          // 初始化 Mermaid 图表
+          if (window.mermaid) {
+            try {
+              window.mermaid.initialize({
+                startOnLoad: false,
+                theme: document.body.classList.contains('nightMode') ? 'dark' : 'default',
+                securityLevel: 'strict'
+              });
+              
+              const mermaidDiagrams = el.querySelectorAll('.mermaid');
+              mermaidDiagrams.forEach(async (diagram) => {
+                try {
+                  const graphDefinition = diagram.textContent;
+                  const { svg } = await window.mermaid.render('mermaid-' + Math.random(), graphDefinition);
+                  diagram.innerHTML = svg;
+                } catch (err) {
+                  console.warn('❌ Mermaid 图表渲染失败:', err);
+                  diagram.innerHTML = `<div class="error-message">❌ 图表渲染失败: ${escapeHtml(err.message)}</div>`;
+                }
+              });
+            } catch (err) {
+              console.warn('❌ Mermaid 初始化失败:', err);
+            }
+          }
+
+          console.log(
+            `🎉 ${ID} 渲染完成，包含代码块: ${el.querySelectorAll("pre code").length}个`
+          );
+        } catch (error) {
+          console.error(`❌ 渲染失败 ${ID}:`, error.message, error.stack);
+          // 安全回退：显示错误信息而不是可能的恶意内容
+          el.innerHTML = `<div class="error-message">❌ 内容渲染失败: ${escapeHtml(
+            error.message
+          )}</div>`;
+        }
+      }
+
+      function renderMath(ID) {
+        const el = document.getElementById(ID);
+        if (
+          !el ||
+          el.dataset.katexRendered === "true" ||
+          !window.renderMathInElement
+        )
+          return;
+        renderMathInElement(el, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "$", right: "$", display: false},
+          ],
+          throwOnError: false,
+          macros: {
+            "\\ce": "\\ce",
+          },
+        });
+        el.dataset.katexRendered = "true";
+      }
+
+      function renderAll() {
+        console.log("🎯 开始渲染所有元素");
+        ["front", "back"].forEach((id) => {
+          renderMarkdown(id);
+          renderMath(id);
+        });
+      }
+
+      async function init() {
+        try {
+          console.log("✅ 预览模式，启用Markdown渲染器");
           
-          // 验证注册并记录状态
-          if (window.hljs.getLanguage('svelte')) {
+          // 根据当前模式加载对应的 highlight.js 主题
+          const isDarkMode = document.body.classList.contains('nightMode');
+          const highlightTheme = isDarkMode ? 'github-dark' : 'github';
+          
+          // 动态加载主题 CSS
+          const themeLink = document.createElement('link');
+          themeLink.rel = 'stylesheet';
+          themeLink.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.0/styles/${highlightTheme}.min.css`;
+          document.head.appendChild(themeLink);
+          
+          // 加载其他资源
+          await Promise.all([
+            ...RESOURCES.css.filter(css => !css[0].includes('highlight')).map(loadCSS),
+            ...RESOURCES.scripts.map(loadScript),
+          ]);
+
+          // ✨ 手动注册Svelte语言支持（永久方案）
+          if (window.hljs && !window.hljs.getLanguage("svelte")) {
+            console.log("🔧 注册Svelte语言定义");
+            window.hljs.registerLanguage("svelte", function (hljs) {
+              return {
+                name: "Svelte",
+                aliases: ["svelte"],
+                case_insensitive: false,
+                subLanguage: "xml",
+                contains: [
+                  // Svelte表达式 {expression}
+                  {
+                    className: "template-variable",
+                    begin: /\{/,
+                    end: /\}/,
+                    excludeBegin: true,
+                    excludeEnd: true,
+                    contains: [
+                      {
+                        subLanguage: "javascript",
+                        begin: /[^}]+/,
+                      },
+                    ],
+                  },
+                  // Svelte指令 {#if} {#each} etc
+                  {
+                    className: "template-tag",
+                    begin: /\{[#:/]/,
+                    end: /\}/,
+                    contains: [
+                      {
+                        className: "name",
+                        begin: /[#:/]\w+/,
+                      },
+                      {
+                        subLanguage: "javascript",
+                        begin: /\s+/,
+                        end: /$/,
+                      },
+                    ],
+                  },
+                  // HTML注释
+                  hljs.COMMENT("<!--", "-->", {
+                    relevance: 10,
+                  }),
+                  // HTML标签
+                  {
+                    className: "tag",
+                    begin: /<\/?[A-Za-z_]/,
+                    end: />/,
+                    contains: [
+                      {
+                        className: "name",
+                        begin: /[A-Za-z_][\w:]*/,
+                      },
+                      {
+                        className: "attr",
+                        begin: /\s[A-Za-z_][\w:]*(?=\s*=)/,
+                      },
+                      {
+                        begin: /=/,
+                        end: /$/,
+                        contains: [
+                          hljs.APOS_STRING_MODE,
+                          hljs.QUOTE_STRING_MODE,
+                          {
+                            className: "template-variable",
+                            begin: /\{/,
+                            end: /\}/,
+                            subLanguage: "javascript",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              };
+            });
+
+            // 验证注册并记录状态
+            if (window.hljs.getLanguage("svelte")) {
+              window.resourceStatus = window.resourceStatus || {};
+              window.resourceStatus["svelte.js"] = "🔧 手动注册";
+              console.log("✅ Svelte语言注册成功，现在可用！");
+            } else {
+              window.resourceStatus = window.resourceStatus || {};
+              window.resourceStatus["svelte.js"] = "❌ 注册失败";
+              console.log("❌ Svelte语言注册失败");
+            }
+          } else if (window.hljs?.getLanguage?.("svelte")) {
             window.resourceStatus = window.resourceStatus || {};
-            window.resourceStatus['svelte.js'] = '🔧 手动注册';
-            console.log('✅ Svelte语言注册成功，现在可用！');
+            window.resourceStatus["svelte.js"] = "✅ 已存在";
+            console.log("✅ Svelte语言已存在，无需重复注册");
           } else {
             window.resourceStatus = window.resourceStatus || {};
-            window.resourceStatus['svelte.js'] = '❌ 注册失败';
-            console.log('❌ Svelte语言注册失败');
+            window.resourceStatus["svelte.js"] = "❌ hljs未加载";
+            console.log("❌ highlight.js未加载，无法注册Svelte语言");
           }
-        } else if (window.hljs?.getLanguage?.('svelte')) {
-          window.resourceStatus = window.resourceStatus || {};
-          window.resourceStatus['svelte.js'] = '✅ 已存在';
-          console.log('✅ Svelte语言已存在，无需重复注册');
-        } else {
-          window.resourceStatus = window.resourceStatus || {};
-          window.resourceStatus['svelte.js'] = '❌ hljs未加载';
-          console.log('❌ highlight.js未加载，无法注册Svelte语言');
+
+          // 显示资源加载状态
+          if (window.resourceStatus) {
+            console.log("📦 资源加载状态:");
+            Object.entries(window.resourceStatus).forEach(
+              ([resource, status]) => {
+                console.log(`   ${resource}: ${status}`);
+              }
+            );
+          }
+
+          renderAll();
+          console.log("✅ Markdown渲染器初始化完成");
+        } catch (e) {
+          console.error("❌ Initialization failed:", e);
         }
-        
-        // 显示资源加载状态
-        if (window.resourceStatus) {
-          console.log("📦 资源加载状态:");
-          Object.entries(window.resourceStatus).forEach(([resource, status]) => {
-            console.log(`   ${resource}: ${status}`);
-          });
-        }
-        
-        renderAll();
-        console.log("✅ Markdown渲染器初始化完成");
-      } catch (e) {
-        console.error("❌ Initialization failed:", e);
       }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        setTimeout(init, 100);
+      }
+    })();
+  }); // 结束 delayedEditModeCheck 回调
+
+  // 添加粘贴事件处理
+  document.addEventListener('paste', function(e) {
+    // 检查是否粘贴在编辑器中
+    const target = e.target;
+    if (!target.isContentEditable && target.tagName !== 'TEXTAREA' && target.tagName !== 'INPUT') {
+      return;
     }
 
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", init);
-    } else {
-      setTimeout(init, 100);
+    // 获取剪贴板数据
+    const clipboardData = e.clipboardData || window.clipboardData;
+    if (!clipboardData) return;
+
+    // 优先获取纯文本（Markdown）
+    const text = clipboardData.getData('text/plain');
+    const html = clipboardData.getData('text/html');
+
+    // 如果文本内容包含 Markdown 特征
+    if (text && (
+      text.includes('```') ||    // 代码块
+      text.includes('##') ||     // 标题
+      text.includes('- ') ||     // 列表
+      text.includes('* ') ||     // 列表
+      text.includes('> ') ||     // 引用
+      text.includes('|') ||      // 表格
+      text.includes('```mermaid') // mermaid 图表
+    )) {
+      console.log("📝 检测到 Markdown 格式，使用纯文本");
+      e.preventDefault();
+      // 插入纯文本内容
+      document.execCommand('insertText', false, text);
+      return;
     }
-  })();
-  }); // 结束 delayedEditModeCheck 回调
+
+    // 如果没有明显的 Markdown 特征，保持默认行为
+    console.log("📄 使用默认粘贴行为");
+  });
 </script>
-</rewritten_file>

@@ -153,11 +153,11 @@
 									close();
 									await update();
 
-									if (!authState.isLoggedIn) {
-										toast.success('退出登录成功');
-									} else {
-										toast.error('退出登录失败');
-									}
+									// if (!authState.isLoggedIn) {
+									// 	toast.success('退出登录成功');
+									// } else {
+									// 	toast.error('退出登录失败');
+									// }
 								};
 							}}
 						>

@@ -452,3 +452,216 @@ function hello() {
       
   })(); // 立即执行函数结束
   </script>
+
+<!-- Front Template -->
+<div id="front" style="text-align: center;">
+{{Front}}
+</div>
+
+<div class='tags'><p class="tag">{{Tags}}</p></div>
+
+<script>
+if (typeof window.ankiEditorInitialized === 'undefined') {
+    window.ankiEditorInitialized = true;
+    
+    // 添加粘贴事件监听器
+    document.addEventListener('paste', function(e) {
+        console.log("📋 检测到粘贴事件");
+        
+        const target = e.target;
+        if (!target.isContentEditable && target.tagName !== 'TEXTAREA' && target.tagName !== 'INPUT') {
+            console.log("❌ 不是可编辑区域，跳过");
+            return;
+        }
+        console.log("✅ 粘贴目标是可编辑区域:", target.tagName);
+
+        const clipboardData = e.clipboardData || window.clipboardData;
+        if (!clipboardData) {
+            console.log("❌ 无法获取剪贴板数据");
+            return;
+        }
+
+        const text = clipboardData.getData('text/plain');
+        const html = clipboardData.getData('text/html');
+        
+        console.log("📄 剪贴板格式:");
+        console.log("- text/plain 长度:", text?.length || 0);
+        console.log("- text/html 长度:", html?.length || 0);
+        console.log("- text/plain 内容:", text);
+
+        // Markdown 特征检测
+        const hasMarkdownFeatures = (text) => {
+            if (!text) return false;
+            
+            const features = {
+                codeBlock: /```[\s\S]*?```/m,
+                inlineCode: /`[^`]+`/,
+                headers: /^#{1,6}\s/m,
+                lists: /^[-*+]\s|^\d+\.\s/m,
+                blockquote: /^>\s/m,
+                table: /\|.*\|.*\n\|[-:|\s]+\|/,
+                mermaid: /```mermaid/,
+                emphasis: /(\*\*[^*]+\*\*|__[^_]+__|\*[^*]+\*|_[^_]+_)/,
+                horizontalRule: /^[-*_]{3,}\s*$/m,
+                link: /\[([^\]]+)\]\([^)]+\)/,
+                image: /!\[([^\]]*)\]\([^)]+\)/,
+                taskList: /^- \[[x ]\]/m,
+                footnote: /\[\^[^\]]+\]/,
+                definitionList: /^[^:\n]+:\s*$/m,
+                latex: /\$\$[\s\S]*?\$\$|\$[^$\n]+\$/
+            };
+
+            // 检查每个特征
+            for (const [name, regex] of Object.entries(features)) {
+                if (regex.test(text)) {
+                    console.log(`✅ 检测到 ${name} 特征`);
+                    return true;
+                }
+            }
+
+            // 额外检查
+            if (text.includes('---') ||
+                text.includes('> ') ||
+                text.includes('* ') ||
+                text.includes('- ') ||
+                (text.match(/\n/g) || []).length > 2) {
+                console.log("✅ 检测到基本 Markdown 特征");
+                return true;
+            }
+
+            return false;
+        };
+
+        if (text && hasMarkdownFeatures(text)) {
+            console.log("📝 使用 Markdown 模式粘贴");
+            e.preventDefault();
+            document.execCommand('insertText', false, text);
+        } else {
+            console.log("📄 使用默认粘贴行为");
+        }
+    });
+}
+</script>
+
+<!-- Back Template -->
+<div id="back">
+{{FrontSide}}
+<hr>
+{{Back}}
+</div>
+
+<!-- Styling -->
+<style>
+.card {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    background-color: #fff;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.tags {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    margin: 0 4px;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #dee2e6;
+    margin: 20px 0;
+}
+
+code {
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    background-color: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+pre {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+blockquote {
+    border-left: 4px solid #dee2e6;
+    margin: 0;
+    padding-left: 15px;
+    color: #6c757d;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15px 0;
+}
+
+th, td {
+    border: 1px solid #dee2e6;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f8f9fa;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .card {
+        color: #e9ecef;
+        background-color: #212529;
+    }
+
+    .tag {
+        background-color: #343a40;
+        color: #e9ecef;
+    }
+
+    code {
+        background-color: #2b3035;
+    }
+
+    pre {
+        background-color: #2b3035;
+    }
+
+    blockquote {
+        border-left-color: #495057;
+        color: #adb5bd;
+    }
+
+    th, td {
+        border-color: #495057;
+    }
+
+    th {
+        background-color: #343a40;
+    }
+}
+</style>

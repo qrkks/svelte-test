@@ -174,20 +174,16 @@
     box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
   }
   .nightMode pre {
-    background: #2d2d2d !important;
-    border: 1px solid #444;
+    background: #0d1117 !important;
+    border-color: #30363d !important;
     box-shadow: none;
-    white-space: pre-wrap !important; /* 确保暗黑模式下也保持换行 */
-    word-wrap: break-word;
   }
   .nightMode code {
-    background: #3a3a3a;
-    color: #ffb86c;
+    background: #21262d;
+    color: inherit;
   }
   .nightMode pre code {
-    color: #e8e8e8;
-    white-space: pre-wrap !important; /* 确保暗黑模式下代码内容保持换行 */
-    word-wrap: break-word;
+    background: transparent;
   }
   .nightMode .tag {
     background-color: #ffffff33;
@@ -280,6 +276,131 @@
     border: 1px solid #8b2635;
     color: #ff6b6b;
   }
+
+  /* Mermaid 相关样式 */
+  .mermaid {
+    text-align: center;
+    margin: 1em 0;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .nightMode .mermaid {
+    background: #2d2d2d;
+  }
+
+  /* 代码块暗黑模式样式 */
+  .nightMode .hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+    color: #c9d1d9;
+    background: #0d1117;
+  }
+
+  .nightMode pre {
+    background: #0d1117 !important;
+    border-color: #30363d !important;
+    box-shadow: none;
+  }
+
+  .nightMode code {
+    background: #21262d;
+    color: #c9d1d9;
+  }
+
+  .nightMode pre code {
+    background: transparent;
+    color: #c9d1d9;
+  }
+
+  /* 确保代码块中的注释在暗黑模式下可见 */
+  .nightMode .hljs-comment,
+  .nightMode .hljs-quote {
+    color: #8b949e;
+    font-style: italic;
+  }
+
+  /* 暗黑模式下的字符串颜色 */
+  .nightMode .hljs-string {
+    color: #a5d6ff;
+  }
+
+  /* 暗黑模式下的关键字颜色 */
+  .nightMode .hljs-keyword,
+  .nightMode .hljs-selector-tag,
+  .nightMode .hljs-deletion {
+    color: #ff7b72;
+  }
+
+  /* 暗黑模式下的数字颜色 */
+  .nightMode .hljs-number,
+  .nightMode .hljs-literal {
+    color: #79c0ff;
+  }
+
+  /* 暗黑模式下的函数名颜色 */
+  .nightMode .hljs-function,
+  .nightMode .hljs-title {
+    color: #d2a8ff;
+  }
+
+  /* 暗黑模式下的类名颜色 */
+  .nightMode .hljs-class .hljs-title {
+    color: #7ee787;
+  }
+
+  /* 暗黑模式下的变量名颜色 */
+  .nightMode .hljs-variable,
+  .nightMode .hljs-template-variable {
+    color: #ffa657;
+  }
+
+  /* 暗黑模式下的属性名颜色 */
+  .nightMode .hljs-attr,
+  .nightMode .hljs-property {
+    color: #79c0ff;
+  }
+
+  /* 暗黑模式下的标签颜色 */
+  .nightMode .hljs-tag,
+  .nightMode .hljs-name {
+    color: #7ee787;
+  }
+
+  /* 暗黑模式下的正则表达式颜色 */
+  .nightMode .hljs-regexp {
+    color: #a5d6ff;
+  }
+
+  /* 暗黑模式下的符号颜色 */
+  .nightMode .hljs-symbol,
+  .nightMode .hljs-bullet {
+    color: #f2cc60;
+  }
+
+  /* 暗黑模式下的内置函数颜色 */
+  .nightMode .hljs-built_in,
+  .nightMode .hljs-builtin-name {
+    color: #ffa657;
+  }
+
+  /* 暗黑模式下的元信息颜色 */
+  .nightMode .hljs-meta {
+    color: #f0883e;
+  }
+
+  /* 暗黑模式下的强调颜色 */
+  .nightMode .hljs-emphasis {
+    font-style: italic;
+  }
+
+  /* 暗黑模式下的加粗颜色 */
+  .nightMode .hljs-strong {
+    font-weight: bold;
+  }
 </style>
 
 <script>
@@ -289,6 +410,7 @@
       return !!(
         window.location.href.includes("editor") ||
         window.location.href.includes("browse") ||
+        window.location.href.includes("add") ||
         document.querySelector('[contenteditable="true"]') ||
         document.activeElement?.tagName === "TEXTAREA" ||
         document.activeElement?.tagName === "INPUT" ||
@@ -299,12 +421,14 @@
         document.body?.classList?.contains("editor") ||
         document.title.includes("编辑") ||
         document.title.includes("Edit") ||
+        document.title.includes("Add") ||
+        document.title.includes("新建") ||
         document.title.includes("Browser") ||
         document.title.includes("浏览")
       );
     } catch (e) {
       console.warn("🚨 编辑模式检测出错，为安全起见假设为编辑模式:", e);
-      return true; // 出错时为安全起见，假设是编辑模式
+      return true;
     }
   }
 
@@ -328,8 +452,8 @@
 
     // 对于可能的编辑模式，快速检测几次
     let checkCount = 0;
-    const maxChecks = 3; // 减少到3次
-    const checkInterval = 20; // 减少到20ms
+    const maxChecks = 3;
+    const checkInterval = 20;
 
     function quickCheck() {
       checkCount++;
@@ -367,40 +491,17 @@
 
       const RESOURCES = {
         css: [
-          [
-            "_katex-0.16.22.css",
-            "https://npm.elemecdn.com/katex@0.16.22/dist/katex.min.css",
-          ],
-          [
-            "_highlight-11.11.1.css",
-            "https://lib.baomitu.com/highlight.js/11.11.1/styles/default.min.css",
-          ],
+          ["_katex-0.16.22.css", "https://npm.elemecdn.com/katex@0.16.22/dist/katex.min.css"],
+          ["_highlight-11.11.1.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.0/styles/github.min.css"],
         ],
         scripts: [
-          [
-            "_highlight-11.11.1.js",
-            "https://lib.baomitu.com/highlight.js/11.11.1/highlight.min.js",
-          ],
-          [
-            "_katex-0.16.22.min.js",
-            "https://npm.elemecdn.com/katex@0.16.22/dist/katex.min.js",
-          ],
-          [
-            "_auto-render-0.16.22.js",
-            "https://npm.elemecdn.com/katex@0.16.22/dist/contrib/auto-render.min.js",
-          ],
-          [
-            "_markdown-it-14.1.0.min.js",
-            "https://lib.baomitu.com/markdown-it/14.1.0/markdown-it.min.js",
-          ],
-          [
-            "_markdown-it-mark.js",
-            "https://jsd.ink/gh/Jwrede/Anki-KaTeX-Markdown/_markdown-it-mark.js",
-          ],
-          [
-            "_mhchem-0.16.22.js",
-            "https://npm.elemecdn.com/katex@0.16.22/dist/contrib/mhchem.min.js",
-          ],
+          ["_highlight-11.11.1.js", "https://lib.baomitu.com/highlight.js/11.11.1/highlight.min.js"],
+          ["_katex-0.16.22.min.js", "https://npm.elemecdn.com/katex@0.16.22/dist/katex.min.js"],
+          ["_auto-render-0.16.22.js", "https://npm.elemecdn.com/katex@0.16.22/dist/contrib/auto-render.min.js"],
+          ["_markdown-it-14.1.0.min.js", "https://lib.baomitu.com/markdown-it/14.1.0/markdown-it.min.js"],
+          ["_markdown-it-mark.js", "https://jsd.ink/gh/Jwrede/Anki-KaTeX-Markdown/_markdown-it-mark.js"],
+          ["_mhchem-0.16.22.js", "https://npm.elemecdn.com/katex@0.16.22/dist/contrib/mhchem.min.js"],
+          ["_mermaid-10.9.0.min.js", "https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"],
         ],
       };
 
@@ -489,6 +590,30 @@
       }
 
       function cleanHTML(html) {
+        // 检查是否是从富文本编辑器粘贴的内容
+        const isPastedContent = html.includes('</div>') || html.includes('</span>') || html.includes('</p>');
+        
+        // 如果是从富文本编辑器粘贴的内容，尝试提取 Markdown
+        if (isPastedContent) {
+          // 检查是否包含代码块（可能是从 ChatGPT 等源复制的）
+          const hasCodeBlock = html.includes('```') || html.includes('pre') || html.includes('code');
+          
+          if (hasCodeBlock) {
+            console.log("📝 检测到代码块，尝试提取 Markdown");
+            // 尝试从剪贴板获取纯文本内容
+            try {
+              const clipboardText = window.clipboardData?.getData('Text') || '';
+              if (clipboardText && clipboardText.includes('```')) {
+                console.log("✅ 成功从剪贴板获取 Markdown");
+                return clipboardText;
+              }
+            } catch (e) {
+              console.log("⚠️ 无法访问剪贴板:", e);
+            }
+          }
+        }
+
+        // 如果不是富文本或无法获取 Markdown，继续原有的处理逻辑
         // 🖼️ 分别保护图片、音频、表格、列表和内联样式等内容
         const imgPlaceholders = [];
         const soundPlaceholders = [];
@@ -511,7 +636,7 @@
           return placeholder;
         });
 
-        // 🏁 保护HTML表格结构
+        // 🔧 保护HTML表格结构
         tempHtml = tempHtml.replace(
           /<table[\s\S]*?<\/table>/gi,
           function (match) {
@@ -544,7 +669,7 @@
           /<sub[^>]*>[\s\S]*?<\/sub>/gi, // <sub>
           /<del[^>]*>[\s\S]*?<\/del>/gi, // <del>
           /<strike[^>]*>[\s\S]*?<\/strike>/gi, // <strike>
-          /<s[^>]*>[\s\S]*?<\/s>/gi, // <s>
+          /<s[^>]*>[\s\S]*?<\/s>/gi, //  
         ];
 
         inlineStyleTags.forEach((regex) => {
@@ -570,7 +695,7 @@
           function (match, lang, whitespace, content) {
             console.log("🔧 发现富文本代码块，正在清理:", lang || "未指定语言");
 
-            // 🔧 智能语言检测：避免把行号当作语言名
+            // 智能语言检测：避免把行号当作语言名
             let actualLang = lang;
             if (lang && /^\d+$/.test(lang)) {
               // 如果语言名是纯数字，使用自动识别
@@ -1117,7 +1242,7 @@
         const el = document.getElementById(ID);
         if (!el || el.dataset.markdownProcessed === "true") return;
 
-        // 获取原始内容，暂时跳过预安全检查，让markdown正常处理
+        // 获取原始内容
         const original = el.innerHTML;
 
         // 创建安全的markdown-it实例
@@ -1126,7 +1251,6 @@
           breaks: true,
           typographer: true,
           linkify: true,
-          // 🔒 智能安全的代码块处理
           highlight: function (str, lang) {
             if (typeof str !== "string") return str || "";
 
@@ -1136,6 +1260,11 @@
               "原始内容:",
               str.substring(0, 50)
             );
+
+            // 如果是 mermaid 图表
+            if (lang === 'mermaid') {
+              return `<div class="mermaid">${str}</div>`;
+            }
 
             // 🔧 智能语言检测：避免把行号当作语言名
             let actualLang = lang;
@@ -1201,11 +1330,8 @@
           const text = cleanHTML(original);
           console.log(`🔄 开始渲染Markdown内容，长度: ${text.length}`);
 
-          // 跳过预渲染安全检查，让markdown正常处理代码块
-
           const rendered = md.render(text);
           console.log(`✅ Markdown渲染完成，长度: ${rendered.length}`);
-          console.log("🔍 [DEBUG] Markdown渲染输出:", rendered.substring(0, 200) + (rendered.length > 200 ? '...' : ''));
 
           // 🔒 使用安全的方式设置HTML内容
           safeSetHTML(el, rendered);
@@ -1214,10 +1340,33 @@
           // ✅ 安全的代码高亮功能
           addCodeHighlight(el);
 
+          // 初始化 Mermaid 图表
+          if (window.mermaid) {
+            try {
+              window.mermaid.initialize({
+                startOnLoad: false,
+                theme: document.body.classList.contains('nightMode') ? 'dark' : 'default',
+                securityLevel: 'strict'
+              });
+              
+              const mermaidDiagrams = el.querySelectorAll('.mermaid');
+              mermaidDiagrams.forEach(async (diagram) => {
+                try {
+                  const graphDefinition = diagram.textContent;
+                  const { svg } = await window.mermaid.render('mermaid-' + Math.random(), graphDefinition);
+                  diagram.innerHTML = svg;
+                } catch (err) {
+                  console.warn('❌ Mermaid 图表渲染失败:', err);
+                  diagram.innerHTML = `<div class="error-message">❌ 图表渲染失败: ${escapeHtml(err.message)}</div>`;
+                }
+              });
+            } catch (err) {
+              console.warn('❌ Mermaid 初始化失败:', err);
+            }
+          }
+
           console.log(
-            `🎉 ${ID} 渲染完成，包含代码块: ${
-              el.querySelectorAll("pre code").length
-            }个`
+            `🎉 ${ID} 渲染完成，包含代码块: ${el.querySelectorAll("pre code").length}个`
           );
         } catch (error) {
           console.error(`❌ 渲染失败 ${ID}:`, error.message, error.stack);
@@ -1259,12 +1408,26 @@
 
       async function init() {
         try {
+          console.log("✅ 开始初始化");
+
           console.log("✅ 预览模式，启用Markdown渲染器");
+          
+          // 根据当前模式加载对应的 highlight.js 主题
+          const isDarkMode = document.body.classList.contains('nightMode');
+          const highlightTheme = isDarkMode ? 'github-dark' : 'github';
+          
+          // 动态加载主题 CSS
+          const themeLink = document.createElement('link');
+          themeLink.rel = 'stylesheet';
+          themeLink.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.0/styles/${highlightTheme}.min.css`;
+          document.head.appendChild(themeLink);
+          
+          // 加载其他资源
           await Promise.all([
-            ...RESOURCES.css.map(loadCSS),
+            ...RESOURCES.css.filter(css => !css[0].includes('highlight')).map(loadCSS),
             ...RESOURCES.scripts.map(loadScript),
           ]);
-
+          
           // ✨ 手动注册Svelte语言支持（永久方案）
           if (window.hljs && !window.hljs.getLanguage("svelte")) {
             console.log("🔧 注册Svelte语言定义");
