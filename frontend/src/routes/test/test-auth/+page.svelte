@@ -2,7 +2,7 @@
 	import { confirm } from '$lib/components/ui/ConfirmDialog.svelte';
 	import { enhance } from '$app/forms';
 	import { toast } from '$lib/components/ui/Toast.svelte';
-	import { authState } from '$lib/stores/global/auth.svelte';
+	import { authState } from '$lib/state/global/auth.svelte.js';
 	import { page } from '$app/state';
 	let { data, form } = $props();
 

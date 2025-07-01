@@ -1,4 +1,4 @@
-import { createSessionState } from '$lib/stores/persisted.svelte.js';
+import { createSessionState } from '$lib/state/persisted.svelte.js';
 
 // 当前会话的临时数据
 export const sessionState = createSessionState('session', {

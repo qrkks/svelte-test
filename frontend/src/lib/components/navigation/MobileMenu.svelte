@@ -1,7 +1,7 @@
 <script>
     import { slide } from 'svelte/transition';
     import { navbarState, navbarActions } from './navbar.svelte.js';
-    import { authState } from '$lib/stores/global/auth.svelte.js';
+    import { authState } from '$lib/state/global/auth.svelte.js';
     import { enhance } from '$app/forms';
     import NavLink from './NavLink.svelte';
     

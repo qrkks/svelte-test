@@ -1,4 +1,4 @@
-import { createLocalState } from '$lib/stores/persisted.svelte.js';
+import { createLocalState } from '$lib/state/persisted.svelte.js';
 
 // 应用主题和UI设置
 export const uiSettings = createLocalState('ui-settings', {

@@ -1,5 +1,5 @@
 <script>
-	import { authState } from '$lib/stores/global/auth.svelte.js';
+	import { authState } from '$lib/state/global/auth.svelte.js';
 	import { enhance } from '$app/forms';
 	import Dropdown from '$lib/components/ui/Dropdown.svelte';
 	import NavLink from './NavLink.svelte';

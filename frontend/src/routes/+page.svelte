@@ -1,5 +1,5 @@
 <script>
-	import { authState } from '$lib/stores/global/auth.svelte.js';
+	import { authState } from '$lib/state/global/auth.svelte.js';
 </script>
 
 <div class="container mx-auto px-4 py-8">

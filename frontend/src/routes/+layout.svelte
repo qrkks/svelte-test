@@ -1,6 +1,6 @@
 <script>
 	import '../app.css';
-	import { authState } from '$lib/stores/global/auth.svelte.js';
+	import { authState } from '$lib/state/global/auth.svelte.js';
 	import Toast from '$lib/components/ui/Toast.svelte';
 	import Navbar from '$lib/components/navigation/Navbar.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';

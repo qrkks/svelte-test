@@ -1,10 +1,10 @@
 <script>
 	// 导入所有全局状态
-	import { authState } from '$lib/stores/global/auth.svelte.js';
-	import { cartState } from '$lib/stores/global/cart.svelte.js';
-	import { toastState } from '$lib/stores/global/toast.svelte.js';
-	import { uiSettings, userPreferences } from '$lib/stores/global/ui.svelte.js';
-	import { sessionState } from '$lib/stores/global/session.svelte.js';
+	import { authState } from '$lib/state/global/auth.svelte.js';
+	import { cartState } from '$lib/state/global/cart.svelte.js';
+	import { toastState } from '$lib/state/global/toast.svelte.js';
+	import { uiSettings, userPreferences } from '$lib/state/global/ui.svelte.js';
+	import { sessionState } from '$lib/state/global/session.svelte.js';
 	import { confirm } from '$lib/components/ui/ConfirmDialog.svelte';
 
 	// 组件状态（通过页面实例访问）

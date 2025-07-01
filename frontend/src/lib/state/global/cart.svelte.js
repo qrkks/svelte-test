@@ -1,4 +1,4 @@
-import { createLocalState } from '$lib/stores/persisted.svelte.js';
+import { createLocalState } from '$lib/state/persisted.svelte.js';
 
 // 购物车状态
 export const cartState = createLocalState('shopping-cart', {

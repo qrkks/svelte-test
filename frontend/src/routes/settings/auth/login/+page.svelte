@@ -1,5 +1,6 @@
 <script>
 	import { enhance } from '$app/forms';
+	import { goto } from '$app/navigation';
 
 	let { form } = $props();
 </script>
@@ -24,8 +25,9 @@
 	<button class="rounded-md bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
 		>Login</button
 	>
+	<!-- formaction="?/register" -->
 	<button
-		formaction="?/register"
+		onclick={() => goto('/settings/auth/register')}
 		class="rounded-md bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
 		>Register</button
 	>
