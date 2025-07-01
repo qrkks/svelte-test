@@ -6,10 +6,9 @@
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { dev } from '$app/environment';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
-	let { children, data } = $props();
-
+	let { children, data, form } = $props();
 
 	// 🔧 修复：使用响应式更新用户状态
 	$effect(() => {
@@ -30,6 +29,12 @@
 				lastLoginTime: null
 			});
 		}
+		// DEBUG: 在开发时监控关键数据，注意生产前删除
+		$inspect('layout: data', data);
+		$inspect('layout: form', form);
+		$inspect('layout: page', page);
+		$inspect('layout: page.data === data', page.data === data);
+		$inspect('layout: page.form === form', page.form === form);
 	});
 
 	// 开发工具状态
@@ -81,7 +86,7 @@
 	<!-- 浮动开发工具按钮 -->
 	<button
 		onclick={toggleDevTools}
-		class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-gray-800 text-white rounded-full shadow-lg hover:bg-gray-700 transition-all duration-200 flex items-center justify-center text-lg"
+		class="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-gray-800 text-lg text-white shadow-lg transition-all duration-200 hover:bg-gray-700"
 		title="开发工具 (Ctrl+Shift+D)"
 	>
 		🔧
@@ -89,21 +94,21 @@
 
 	<!-- 开发工具面板 -->
 	{#if showDevTools}
-		<div class="fixed bottom-20 right-6 z-50 bg-white rounded-lg shadow-xl border border-gray-200 p-4 min-w-48">
-			<h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-				🛠️ 开发工具
-			</h3>
-			
+		<div
+			class="fixed bottom-20 right-6 z-50 min-w-48 rounded-lg border border-gray-200 bg-white p-4 shadow-xl"
+		>
+			<h3 class="mb-3 flex items-center gap-2 font-semibold text-gray-900">🛠️ 开发工具</h3>
+
 			<div class="space-y-2">
 				<button
 					onclick={openStatesMonitor}
-					class="w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 transition-colors flex items-center gap-2"
+					class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left transition-colors hover:bg-gray-100"
 				>
 					🔍 状态监控
 				</button>
-				
+
 				<div class="border-t pt-2">
-					<div class="text-xs text-gray-500 px-3">
+					<div class="px-3 text-xs text-gray-500">
 						当前路由: {$page.route.id || '/'}
 					</div>
 				</div>

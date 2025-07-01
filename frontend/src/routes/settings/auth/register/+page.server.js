@@ -28,8 +28,6 @@ export const actions = {
 			const sessionToken = auth.generateSessionToken();
 			const session = await auth.createSession(sessionToken, userID);
 			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
-
-			// return redirect(302, '/settings/auth');
 		} catch (error) {
 			console.error('Registration error details:', {
 				errorType: error.constructor.name,
@@ -49,7 +47,8 @@ export const actions = {
 				message: '注册失败，请稍后重试',
 				debug: `${error.code}: ${error.message}`
 			});
+			// CHECK: 上线时检查错误捕获，正式环境使用postgres, 这些捕获能否覆盖；上线后，重新测试。
 		}
-		return redirect(302, '/settings/auth/login');
+		throw redirect(302, '/settings/auth/login');
 	}
 };

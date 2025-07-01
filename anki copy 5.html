@@ -613,14 +613,59 @@
           }
         }
 
-        // 如果不是富文本或无法获取 Markdown，继续原有的处理逻辑
+        // 预处理：先解码所有 HTML 实体
+        let tempHtml = html
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'")
+          .replace(/&nbsp;/g, ' ');
+
         // 🖼️ 分别保护图片、音频、表格、列表和内联样式等内容
         const imgPlaceholders = [];
         const soundPlaceholders = [];
         const tablePlaceholders = [];
         const listPlaceholders = [];
         const inlineStylePlaceholders = [];
-        let tempHtml = html;
+        const sveltePlaceholders = [];  // 保护 Svelte 语法
+
+        // 保护 Svelte 表达式和指令
+        tempHtml = tempHtml.replace(/(<script[\s\S]*?<\/script>)|({[^}]*(?:(?:&&|\|\||[+\-*/%]|\?|:|\|\>|\|\<|\|\=|\&\>|\&\<|\&\=|=>|==|!=|>=|<=|\+=|-=|\*=|\/=|%=|\?\.|\?\?|[|&]|\s+or\s+|\s+and\s+)[^}]*)+}|{#[\s\S]*?}|{:[\s\S]*?}|{\/[\s\S]*?})/gi, function(match, script, expr) {
+          if (script) {
+            // 处理 script 标签
+            const placeholder = `__SVELTE_SCRIPT_${sveltePlaceholders.length}__`;
+            sveltePlaceholders.push(script);
+            console.log("🎯 保护 Svelte script:", script);
+            return placeholder;
+          } else {
+            // 处理表达式
+            const placeholder = `__SVELTE_EXPR_${sveltePlaceholders.length}__`;
+            sveltePlaceholders.push(expr);
+            console.log("🎯 保护 Svelte 表达式:", expr);
+            return placeholder;
+          }
+        });
+
+        // 保护 Svelte 属性绑定
+        tempHtml = tempHtml.replace(/(\s)(bind|on|use|transition|animate|class|style):[a-zA-Z0-9_\-]+=/g, function(match, space, dir) {
+          const placeholder = `__SVELTE_DIR_${sveltePlaceholders.length}__`;
+          sveltePlaceholders.push(match);
+          console.log("🎯 保护 Svelte 指令:", match);
+          return placeholder;
+        });
+
+        // 保护简单的花括号表达式（不包含运算符的）
+        tempHtml = tempHtml.replace(/{([^{}]*?)}/g, function(match, expr) {
+          // 如果表达式已经是占位符，跳过
+          if (expr.includes('__SVELTE_')) {
+            return match;
+          }
+          const placeholder = `__SVELTE_EXPR_${sveltePlaceholders.length}__`;
+          sveltePlaceholders.push(match);
+          console.log("🎯 保护简单 Svelte 表达式:", match);
+          return placeholder;
+        });
 
         // 保护 <img> 标签
         tempHtml = tempHtml.replace(/<img[^>]*>/gi, function (match) {
@@ -689,151 +734,65 @@
         const codeBlockPlaceholders = [];
         console.log("🔍 [DEBUG] cleanHTML输入内容:", tempHtml.substring(0, 200) + (tempHtml.length > 200 ? "..." : ""));
 
-        // 🔧 新增：自动修复富文本代码块（```包围的内容）
+        // 🔧 处理完整的代码块
         tempHtml = tempHtml.replace(
-          /```(\w+)?(<br>|<br\s*\/?>|&nbsp;|\s)*([^`]*?)```/gi,
+          /```(\w+)?(\s*)([\s\S]*?)```/gi,
           function (match, lang, whitespace, content) {
-            console.log("🔧 发现富文本代码块，正在清理:", lang || "未指定语言");
+            console.log("🔧 处理代码块，语言:", lang || "未指定");
 
-            // 智能语言检测：避免把行号当作语言名
+            // 智能语言检测
             let actualLang = lang;
             if (lang && /^\d+$/.test(lang)) {
-              // 如果语言名是纯数字，使用自动识别
               console.log("🔧 检测到纯数字语言名，使用自动识别:", lang);
               actualLang = '';
             }
 
-            // 🔧 智能清理：先恢复HTML实体，再清理富文本标签
-            console.log("🔍 [DEBUG] 开始清理代码块，原始内容:", content);
-            
+            // 清理和保护代码内容
             let cleanContent = content
-              .replace(/<br\s*\/?>/gi, "\n"); // <br> → 换行
-            console.log("🔍 [DEBUG] 清理br后:", cleanContent);
-            
-            cleanContent = cleanContent
-              .replace(/<\/div>\s*<div[^>]*>/gi, "\n") // div换行 → 换行符
-              .replace(/<div[^>]*>/gi, "\n") // div开始 → 换行符
-              .replace(/<\/div>/gi, ""); // div结束 → 清除
-            console.log("🔍 [DEBUG] 清理div后:", cleanContent);
-            
-            cleanContent = cleanContent
-              .replace(/&nbsp;/gi, " "); // &nbsp; → 空格
-            console.log("🔍 [DEBUG] 清理nbsp后:", cleanContent);
-            
-            // 🔧 先恢复HTML实体，确保HTML标签不被误删
-            cleanContent = cleanContent
-              .replace(/&lt;/gi, "<"); // &lt; → <
-            console.log("🔍 [DEBUG] 恢复&lt;后:", cleanContent);
-            
-            cleanContent = cleanContent
-              .replace(/&gt;/gi, ">"); // &gt; → >
-            console.log("🔍 [DEBUG] 恢复&gt;后:", cleanContent);
-            
-            cleanContent = cleanContent
-              .replace(/&amp;/gi, "&") // &amp; → &
-              .replace(/&quot;/gi, '"') // &quot; → "
-              .replace(/&#39;/gi, "'"); // &#39; → '
-            console.log("🔍 [DEBUG] 恢复其他实体后:", cleanContent);
-            
-            // 🔧 只移除富文本编辑器标签，保留代码中的HTML标签
-            // 使用更安全的方法，分别处理每个标签，避免误匹配
+              .replace(/<br\s*\/?>/gi, "\n")  // 处理换行
+              .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
+              .replace(/<div[^>]*>/gi, "\n")
+              .replace(/<\/div>/gi, "")
+              .replace(/&nbsp;/gi, " ");
+
+            // 移除富文本标签但保留代码中的 HTML
             const richTextTags = ['p', 'span', 'font', 'strong', 'b', 'em', 'i', 'u', 'div', 'br'];
             richTextTags.forEach(tag => {
               const regex = new RegExp(`</?${tag}(?:\\s[^>]*)?>`, 'gi');
               cleanContent = cleanContent.replace(regex, '');
             });
-            console.log("🔍 [DEBUG] 清理富文本标签后:", cleanContent);
-            
-            // 🔧 修复：不要移除HTML实体，它们应该被保留
-            // 移除这行：.replace(/<\/?[^>]+(>|$)/gi, "") // 移除其他HTML标签
-            
-            cleanContent = cleanContent
-              .replace(/\n{3,}/g, "\n\n") // 连续3个以上换行 → 2个换行
-              .replace(/^\s+|\s+$/g, ""); // 去除首尾空白，但保留内部换行
-            console.log("🔍 [DEBUG] 最终清理后:", cleanContent);
 
-            const placeholder = `__FIXED_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
+            // 清理多余的空行但保留格式
+            cleanContent = cleanContent
+              .replace(/\n{3,}/g, "\n\n")
+              .replace(/^\s+|\s+$/g, "");
+
+            const placeholder = `__CODE_BLOCK_${codeBlockPlaceholders.length}__`;
             const finalCodeBlock = "```" + (actualLang || "") + "\n" + cleanContent + "\n```";
             codeBlockPlaceholders.push(finalCodeBlock);
-            console.log("✅ 代码块清理完成，保留了换行符");
-            console.log("🔍 [DEBUG] 清理前内容:", content.substring(0, 100) + (content.length > 100 ? "..." : ""));
-            console.log("🔍 [DEBUG] 清理后内容:", cleanContent.substring(0, 100) + (cleanContent.length > 100 ? "..." : ""));
-            console.log("🔍 [DEBUG] 最终代码块:", finalCodeBlock);
-            console.log("🔍 [DEBUG] 占位符:", placeholder);
-            console.log("🔍 [DEBUG] 使用语言:", actualLang || "未指定");
+            
+            console.log("✅ 代码块处理完成");
             return placeholder;
           }
         );
 
-        // 🔧 特殊处理：不完整的代码块（```开始但被div分割）
-        tempHtml = tempHtml.replace(
-          /```(\w+)?\s*(<\/div>\s*<div[^>]*>[\s\S]*?)```/gi,
-          function (match, lang, content) {
-            console.log(
-              "🔧 发现被div分割的代码块，正在清理:",
-              lang || "未指定语言"
-            );
-
-            // 清理代码块内的div标签
-            const cleanContent = content
-              .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
-              .replace(/<\/div>/gi, "\n")
-              .replace(/<div[^>]*>/gi, "\n")
-              .replace(/&gt;/gi, ">")
-              .replace(/&lt;/gi, "<")
-              .replace(/&amp;/gi, "&")
-              .replace(/<[^>]*>/gi, "")
-              .trim();
-
-            const placeholder = `__DIV_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
-            codeBlockPlaceholders.push(
-              "```" + (lang || "") + "\n" + cleanContent + "\n```"
-            );
-            console.log("✅ div分割代码块清理完成");
-            return placeholder;
-          }
-        );
-
-        // 保护完整的Markdown代码块
-        tempHtml = tempHtml.replace(/```[\s\S]*?```/gi, function (match) {
-          const placeholder = `__COMPLETE_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
+        // 修改行内代码处理
+        tempHtml = tempHtml.replace(/`([^`\n]+)`/g, function(match, content) {
+          const placeholder = `__INLINE_CODE_${codeBlockPlaceholders.length}__`;
+          // 保护行内代码中的内容，不做任何处理
           codeBlockPlaceholders.push(match);
-          return placeholder;
-        });
-
-        // 🔧 保护行内代码，避免HTML清理过程影响其内容
-        tempHtml = tempHtml.replace(/`([^`\n]*)`/gi, function (match, content) {
-          console.log("🔧 处理行内代码:", content.substring(0, 50) + "...");
-
-          // 简单保护行内代码内容，使用特殊编码避免被HTML清理影响
-          const protectedContent = content
-            .replace(/&lt;/gi, "____LT____") // 临时保护&lt;
-            .replace(/&gt;/gi, "____GT____") // 临时保护&gt;
-            .replace(/&amp;/gi, "____AMP____"); // 临时保护&amp;
-
-          const protectedMatch = "`" + protectedContent + "`";
-          const placeholder = `__MD_INLINE_CODE_${codeBlockPlaceholders.length}__`;
-          codeBlockPlaceholders.push(protectedMatch);
           return placeholder;
         });
 
         // 🧹 智能HTML清理和Markdown转换
         let cleaned = tempHtml
-          // 先清理HTML实体，防止HTML标签被编码
-          .replace(/&lt;/gi, "<")
-          .replace(/&gt;/gi, ">")
-          .replace(/&amp;/gi, "&")
-          .replace(/&nbsp;/gi, " ")
-          .replace(/&tab;/gi, "\t")
-          .replace(/&mdash;/gi, "—")
-          .replace(/&ndash;/gi, "–")
-          .replace(/&quot;/gi, '"')
-          .replace(/&#39;/gi, "'")
-          .replace(/&hellip;/gi, "...")
           // 特殊处理：清理连续的div标签（Anki常见格式）
           .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
           .replace(/<\/div>/gi, "\n")
           .replace(/<div[^>]*>/gi, "\n")
+          // 保持 Svelte 语法完整性
+          .replace(/=\s*"\s*{/g, '={')  // 修复 ="{ 为 ={
+          .replace(/}\s*"/g, '}')       // 修复 }" 为 }
           // 🔧 正确处理富文本标签转换为Markdown
           .replace(/<strong[^>]*>(.*?)<\/strong>/gi, "**$1**") // <strong>text</strong> → **text**
           .replace(/<b[^>]*>(.*?)<\/b>/gi, "**$1**") // <b>text</b> → **text**
@@ -934,24 +893,14 @@
 
         // 💻 恢复Markdown代码块
         codeBlockPlaceholders.forEach((original, index) => {
-          const placeholder = `__FIXED_CODE_BLOCK_${index}__`;
+          const placeholder = `__CODE_BLOCK_${index}__`;
           console.log("🔍 [DEBUG] 恢复代码块", index, "占位符:", placeholder);
           console.log("🔍 [DEBUG] 恢复代码块", index, "内容:", original.substring(0, 100) + (original.length > 100 ? "..." : ""));
           result = result.replace(placeholder, original);
         });
 
         codeBlockPlaceholders.forEach((original, index) => {
-          const placeholder = `__DIV_CODE_BLOCK_${index}__`;
-          result = result.replace(placeholder, original);
-        });
-
-        codeBlockPlaceholders.forEach((original, index) => {
-          const placeholder = `__COMPLETE_CODE_BLOCK_${index}__`;
-          result = result.replace(placeholder, original);
-        });
-
-        codeBlockPlaceholders.forEach((original, index) => {
-          const placeholder = `__MD_INLINE_CODE_${index}__`;
+          const placeholder = `__INLINE_CODE_${index}__`;
           // 🔧 恢复特殊编码为原始字符，让markdown-it正常处理
           const restoredOriginal = original
             .replace(/____LT____/gi, "<") // 恢复为<字符
@@ -959,6 +908,13 @@
             .replace(/____AMP____/gi, "&"); // 恢复为&字符
 
           result = result.replace(placeholder, restoredOriginal);
+        });
+
+        // 恢复 Svelte 表达式
+        sveltePlaceholders.forEach((original, index) => {
+          const placeholder = `__SVELTE_EXPR_${index}__`;
+          result = result.replace(placeholder, original);
+          console.log("🎯 恢复 Svelte 表达式:", original);
         });
 
         console.log("✅ HTML清理完成");

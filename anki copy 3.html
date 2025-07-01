@@ -410,6 +410,7 @@
       return !!(
         window.location.href.includes("editor") ||
         window.location.href.includes("browse") ||
+        window.location.href.includes("add") ||
         document.querySelector('[contenteditable="true"]') ||
         document.activeElement?.tagName === "TEXTAREA" ||
         document.activeElement?.tagName === "INPUT" ||
@@ -420,12 +421,14 @@
         document.body?.classList?.contains("editor") ||
         document.title.includes("编辑") ||
         document.title.includes("Edit") ||
+        document.title.includes("Add") ||
+        document.title.includes("新建") ||
         document.title.includes("Browser") ||
         document.title.includes("浏览")
       );
     } catch (e) {
       console.warn("🚨 编辑模式检测出错，为安全起见假设为编辑模式:", e);
-      return true; // 出错时为安全起见，假设是编辑模式
+      return true;
     }
   }
 
@@ -449,8 +452,8 @@
 
     // 对于可能的编辑模式，快速检测几次
     let checkCount = 0;
-    const maxChecks = 3; // 减少到3次
-    const checkInterval = 20; // 减少到20ms
+    const maxChecks = 3;
+    const checkInterval = 20;
 
     function quickCheck() {
       checkCount++;
@@ -586,381 +589,96 @@
         });
       }
 
+      // 清理 HTML 内容
       function cleanHTML(html) {
-        // �� 检查是否是从富文本编辑器粘贴的内容
-        const isPastedContent = html.includes('</div>') || html.includes('</span>') || html.includes('</p>');
-        
-        // 如果是从富文本编辑器粘贴的内容，尝试提取 Markdown
-        if (isPastedContent) {
-          // 检查是否包含代码块（可能是从 ChatGPT 等源复制的）
-          const hasCodeBlock = html.includes('```') || html.includes('pre') || html.includes('code');
-          
-          if (hasCodeBlock) {
-            console.log("📝 检测到代码块，尝试提取 Markdown");
-            // 尝试从剪贴板获取纯文本内容
+        // 检查是否是从富文本编辑器粘贴的内容
+        if (html.includes('</div>') || html.includes('</span>') || html.includes('</p>')) {
+          // 检查是否包含代码块
+          if (html.includes('```') || html.includes('pre') || html.includes('code')) {
             try {
               const clipboardText = window.clipboardData?.getData('Text') || '';
               if (clipboardText && clipboardText.includes('```')) {
-                console.log("✅ 成功从剪贴板获取 Markdown");
                 return clipboardText;
               }
             } catch (e) {
-              console.log("⚠️ 无法访问剪贴板:", e);
+              console.log("无法访问剪贴板:", e);
             }
           }
         }
 
-        // 如果不是富文本或无法获取 Markdown，继续原有的处理逻辑
-        // 🖼️ 分别保护图片、音频、表格、列表和内联样式等内容
-        const imgPlaceholders = [];
-        const soundPlaceholders = [];
-        const tablePlaceholders = [];
-        const listPlaceholders = [];
-        const inlineStylePlaceholders = [];
-        let tempHtml = html;
+        // 预处理：解码 HTML 实体
+        let tempHtml = html
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'")
+          .replace(/&nbsp;/g, ' ')
+          .replace(/\|\|=""/g, '||')  // 修复 || 操作符
+          .replace(/&&=""/g, '&&')    // 修复 && 操作符
+          .replace(/\s+=""\s+/g, ' ') // 移除多余的 ="" 属性
+          .replace(/\s+=">/g, '>');   // 修复属性结束标记
 
-        // 保护 <img> 标签
-        tempHtml = tempHtml.replace(/<img[^>]*>/gi, function (match) {
-          const placeholder = `__IMG_PLACEHOLDER_${imgPlaceholders.length}__`;
-          imgPlaceholders.push(match);
+        // 保护 Svelte 语法
+        const sveltePlaceholders = [];
+        
+        // 1. 保护 script 标签
+        tempHtml = tempHtml.replace(/(<script[^>]*>[\s\S]*?<\/script>)/gi, function(match) {
+          const placeholder = `__SVELTE_SCRIPT_${sveltePlaceholders.length}__`;
+          sveltePlaceholders.push(match);
           return placeholder;
         });
 
-        // 保护音频文件引用
-        tempHtml = tempHtml.replace(/\[sound:[^\]]+\]/gi, function (match) {
-          const placeholder = `__SOUND_PLACEHOLDER_${soundPlaceholders.length}__`;
-          soundPlaceholders.push(match);
+        // 2. 保护 HTML 属性中的表达式
+        tempHtml = tempHtml.replace(/value=["']?\{([^}]+)\}["']?/g, function(match, expr) {
+          const placeholder = `__SVELTE_ATTR_${sveltePlaceholders.length}__`;
+          sveltePlaceholders.push(`value={${expr}}`);
           return placeholder;
         });
 
-        // 🔧 保护HTML表格结构
-        tempHtml = tempHtml.replace(
-          /<table[\s\S]*?<\/table>/gi,
-          function (match) {
-            const placeholder = `__TABLE_PLACEHOLDER_${tablePlaceholders.length}__`;
-            tablePlaceholders.push(match);
-            console.log("🏁 保护表格结构:", placeholder);
-            return placeholder;
-          }
-        );
-
-        // 📝 保护HTML列表结构（包括嵌套列表）
-        tempHtml = tempHtml.replace(
-          /<[ou]l[\s\S]*?<\/[ou]l>/gi,
-          function (match) {
-            const placeholder = `__LIST_PLACEHOLDER_${listPlaceholders.length}__`;
-            listPlaceholders.push(match);
-            console.log("📝 保护列表结构:", placeholder);
-            return placeholder;
-          }
-        );
-
-        // 🎨 保护常用内联样式标签
-        const inlineStyleTags = [
-          /<span[^>]*style[^>]*>[\s\S]*?<\/span>/gi, // <span style="...">
-          /<font[^>]*(?:color|size|face)[^>]*>[\s\S]*?<\/font>/gi, // <font color/size/face="...">
-          /<mark[^>]*>[\s\S]*?<\/mark>/gi, // <mark>
-          /<small[^>]*>[\s\S]*?<\/small>/gi, // <small>
-          /<big[^>]*>[\s\S]*?<\/big>/gi, // <big>
-          /<sup[^>]*>[\s\S]*?<\/sup>/gi, // <sup>
-          /<sub[^>]*>[\s\S]*?<\/sub>/gi, // <sub>
-          /<del[^>]*>[\s\S]*?<\/del>/gi, // <del>
-          /<strike[^>]*>[\s\S]*?<\/strike>/gi, // <strike>
-          /<s[^>]*>[\s\S]*?<\/s>/gi, // <s>
-        ];
-
-        inlineStyleTags.forEach((regex) => {
-          tempHtml = tempHtml.replace(regex, function (match) {
-            const placeholder = `__INLINE_STYLE_${inlineStylePlaceholders.length}__`;
-            inlineStylePlaceholders.push(match);
-            console.log(
-              "🎨 保护内联样式:",
-              placeholder,
-              match.substring(0, 50) + "..."
-            );
-            return placeholder;
-          });
-        });
-
-        // 💻 只保护Markdown格式的代码块（不保护HTML格式）
-        const codeBlockPlaceholders = [];
-        console.log("🔍 [DEBUG] cleanHTML输入内容:", tempHtml.substring(0, 200) + (tempHtml.length > 200 ? "..." : ""));
-
-        // 🔧 新增：自动修复富文本代码块（```包围的内容）
-        tempHtml = tempHtml.replace(
-          /```(\w+)?(<br>|<br\s*\/?>|&nbsp;|\s)*([^`]*?)```/gi,
-          function (match, lang, whitespace, content) {
-            console.log("🔧 发现富文本代码块，正在清理:", lang || "未指定语言");
-
-            // �� 智能语言检测：避免把行号当作语言名
-            let actualLang = lang;
-            if (lang && /^\d+$/.test(lang)) {
-              // 如果语言名是纯数字，使用自动识别
-              console.log("🔧 检测到纯数字语言名，使用自动识别:", lang);
-              actualLang = '';
-            }
-
-            // 🔧 智能清理：先恢复HTML实体，再清理富文本标签
-            console.log("🔍 [DEBUG] 开始清理代码块，原始内容:", content);
-            
-            let cleanContent = content
-              .replace(/<br\s*\/?>/gi, "\n"); // <br> → 换行
-            console.log("🔍 [DEBUG] 清理br后:", cleanContent);
-            
-            cleanContent = cleanContent
-              .replace(/<\/div>\s*<div[^>]*>/gi, "\n") // div换行 → 换行符
-              .replace(/<div[^>]*>/gi, "\n") // div开始 → 换行符
-              .replace(/<\/div>/gi, ""); // div结束 → 清除
-            console.log("🔍 [DEBUG] 清理div后:", cleanContent);
-            
-            cleanContent = cleanContent
-              .replace(/&nbsp;/gi, " "); // &nbsp; → 空格
-            console.log("🔍 [DEBUG] 清理nbsp后:", cleanContent);
-            
-            // 🔧 先恢复HTML实体，确保HTML标签不被误删
-            cleanContent = cleanContent
-              .replace(/&lt;/gi, "<"); // &lt; → <
-            console.log("🔍 [DEBUG] 恢复&lt;后:", cleanContent);
-            
-            cleanContent = cleanContent
-              .replace(/&gt;/gi, ">"); // &gt; → >
-            console.log("🔍 [DEBUG] 恢复&gt;后:", cleanContent);
-            
-            cleanContent = cleanContent
-              .replace(/&amp;/gi, "&") // &amp; → &
-              .replace(/&quot;/gi, '"') // &quot; → "
-              .replace(/&#39;/gi, "'"); // &#39; → '
-            console.log("🔍 [DEBUG] 恢复其他实体后:", cleanContent);
-            
-            // 🔧 只移除富文本编辑器标签，保留代码中的HTML标签
-            // 使用更安全的方法，分别处理每个标签，避免误匹配
-            const richTextTags = ['p', 'span', 'font', 'strong', 'b', 'em', 'i', 'u', 'div', 'br'];
-            richTextTags.forEach(tag => {
-              const regex = new RegExp(`</?${tag}(?:\\s[^>]*)?>`, 'gi');
-              cleanContent = cleanContent.replace(regex, '');
-            });
-            console.log("🔍 [DEBUG] 清理富文本标签后:", cleanContent);
-            
-            // 🔧 修复：不要移除HTML实体，它们应该被保留
-            // 移除这行：.replace(/<\/?[^>]+(>|$)/gi, "") // 移除其他HTML标签
-            
-            cleanContent = cleanContent
-              .replace(/\n{3,}/g, "\n\n") // 连续3个以上换行 → 2个换行
-              .replace(/^\s+|\s+$/g, ""); // 去除首尾空白，但保留内部换行
-            console.log("🔍 [DEBUG] 最终清理后:", cleanContent);
-
-            const placeholder = `__FIXED_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
-            const finalCodeBlock = "```" + (actualLang || "") + "\n" + cleanContent + "\n```";
-            codeBlockPlaceholders.push(finalCodeBlock);
-            console.log("✅ 代码块清理完成，保留了换行符");
-            console.log("🔍 [DEBUG] 清理前内容:", content.substring(0, 100) + (content.length > 100 ? "..." : ""));
-            console.log("🔍 [DEBUG] 清理后内容:", cleanContent.substring(0, 100) + (cleanContent.length > 100 ? "..." : ""));
-            console.log("🔍 [DEBUG] 最终代码块:", finalCodeBlock);
-            console.log("🔍 [DEBUG] 占位符:", placeholder);
-            console.log("🔍 [DEBUG] 使用语言:", actualLang || "未指定");
-            return placeholder;
-          }
-        );
-
-        // 🔧 特殊处理：不完整的代码块（```开始但被div分割）
-        tempHtml = tempHtml.replace(
-          /```(\w+)?\s*(<\/div>\s*<div[^>]*>[\s\S]*?)```/gi,
-          function (match, lang, content) {
-            console.log(
-              "🔧 发现被div分割的代码块，正在清理:",
-              lang || "未指定语言"
-            );
-
-            // 清理代码块内的div标签
-            const cleanContent = content
-              .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
-              .replace(/<\/div>/gi, "\n")
-              .replace(/<div[^>]*>/gi, "\n")
-              .replace(/&gt;/gi, ">")
-              .replace(/&lt;/gi, "<")
-              .replace(/&amp;/gi, "&")
-              .replace(/<[^>]*>/gi, "")
-              .trim();
-
-            const placeholder = `__DIV_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
-            codeBlockPlaceholders.push(
-              "```" + (lang || "") + "\n" + cleanContent + "\n```"
-            );
-            console.log("✅ div分割代码块清理完成");
-            return placeholder;
-          }
-        );
-
-        // 保护完整的Markdown代码块
-        tempHtml = tempHtml.replace(/```[\s\S]*?```/gi, function (match) {
-          const placeholder = `__COMPLETE_CODE_BLOCK_${codeBlockPlaceholders.length}__`;
-          codeBlockPlaceholders.push(match);
+        // 3. 保护 Svelte 控制流语句和特殊指令
+        tempHtml = tempHtml.replace(/{[#:\/][^}]+}/g, function(match) {
+          const placeholder = `__SVELTE_CONTROL_${sveltePlaceholders.length}__`;
+          sveltePlaceholders.push(match);
           return placeholder;
         });
 
-        // 🔧 保护行内代码，避免HTML清理过程影响其内容
-        tempHtml = tempHtml.replace(/`([^`\n]*)`/gi, function (match, content) {
-          console.log("🔧 处理行内代码:", content.substring(0, 50) + "...");
-
-          // 简单保护行内代码内容，使用特殊编码避免被HTML清理影响
-          const protectedContent = content
-            .replace(/&lt;/gi, "____LT____") // 临时保护&lt;
-            .replace(/&gt;/gi, "____GT____") // 临时保护&gt;
-            .replace(/&amp;/gi, "____AMP____"); // 临时保护&amp;
-
-          const protectedMatch = "`" + protectedContent + "`";
-          const placeholder = `__MD_INLINE_CODE_${codeBlockPlaceholders.length}__`;
-          codeBlockPlaceholders.push(protectedMatch);
+        // 4. 保护完整的JavaScript表达式
+        tempHtml = tempHtml.replace(/{([^{}]*(?:{[^{}]*}[^{}]*)*?)}/g, function(match, expr) {
+          if (match.includes('__SVELTE_')) return match;
+          const placeholder = `__SVELTE_EXPR_${sveltePlaceholders.length}__`;
+          sveltePlaceholders.push(`{${expr}}`);
           return placeholder;
         });
 
-        // 🧹 智能HTML清理和Markdown转换
+        // 5. 基本清理
         let cleaned = tempHtml
-          // 先清理HTML实体，防止HTML标签被编码
-          .replace(/&lt;/gi, "<")
-          .replace(/&gt;/gi, ">")
-          .replace(/&amp;/gi, "&")
-          .replace(/&nbsp;/gi, " ")
-          .replace(/&tab;/gi, "\t")
-          .replace(/&mdash;/gi, "—")
-          .replace(/&ndash;/gi, "–")
-          .replace(/&quot;/gi, '"')
-          .replace(/&#39;/gi, "'")
-          .replace(/&hellip;/gi, "...")
-          // 特殊处理：清理连续的div标签（Anki常见格式）
           .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
           .replace(/<\/div>/gi, "\n")
           .replace(/<div[^>]*>/gi, "\n")
-          // 🔧 正确处理富文本标签转换为Markdown
-          .replace(/<strong[^>]*>(.*?)<\/strong>/gi, "**$1**") // <strong>text</strong> → **text**
-          .replace(/<b[^>]*>(.*?)<\/b>/gi, "**$1**") // <b>text</b> → **text**
-          .replace(/<em[^>]*>(.*?)<\/em>/gi, "*$1*") // <em>text</em> → *text*
-          .replace(/<i[^>]*>(.*?)<\/i>/gi, "*$1*") // <i>text</i> → *text*
-          .replace(/<u[^>]*>(.*?)<\/u>/gi, "$1") // 移除下划线标签但保留内容
-          // 🔧 处理标题标签
-          .replace(
-            /<h([1-6])[^>]*>(.*?)<\/h\1>/gi,
-            function (match, level, text) {
-              return "#".repeat(parseInt(level)) + " " + text + "\n";
-            }
-          )
-          // 🔧 处理链接标签
-          .replace(/<a[^>]*href=["']([^"']*)["'][^>]*>(.*?)<\/a>/gi, "[$2]($1)")
-          // 📝 列表标签已被保护，不再进行转换
-          // 清理其他HTML标签
-          .replace(/<br\s*\/?>/gi, "\n")
-          .replace(/<p[^>]*>/gi, "\n")
-          .replace(/<\/p>/gi, "\n")
-          .replace(/<span[^>]*>/gi, "")
-          .replace(/<\/span>/gi, "")
-          .replace(/<code[^>]*>/gi, "`")
-          .replace(/<\/code>/gi, "`")
-          .replace(/<pre[^>]*>/gi, "")
-          .replace(/<\/pre>/gi, "")
-          // 🎨 清理任何剩余的HTML标签（内联样式已被保护，不会被清理）
-          .replace(/<[^>]*>/gi, "")
-          // 清理多余的Markdown格式重复
-          .replace(/\*{3,}/g, "**") // ***+ → **
-          .replace(/\*\*\s*\*\*/g, "") // ** ** → 空
-          // 清理多余空行和空白
-          .replace(/\n\s*\n\s*\n/g, "\n\n")
-          .replace(/^\s+|\s+$/g, ""); // trim
+          .replace(/\s+=""\s+/g, ' ')  // 移除空属性
+          .replace(/\s+=">/g, '>');    // 修复属性结束标记
 
-        // 🔧 特殊处理表格：移除表格行之间的空行
-        const lines = cleaned.split(/\r?\n/);
-        const tableRowPattern = /^\s*\|.*\|\s*$/;
-        let processedLines = [];
-
-        for (let i = 0; i < lines.length; i++) {
-          let line = lines[i].trim();
-
-          if (line) {
-            processedLines.push(line);
-          } else {
-            // 空行处理：如果前后都是表格行，跳过空行
-            const prevLine = processedLines[processedLines.length - 1];
-            const nextLine = lines[i + 1]?.trim();
-
-            if (
-              !(
-                tableRowPattern.test(prevLine) && tableRowPattern.test(nextLine)
-              )
-            ) {
-              processedLines.push("");
-            }
-          }
-        }
-
-        let result = processedLines.join("\n");
-
-        // 🖼️ 恢复保护的媒体内容
-        imgPlaceholders.forEach((original, index) => {
-          const placeholder = `__IMG_PLACEHOLDER_${index}__`;
-          result = result.replace(placeholder, original);
+        // 6. 恢复所有占位符
+        sveltePlaceholders.forEach((original, index) => {
+          cleaned = cleaned
+            .replace(`__SVELTE_SCRIPT_${index}__`, original)
+            .replace(`__SVELTE_CONTROL_${index}__`, original)
+            .replace(`__SVELTE_EXPR_${index}__`, original)
+            .replace(`__SVELTE_ATTR_${index}__`, original);
         });
 
-        soundPlaceholders.forEach((original, index) => {
-          const placeholder = `__SOUND_PLACEHOLDER_${index}__`;
-          result = result.replace(placeholder, original);
-        });
+        // 7. 最终清理
+        cleaned = cleaned
+          .replace(/\|\|=""/g, '||')  // 再次清理可能残留的操作符问题
+          .replace(/&&=""/g, '&&')
+          .replace(/\s+=""\s+/g, ' ')
+          .replace(/\s+=">/g, '>')
+          .replace(/([^"'`])\|\|([^"'`])/g, '$1||$2')  // 修复未被捕获的操作符
+          .replace(/([^"'`])&&([^"'`])/g, '$1&&$2')
+          .replace(/value=\{([^}]+)\}/g, 'value={$1}');  // 确保value属性的大括号格式正确
 
-        // 🏁 恢复表格结构
-        tablePlaceholders.forEach((original, index) => {
-          const placeholder = `__TABLE_PLACEHOLDER_${index}__`;
-          result = result.replace(placeholder, original);
-          console.log("🏁 恢复表格结构:", placeholder);
-        });
-
-        // 📝 恢复列表结构
-        listPlaceholders.forEach((original, index) => {
-          const placeholder = `__LIST_PLACEHOLDER_${index}__`;
-          result = result.replace(placeholder, original);
-          console.log("📝 恢复列表结构:", placeholder);
-        });
-
-        // 🎨 恢复内联样式
-        inlineStylePlaceholders.forEach((original, index) => {
-          const placeholder = `__INLINE_STYLE_${index}__`;
-          result = result.replace(placeholder, original);
-          console.log(
-            "🎨 恢复内联样式:",
-            placeholder,
-            original.substring(0, 50) + "..."
-          );
-        });
-
-        // 💻 恢复Markdown代码块
-        codeBlockPlaceholders.forEach((original, index) => {
-          const placeholder = `__FIXED_CODE_BLOCK_${index}__`;
-          console.log("🔍 [DEBUG] 恢复代码块", index, "占位符:", placeholder);
-          console.log("🔍 [DEBUG] 恢复代码块", index, "内容:", original.substring(0, 100) + (original.length > 100 ? "..." : ""));
-          result = result.replace(placeholder, original);
-        });
-
-        codeBlockPlaceholders.forEach((original, index) => {
-          const placeholder = `__DIV_CODE_BLOCK_${index}__`;
-          result = result.replace(placeholder, original);
-        });
-
-        codeBlockPlaceholders.forEach((original, index) => {
-          const placeholder = `__COMPLETE_CODE_BLOCK_${index}__`;
-          result = result.replace(placeholder, original);
-        });
-
-        codeBlockPlaceholders.forEach((original, index) => {
-          const placeholder = `__MD_INLINE_CODE_${index}__`;
-          // 🔧 恢复特殊编码为原始字符，让markdown-it正常处理
-          const restoredOriginal = original
-            .replace(/____LT____/gi, "<") // 恢复为<字符
-            .replace(/____GT____/gi, ">") // 恢复为>字符
-            .replace(/____AMP____/gi, "&"); // 恢复为&字符
-
-          result = result.replace(placeholder, restoredOriginal);
-        });
-
-        console.log("✅ HTML清理完成");
-        console.log("🔍 [DEBUG] cleanHTML最终输出:", result.substring(0, 300) + (result.length > 300 ? "..." : ""));
-        return result;
+        return cleaned;
       }
 
       // 🔒 安全的HTML转义函数
@@ -1405,6 +1123,8 @@
 
       async function init() {
         try {
+          console.log("✅ 开始初始化");
+
           console.log("✅ 预览模式，启用Markdown渲染器");
           
           // 根据当前模式加载对应的 highlight.js 主题
@@ -1422,7 +1142,7 @@
             ...RESOURCES.css.filter(css => !css[0].includes('highlight')).map(loadCSS),
             ...RESOURCES.scripts.map(loadScript),
           ]);
-
+          
           // ✨ 手动注册Svelte语言支持（永久方案）
           if (window.hljs && !window.hljs.getLanguage("svelte")) {
             console.log("🔧 注册Svelte语言定义");
@@ -1546,41 +1266,4 @@
       }
     })();
   }); // 结束 delayedEditModeCheck 回调
-
-  // 添加粘贴事件处理
-  document.addEventListener('paste', function(e) {
-    // 检查是否粘贴在编辑器中
-    const target = e.target;
-    if (!target.isContentEditable && target.tagName !== 'TEXTAREA' && target.tagName !== 'INPUT') {
-      return;
-    }
-
-    // 获取剪贴板数据
-    const clipboardData = e.clipboardData || window.clipboardData;
-    if (!clipboardData) return;
-
-    // 优先获取纯文本（Markdown）
-    const text = clipboardData.getData('text/plain');
-    const html = clipboardData.getData('text/html');
-
-    // 如果文本内容包含 Markdown 特征
-    if (text && (
-      text.includes('```') ||    // 代码块
-      text.includes('##') ||     // 标题
-      text.includes('- ') ||     // 列表
-      text.includes('* ') ||     // 列表
-      text.includes('> ') ||     // 引用
-      text.includes('|') ||      // 表格
-      text.includes('```mermaid') // mermaid 图表
-    )) {
-      console.log("📝 检测到 Markdown 格式，使用纯文本");
-      e.preventDefault();
-      // 插入纯文本内容
-      document.execCommand('insertText', false, text);
-      return;
-    }
-
-    // 如果没有明显的 Markdown 特征，保持默认行为
-    console.log("📄 使用默认粘贴行为");
-  });
 </script>

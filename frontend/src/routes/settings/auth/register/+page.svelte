@@ -102,16 +102,7 @@
 			<form 
 				method="POST" 
 				action="?/register" 
-				use:enhance={() => {
-					// 表单提交时重置 lastShownMessage
-					lastShownMessage = '';
-					return async ({ result, formElement, formData,action }) => {
-                        console.log(formElement, formData, action,result);
-						if (result.type === 'success') {
-							// 处理成功情况
-						}
-					};
-				}} 
+				use:enhance
 				class="space-y-6"
 			>
 				<!-- 用户名 -->
