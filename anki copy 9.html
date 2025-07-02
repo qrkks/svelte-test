@@ -279,127 +279,155 @@
 
   /* Mermaid 相关样式 */
   .mermaid {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 1em 0;
-    background: white;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: visible;
+    background: transparent;
   }
 
   .nightMode .mermaid {
-    background: #2d2d2d;
+    filter: brightness(0.8) contrast(1.2);
   }
 
-  /* 代码块暗黑模式样式 */
-  .nightMode .hljs {
-    display: block;
-    overflow-x: auto;
+  .mermaid svg {
+    max-width: 100% !important;
+    height: auto !important;
+    font-family: "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Arial, sans-serif !important;
+  }
+
+  .mermaid .node {
+    fill: transparent;
+    stroke-width: 2px;
+  }
+
+  .mermaid .node rect,
+  .mermaid .node circle,
+  .mermaid .node ellipse,
+  .mermaid .node polygon,
+  .mermaid .node path {
+    stroke-width: 2px;
+    rx: 5px;
+    ry: 5px;
+  }
+
+  .mermaid .node .label {
+    font-family: "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+  }
+
+  .mermaid .nodeLabel {
+    background: transparent !important;
+    padding: 0.5em !important;
+    border-radius: 4px !important;
+    font-family: "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    white-space: pre !important;
+  }
+
+  .mermaid .edgeLabel {
+    background-color: transparent !important;
+    font-family: "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 12px !important;
+  }
+
+  .mermaid .cluster rect {
+    rx: 5px !important;
+    ry: 5px !important;
+    stroke-width: 1px !important;
+  }
+
+  .mermaid .edgePath .path {
+    stroke-width: 2px !important;
+    marker-end: url(#arrowhead) !important;
+  }
+
+  .mermaid .edgePath marker {
+    fill: currentColor !important;
+  }
+
+  .mermaid .flowchart-link {
+    stroke-width: 2px !important;
+  }
+
+  .nightMode .mermaid .node rect,
+  .nightMode .mermaid .node circle,
+  .nightMode .mermaid .node ellipse,
+  .nightMode .mermaid .node polygon,
+  .nightMode .mermaid .node path {
+    fill: #2d2d2d !important;
+    stroke: #ffffff !important;
+  }
+
+  .nightMode .mermaid .edgeLabel {
+    color: #ffffff !important;
+  }
+
+  .nightMode .mermaid .cluster rect {
+    fill: #2d2d2d !important;
+    stroke: #ffffff !important;
+  }
+
+  .nightMode .mermaid .edgePath .path {
+    stroke: #ffffff !important;
+  }
+
+  .nightMode .mermaid .edgePath marker {
+    fill: #ffffff !important;
+  }
+
+  .nightMode .mermaid .flowchart-link {
+    stroke: #ffffff !important;
+  }
+
+  .mermaid text {
+    font-family: "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 14px !important;
+    fill: currentColor !important;
+    stroke: none !important;
+  }
+
+  .mermaid .nodeLabel img,
+  .mermaid .nodeLabel span {
+    display: inline-block !important;
+    vertical-align: middle !important;
+  }
+
+  .mermaid .node[style*="height"] {
+    height: auto !important;
+  }
+
+  .mermaid .node foreignObject {
+    overflow: visible !important;
+  }
+
+  .error-message {
+    color: #ff4444;
+    text-align: center;
     padding: 1em;
-    color: #c9d1d9;
-    background: #0d1117;
+    border: 1px solid #ff4444;
+    border-radius: 4px;
+    margin: 1em 0;
+    background-color: rgba(255, 68, 68, 0.1);
   }
 
-  .nightMode pre {
-    background: #0d1117 !important;
-    border-color: #30363d !important;
-    box-shadow: none;
+  .error-message small {
+    display: block;
+    margin-top: 0.5em;
+    color: #666;
   }
 
-  .nightMode code {
-    background: #21262d;
-    color: #c9d1d9;
+  .nightMode .error-message {
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.1);
   }
 
-  .nightMode pre code {
-    background: transparent;
-    color: #c9d1d9;
-  }
-
-  /* 确保代码块中的注释在暗黑模式下可见 */
-  .nightMode .hljs-comment,
-  .nightMode .hljs-quote {
-    color: #8b949e;
-    font-style: italic;
-  }
-
-  /* 暗黑模式下的字符串颜色 */
-  .nightMode .hljs-string {
-    color: #a5d6ff;
-  }
-
-  /* 暗黑模式下的关键字颜色 */
-  .nightMode .hljs-keyword,
-  .nightMode .hljs-selector-tag,
-  .nightMode .hljs-deletion {
-    color: #ff7b72;
-  }
-
-  /* 暗黑模式下的数字颜色 */
-  .nightMode .hljs-number,
-  .nightMode .hljs-literal {
-    color: #79c0ff;
-  }
-
-  /* 暗黑模式下的函数名颜色 */
-  .nightMode .hljs-function,
-  .nightMode .hljs-title {
-    color: #d2a8ff;
-  }
-
-  /* 暗黑模式下的类名颜色 */
-  .nightMode .hljs-class .hljs-title {
-    color: #7ee787;
-  }
-
-  /* 暗黑模式下的变量名颜色 */
-  .nightMode .hljs-variable,
-  .nightMode .hljs-template-variable {
-    color: #ffa657;
-  }
-
-  /* 暗黑模式下的属性名颜色 */
-  .nightMode .hljs-attr,
-  .nightMode .hljs-property {
-    color: #79c0ff;
-  }
-
-  /* 暗黑模式下的标签颜色 */
-  .nightMode .hljs-tag,
-  .nightMode .hljs-name {
-    color: #7ee787;
-  }
-
-  /* 暗黑模式下的正则表达式颜色 */
-  .nightMode .hljs-regexp {
-    color: #a5d6ff;
-  }
-
-  /* 暗黑模式下的符号颜色 */
-  .nightMode .hljs-symbol,
-  .nightMode .hljs-bullet {
-    color: #f2cc60;
-  }
-
-  /* 暗黑模式下的内置函数颜色 */
-  .nightMode .hljs-built_in,
-  .nightMode .hljs-builtin-name {
-    color: #ffa657;
-  }
-
-  /* 暗黑模式下的元信息颜色 */
-  .nightMode .hljs-meta {
-    color: #f0883e;
-  }
-
-  /* 暗黑模式下的强调颜色 */
-  .nightMode .hljs-emphasis {
-    font-style: italic;
-  }
-
-  /* 暗黑模式下的加粗颜色 */
-  .nightMode .hljs-strong {
-    font-weight: bold;
+  .nightMode .error-message small {
+    color: #999;
   }
 </style>
 
@@ -589,14 +617,14 @@
         });
       }
 
-      function cleanHTML(html) {
+      function cleanHTML(text) {
         // 检查是否是从富文本编辑器粘贴的内容
-        const isPastedContent = html.includes('</div>') || html.includes('</span>') || html.includes('</p>');
+        const isPastedContent = text.includes('</div>') || text.includes('</span>') || text.includes('</p>');
         
         // 如果是从富文本编辑器粘贴的内容，尝试提取 Markdown
         if (isPastedContent) {
           // 检查是否包含代码块（可能是从 ChatGPT 等源复制的）
-          const hasCodeBlock = html.includes('```') || html.includes('pre') || html.includes('code');
+          const hasCodeBlock = text.includes('```') || text.includes('pre') || text.includes('code');
           
           if (hasCodeBlock) {
             console.log("📝 检测到代码块，尝试提取 Markdown");
@@ -614,13 +642,66 @@
         }
 
         // 预处理：先解码所有 HTML 实体
-        let tempHtml = html
+        let tempHtml = text
           .replace(/&amp;/g, '&')
           .replace(/&lt;/g, '<')
           .replace(/&gt;/g, '>')
           .replace(/&quot;/g, '"')
           .replace(/&#39;/g, "'")
-          .replace(/&nbsp;/g, ' ');
+          .replace(/&nbsp;/g, ' ')
+          // 将<br>标签转换为实际的换行符
+          .replace(/<br\s*\/?>/gi, '\n');
+
+        // 保护代码块
+        const codeBlockPlaceholders = [];
+        tempHtml = tempHtml.replace(
+          /```(\w+)?(\s*)([\s\S]*?)```/gi,
+          function (match, lang, whitespace, content) {
+            console.log("🔧 处理代码块，语言:", lang || "未指定");
+
+            // 智能语言检测
+            let actualLang = lang;
+            if (lang && /^\d+$/.test(lang)) {
+              console.log("🔧 检测到纯数字语言名，使用自动识别:", lang);
+              actualLang = '';
+            }
+
+            // 清理和保护代码内容
+            let cleanContent = content
+              .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
+              .replace(/<div[^>]*>/gi, "\n")
+              .replace(/<\/div>/gi, "")
+              .replace(/&nbsp;/gi, " ");
+
+            // 移除富文本标签但保留代码中的 HTML
+            const richTextTags = ['p', 'span', 'font', 'strong', 'b', 'em', 'i', 'u', 'div', 'br'];
+            richTextTags.forEach(tag => {
+              const regex = new RegExp(`</?${tag}(?:\\s[^>]*)?>`, 'gi');
+              cleanContent = cleanContent.replace(regex, '');
+            });
+
+            // 清理多余的空行但保留格式
+            cleanContent = cleanContent
+              .replace(/\n{3,}/g, "\n\n")
+              .trim();
+
+            const placeholder = `__CODE_BLOCK_${codeBlockPlaceholders.length}__`;
+            const finalCodeBlock = "```" + (actualLang || "") + "\n" + cleanContent + "\n```";
+            codeBlockPlaceholders.push(finalCodeBlock);
+            
+            console.log("✅ 代码块处理完成");
+            return placeholder;
+          }
+        );
+
+        // 保护 Svelte 表达式
+        const sveltePlaceholders = [];
+        tempHtml = tempHtml.replace(/(<script[\s\S]*?<\/script>)|({[^}]*(?:(?:&&|\|\||[+\-*/%]|\?|:|\|\>|\|\<|\|\=|\&\>|\&\<|\&\=|=>|==|!=|>=|<=|\+=|-=|\*=|\/=|%=|\?\.|\?\?|[|&]|\s+or\s+|\s+and\s+)[^}]*)+}|{#[\s\S]*?}|{:[\s\S]*?}|{\/[\s\S]*?})/gi, function(match, script, expr) {
+          const placeholder = `__SVELTE_EXPR_${sveltePlaceholders.length}__`;
+          sveltePlaceholders.push(match);
+          console.log("🎯 保护 Svelte 表达式:", match);
+          return placeholder;
+        });
 
         // 🖼️ 分别保护图片、音频、表格、列表和内联样式等内容
         const imgPlaceholders = [];
@@ -628,44 +709,6 @@
         const tablePlaceholders = [];
         const listPlaceholders = [];
         const inlineStylePlaceholders = [];
-        const sveltePlaceholders = [];  // 保护 Svelte 语法
-
-        // 保护 Svelte 表达式和指令
-        tempHtml = tempHtml.replace(/(<script[\s\S]*?<\/script>)|({[^}]*(?:(?:&&|\|\||[+\-*/%]|\?|:|\|\>|\|\<|\|\=|\&\>|\&\<|\&\=|=>|==|!=|>=|<=|\+=|-=|\*=|\/=|%=|\?\.|\?\?|[|&]|\s+or\s+|\s+and\s+)[^}]*)+}|{#[\s\S]*?}|{:[\s\S]*?}|{\/[\s\S]*?})/gi, function(match, script, expr) {
-          if (script) {
-            // 处理 script 标签
-            const placeholder = `__SVELTE_SCRIPT_${sveltePlaceholders.length}__`;
-            sveltePlaceholders.push(script);
-            console.log("🎯 保护 Svelte script:", script);
-            return placeholder;
-          } else {
-            // 处理表达式
-            const placeholder = `__SVELTE_EXPR_${sveltePlaceholders.length}__`;
-            sveltePlaceholders.push(expr);
-            console.log("🎯 保护 Svelte 表达式:", expr);
-            return placeholder;
-          }
-        });
-
-        // 保护 Svelte 属性绑定
-        tempHtml = tempHtml.replace(/(\s)(bind|on|use|transition|animate|class|style):[a-zA-Z0-9_\-]+=/g, function(match, space, dir) {
-          const placeholder = `__SVELTE_DIR_${sveltePlaceholders.length}__`;
-          sveltePlaceholders.push(match);
-          console.log("🎯 保护 Svelte 指令:", match);
-          return placeholder;
-        });
-
-        // 保护简单的花括号表达式（不包含运算符的）
-        tempHtml = tempHtml.replace(/{([^{}]*?)}/g, function(match, expr) {
-          // 如果表达式已经是占位符，跳过
-          if (expr.includes('__SVELTE_')) {
-            return match;
-          }
-          const placeholder = `__SVELTE_EXPR_${sveltePlaceholders.length}__`;
-          sveltePlaceholders.push(match);
-          console.log("🎯 保护简单 Svelte 表达式:", match);
-          return placeholder;
-        });
 
         // 保护 <img> 标签
         tempHtml = tempHtml.replace(/<img[^>]*>/gi, function (match) {
@@ -728,60 +771,6 @@
             );
             return placeholder;
           });
-        });
-
-        // 💻 只保护Markdown格式的代码块（不保护HTML格式）
-        const codeBlockPlaceholders = [];
-        console.log("🔍 [DEBUG] cleanHTML输入内容:", tempHtml.substring(0, 200) + (tempHtml.length > 200 ? "..." : ""));
-
-        // 🔧 处理完整的代码块
-        tempHtml = tempHtml.replace(
-          /```(\w+)?(\s*)([\s\S]*?)```/gi,
-          function (match, lang, whitespace, content) {
-            console.log("🔧 处理代码块，语言:", lang || "未指定");
-
-            // 智能语言检测
-            let actualLang = lang;
-            if (lang && /^\d+$/.test(lang)) {
-              console.log("🔧 检测到纯数字语言名，使用自动识别:", lang);
-              actualLang = '';
-            }
-
-            // 清理和保护代码内容
-            let cleanContent = content
-              .replace(/<br\s*\/?>/gi, "\n")  // 处理换行
-              .replace(/<\/div>\s*<div[^>]*>/gi, "\n")
-              .replace(/<div[^>]*>/gi, "\n")
-              .replace(/<\/div>/gi, "")
-              .replace(/&nbsp;/gi, " ");
-
-            // 移除富文本标签但保留代码中的 HTML
-            const richTextTags = ['p', 'span', 'font', 'strong', 'b', 'em', 'i', 'u', 'div', 'br'];
-            richTextTags.forEach(tag => {
-              const regex = new RegExp(`</?${tag}(?:\\s[^>]*)?>`, 'gi');
-              cleanContent = cleanContent.replace(regex, '');
-            });
-
-            // 清理多余的空行但保留格式
-            cleanContent = cleanContent
-              .replace(/\n{3,}/g, "\n\n")
-              .replace(/^\s+|\s+$/g, "");
-
-            const placeholder = `__CODE_BLOCK_${codeBlockPlaceholders.length}__`;
-            const finalCodeBlock = "```" + (actualLang || "") + "\n" + cleanContent + "\n```";
-            codeBlockPlaceholders.push(finalCodeBlock);
-            
-            console.log("✅ 代码块处理完成");
-            return placeholder;
-          }
-        );
-
-        // 修改行内代码处理
-        tempHtml = tempHtml.replace(/`([^`\n]+)`/g, function(match, content) {
-          const placeholder = `__INLINE_CODE_${codeBlockPlaceholders.length}__`;
-          // 保护行内代码中的内容，不做任何处理
-          codeBlockPlaceholders.push(match);
-          return placeholder;
         });
 
         // 🧹 智能HTML清理和Markdown转换
@@ -897,17 +886,6 @@
           console.log("🔍 [DEBUG] 恢复代码块", index, "占位符:", placeholder);
           console.log("🔍 [DEBUG] 恢复代码块", index, "内容:", original.substring(0, 100) + (original.length > 100 ? "..." : ""));
           result = result.replace(placeholder, original);
-        });
-
-        codeBlockPlaceholders.forEach((original, index) => {
-          const placeholder = `__INLINE_CODE_${index}__`;
-          // 🔧 恢复特殊编码为原始字符，让markdown-it正常处理
-          const restoredOriginal = original
-            .replace(/____LT____/gi, "<") // 恢复为<字符
-            .replace(/____GT____/gi, ">") // 恢复为>字符
-            .replace(/____AMP____/gi, "&"); // 恢复为&字符
-
-          result = result.replace(placeholder, restoredOriginal);
         });
 
         // 恢复 Svelte 表达式
@@ -1299,26 +1277,110 @@
           // 初始化 Mermaid 图表
           if (window.mermaid) {
             try {
+              console.log('🔄 开始初始化 Mermaid...', window.mermaid.version);
+              
+              // 确保mermaid库已经正确加载
+              if (!window.mermaid.parse) {
+                throw new Error('Mermaid库未完全加载，缺少parse方法');
+              }
+
               window.mermaid.initialize({
-                startOnLoad: false,
+                startOnLoad: false, // 改为false，手动控制渲染时机
                 theme: document.body.classList.contains('nightMode') ? 'dark' : 'default',
-                securityLevel: 'strict'
+                securityLevel: 'loose',
+                flowchart: {
+                  htmlLabels: true,
+                  wrap: false,
+                  useMaxWidth: false,
+                  nodeSpacing: 50,
+                  rankSpacing: 50,
+                  curve: 'basis',
+                  diagramPadding: 8,
+                  labelBackgroundColor: 'transparent'
+                },
+                themeVariables: {
+                  fontSize: '14px',
+                  fontFamily: '"Microsoft YaHei", "微软雅黑", "Helvetica Neue", Arial, sans-serif',
+                  nodeBorder: '2px',
+                  mainBkg: document.body.classList.contains('nightMode') ? '#2d2d2d' : '#ffffff',
+                  nodeBkg: document.body.classList.contains('nightMode') ? '#2d2d2d' : '#ffffff',
+                  nodeTextColor: document.body.classList.contains('nightMode') ? '#ffffff' : '#333333',
+                  lineColor: document.body.classList.contains('nightMode') ? '#ffffff' : '#333333',
+                  nodePadding: 16
+                }
               });
+              console.log('✅ Mermaid 初始化成功');
               
               const mermaidDiagrams = el.querySelectorAll('.mermaid');
-              mermaidDiagrams.forEach(async (diagram) => {
+              console.log(`📊 找到 ${mermaidDiagrams.length} 个 Mermaid 图表`);
+              
+              mermaidDiagrams.forEach(async (diagram, index) => {
                 try {
-                  const graphDefinition = diagram.textContent;
-                  const { svg } = await window.mermaid.render('mermaid-' + Math.random(), graphDefinition);
+                  const graphDefinition = diagram.textContent.trim();
+                  // 先解析确保语法正确
+                  await window.mermaid.parse(graphDefinition);
+                  
+                  // 生成唯一ID
+                  const safeId = `mermaid-diagram-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                  diagram.id = safeId;
+                  
+                  // 渲染图表
+                  const { svg } = await window.mermaid.render(safeId, graphDefinition);
                   diagram.innerHTML = svg;
+                  
+                  // 渲染后处理
+                  const svgElement = diagram.querySelector('svg');
+                  if (svgElement) {
+                    // 设置SVG样式
+                    svgElement.style.maxWidth = '100%';
+                    svgElement.style.height = 'auto';
+                    
+                    // 处理foreignObject
+                    const foreignObjects = svgElement.querySelectorAll('foreignObject');
+                    foreignObjects.forEach(fo => {
+                      const div = fo.querySelector('div');
+                      if (div) {
+                        // 获取实际内容尺寸
+                        const rect = div.getBoundingClientRect();
+                        // 设置foreignObject尺寸
+                        fo.setAttribute('width', Math.ceil(rect.width + 20));
+                        fo.setAttribute('height', Math.ceil(rect.height + 10));
+                      }
+                    });
+                    
+                    // 更新SVG视口
+                    const bbox = svgElement.getBBox();
+                    svgElement.setAttribute('viewBox', `0 0 ${Math.ceil(bbox.width + 40)} ${Math.ceil(bbox.height + 20)}`);
+                  }
+                  
+                  console.log(`✅ 图表 ${index + 1} 渲染成功`);
                 } catch (err) {
-                  console.warn('❌ Mermaid 图表渲染失败:', err);
-                  diagram.innerHTML = `<div class="error-message">❌ 图表渲染失败: ${escapeHtml(err.message)}</div>`;
+                  console.error(`❌ 图表 ${index + 1} 渲染失败:`, err);
+                  diagram.innerHTML = `
+                    <div class="error-message">
+                      ⚠️ 图表渲染失败
+                      <br>
+                      <small>${err.message}</small>
+                    </div>
+                  `;
                 }
               });
             } catch (err) {
-              console.warn('❌ Mermaid 初始化失败:', err);
+              console.error('❌ Mermaid 初始化失败:', err);
             }
+          } else {
+            console.warn('⚠️ Mermaid 库未加载，请检查网络连接或CDN可用性');
+            // 显示加载失败提示
+            const mermaidDiagrams = el.querySelectorAll('.mermaid');
+            mermaidDiagrams.forEach(diagram => {
+              diagram.innerHTML = `
+                <div class="error-message">
+                  ⚠️ Mermaid 图表库加载失败
+                  <br>
+                  <small>请检查网络连接并刷新页面重试</small>
+                </div>
+              `;
+            });
           }
 
           console.log(
@@ -1507,4 +1569,130 @@
       }
     })();
   }); // 结束 delayedEditModeCheck 回调
+
+  // 渲染后调整节点尺寸
+  async function adjustNodeSize(diagram, index) {
+    try {
+      console.log(`\n==== 🔍 开始检查节点尺寸 ====`);
+      const svgElement = diagram.querySelector('svg');
+      const nodes = Array.from(svgElement.querySelectorAll('.node'));
+      
+      console.log(`📊 总节点数量: ${nodes.length}`);
+      
+      nodes.forEach((node, nodeIndex) => {
+        const rect = node.querySelector('rect, circle, ellipse, polygon, path');
+        const label = node.querySelector('.label');
+        
+        if (rect && label) {
+          console.log(`\n🎯 检查节点 ${nodeIndex + 1}:`);
+          console.log(`📝 节点文本: "${label.textContent.trim()}"`);
+          
+          // 调整前的尺寸
+          const beforeRectBox = rect.getBoundingClientRect();
+          const beforeLabelBox = label.getBoundingClientRect();
+          
+          console.log('📏 调整前尺寸:', {
+            rect: {
+              width: beforeRectBox.width.toFixed(2),
+              height: beforeRectBox.height.toFixed(2)
+            },
+            label: {
+              width: beforeLabelBox.width.toFixed(2),
+              height: beforeLabelBox.height.toFixed(2)
+            }
+          });
+          
+          // 计算初始溢出量
+          const beforeOverflowWidth = Math.max(0, beforeLabelBox.width - beforeRectBox.width);
+          const beforeOverflowHeight = Math.max(0, beforeLabelBox.height - beforeRectBox.height);
+          
+          console.log('⚠️ 初始溢出量:', {
+            width: beforeOverflowWidth.toFixed(2),
+            height: beforeOverflowHeight.toFixed(2)
+          });
+          
+          // 如果有溢出，进行调整
+          if (beforeOverflowWidth > 0 || beforeOverflowHeight > 0) {
+            console.log('🔧 开始调整节点尺寸...');
+            const padding = 16;
+            
+            if (rect.tagName === 'rect') {
+              const newWidth = beforeLabelBox.width + (padding * 2);
+              const newHeight = beforeLabelBox.height + (padding * 2);
+              
+              console.log('📐 计划调整为:', {
+                width: newWidth.toFixed(2),
+                height: newHeight.toFixed(2),
+                padding: padding
+              });
+              
+              // 转换为SVG坐标系
+              const svgPoint = svgElement.createSVGPoint();
+              svgPoint.x = newWidth;
+              svgPoint.y = newHeight;
+              const transformedPoint = svgPoint.matrixTransform(rect.getScreenCTM().inverse());
+              
+              const oldWidth = rect.getAttribute('width');
+              const oldHeight = rect.getAttribute('height');
+              
+              rect.setAttribute('width', transformedPoint.x);
+              rect.setAttribute('height', transformedPoint.y);
+              
+              console.log('🔄 属性更新:', {
+                width: {
+                  from: oldWidth,
+                  to: transformedPoint.x.toFixed(2)
+                },
+                height: {
+                  from: oldHeight,
+                  to: transformedPoint.y.toFixed(2)
+                }
+              });
+              
+              // 调整位置
+              const dx = (transformedPoint.x - beforeRectBox.width) / 2;
+              const dy = (transformedPoint.y - beforeRectBox.height) / 2;
+              const currentX = parseFloat(rect.getAttribute('x') || 0);
+              const currentY = parseFloat(rect.getAttribute('y') || 0);
+              
+              rect.setAttribute('x', currentX - dx);
+              rect.setAttribute('y', currentY - dy);
+              
+              // 检查调整后的尺寸
+              const afterRectBox = rect.getBoundingClientRect();
+              const afterLabelBox = label.getBoundingClientRect();
+              const afterOverflowWidth = Math.max(0, afterLabelBox.width - afterRectBox.width);
+              const afterOverflowHeight = Math.max(0, afterLabelBox.height - afterRectBox.height);
+              
+              console.log('📏 调整后尺寸:', {
+                rect: {
+                  width: afterRectBox.width.toFixed(2),
+                  height: afterRectBox.height.toFixed(2)
+                },
+                label: {
+                  width: afterLabelBox.width.toFixed(2),
+                  height: afterLabelBox.height.toFixed(2)
+                }
+              });
+              
+              console.log('⚠️ 调整后溢出量:', {
+                width: afterOverflowWidth.toFixed(2),
+                height: afterOverflowHeight.toFixed(2)
+              });
+              
+              if (afterOverflowWidth > 0 || afterOverflowHeight > 0) {
+                console.log('❌ 警告：调整后仍有溢出');
+              } else {
+                console.log('✅ 调整成功：溢出已解决');
+              }
+            }
+          } else {
+            console.log('✅ 无需调整：节点尺寸合适');
+          }
+        }
+      });
+    } catch (err) {
+      console.error('❌ 节点调整失败:', err);
+    }
+  }
 </script>
