@@ -1281,30 +1281,14 @@
 
       // 添加语言标识符函数
       function addLanguageLabel(preElement, language) {
-        // 🔒 安全检查：确保preElement存在且有parentElement
-        if (!preElement || !preElement.parentElement) {
-          console.warn(
-            "⚠️ preElement或其parentElement为null，跳过语言标签添加"
-          );
+        // 🔒 安全检查：确保preElement存在
+        if (!preElement) {
+          console.warn("⚠️ preElement为null，跳过语言标签添加");
           return;
         }
 
-        // 检查pre元素是否已经被包装
-        let wrapper = preElement.parentElement;
-        // if (!wrapper.classList.contains("code-wrapper")) {
-        //   // 创建包装容器
-        //   wrapper = document.createElement("div");
-        //   wrapper.className = "code-wrapper";
-        //   wrapper.style.position = "relative";
-        //   wrapper.style.display = "block";
-
-        //   // 将pre元素包装起来
-        //   preElement.parentNode.insertBefore(wrapper, preElement);
-        //   wrapper.appendChild(preElement);
-        // }
-
         // 检查是否已经有标签
-        const existingLabel = wrapper.querySelector(".code-lang-label");
+        const existingLabel = preElement.querySelector(".code-lang-label");
         if (existingLabel) {
           existingLabel.remove();
         }
@@ -1323,14 +1307,42 @@
           // 获取代码块内容
           const codeElement = preElement.querySelector("code");
           if (codeElement) {
-            const codeText =
-              codeElement.textContent || codeElement.innerText || "";
-            await copyToClipboard(codeText, langLabel);
+            // 使用临时div获取未转义的文本内容
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = codeElement.innerHTML;
+            // 移除所有highlight.js的span标签，只保留文本内容
+            const spans = tempDiv.querySelectorAll('span');
+            spans.forEach(span => {
+              const textNode = document.createTextNode(span.textContent || '');
+              span.parentNode.replaceChild(textNode, span);
+            });
+            // 获取原始文本并解码HTML实体
+            const codeText = tempDiv.textContent || tempDiv.innerText || "";
+            const decodedText = codeText
+              .replace(/&lt;/g, '<')
+              .replace(/&gt;/g, '>')
+              .replace(/&quot;/g, '"')
+              .replace(/&amp;/g, '&')
+              .replace(/&#39;/g, "'")
+              .replace(/&nbsp;/g, ' ');
+            
+            await copyToClipboard(decodedText, langLabel);
           }
         });
 
-        // 添加到包装容器而不是pre元素
-        wrapper.appendChild(langLabel);
+        // 直接添加到pre元素
+        preElement.appendChild(langLabel);
+
+        // 记录调试信息
+        const codeElement = preElement.querySelector("code");
+        if (codeElement) {
+          console.log("🔍 [DEBUG] 代码块", language, "最终内容:", codeElement.innerHTML.substring(0, 100) + (codeElement.innerHTML.length > 100 ? "..." : ""));
+          
+          // 获取原始文本内容用于调试
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = codeElement.innerHTML;
+          console.log("🔍 [DEBUG] 代码块", language, "文本内容:", tempDiv.textContent.substring(0, 100) + (tempDiv.textContent.length > 100 ? "..." : ""));
+        }
       }
 
       function renderMarkdown(ID) {
@@ -1364,33 +1376,24 @@
             // 🔧 智能语言检测：避免把行号当作语言名
             let actualLang = lang;
             if (lang && /^\d+$/.test(lang)) {
-              // 如果语言名是纯数字，使用自动识别
               console.log("🔧 检测到纯数字语言名，使用自动识别:", lang);
               actualLang = "";
             }
 
-            // 🔒 智能HTML转义：让HTML代码正常显示，但确保安全
-            const smartEscapeHtml = (text, language) => {
-              // 🔧 修复：对于代码块中的HTML，我们不应该转义，应该让它显示为原始文本
-              // 代码块本身就是安全的文本内容，不需要额外的HTML转义
-              console.log("✅ 代码块内容正常显示，无需转义");
-              console.log(
-                "🔍 [DEBUG] smartEscape输入:",
-                text.substring(0, 100) + (text.length > 100 ? "..." : "")
-              );
-              console.log(
-                "🔍 [DEBUG] smartEscape输出:",
-                text.substring(0, 100) + (text.length > 100 ? "..." : "")
-              );
-              return text;
-            };
-
-            const processedStr = smartEscapeHtml(str, actualLang);
             let highlightedCode = "";
+
+            // 解码HTML实体
+            const decodedStr = str
+              .replace(/&lt;/g, '<')
+              .replace(/&gt;/g, '>')
+              .replace(/&quot;/g, '"')
+              .replace(/&amp;/g, '&')
+              .replace(/&#39;/g, "'")
+              .replace(/&nbsp;/g, ' ');
 
             if (actualLang && window.hljs) {
               try {
-                const result = window.hljs.highlight(processedStr, {
+                const result = window.hljs.highlight(decodedStr, {
                   language: actualLang,
                 });
                 highlightedCode = result.value;
@@ -1398,25 +1401,25 @@
               } catch (e) {
                 console.warn("❌ 指定语言高亮失败，回退到自动检测:", e.message);
                 try {
-                  const result = window.hljs.highlightAuto(processedStr);
+                  const result = window.hljs.highlightAuto(decodedStr);
                   highlightedCode = result.value;
                 } catch (e2) {
                   console.warn("❌ 自动检测也失败，使用原始代码:", e2.message);
-                  highlightedCode = processedStr;
+                  highlightedCode = decodedStr;
                 }
               }
             } else if (window.hljs) {
               try {
-                const result = window.hljs.highlightAuto(processedStr);
+                const result = window.hljs.highlightAuto(decodedStr);
                 highlightedCode = result.value;
                 console.log("✅ 自动检测语言高亮:", result.language || "auto");
               } catch (e) {
                 console.warn("❌ 自动高亮失败，使用原始代码:", e.message);
-                highlightedCode = processedStr;
+                highlightedCode = decodedStr;
               }
             } else {
-              highlightedCode = processedStr;
-              console.log("✅ hljs未加载，使用处理后代码");
+              highlightedCode = decodedStr;
+              console.log("✅ hljs未加载，使用原始代码");
             }
 
             console.log("✅ 返回处理后代码，长度:", highlightedCode.length);
@@ -1428,6 +1431,59 @@
             return highlightedCode;
           },
         });
+
+        // 重写行内代码渲染规则
+        md.renderer.rules.code_inline = function(tokens, idx, options, env, slf) {
+          var token = tokens[idx];
+          
+          console.log("🔍 [DEBUG] 处理行内代码:", {
+            原始内容: token.content,
+            长度: token.content.length,
+            包含HTML标签: token.content.includes('<') || token.content.includes('>')
+          });
+          
+          // 解码HTML实体
+          const decodedContent = token.content
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"')
+            .replace(/&amp;/g, '&')
+            .replace(/&#39;/g, "'")
+            .replace(/&nbsp;/g, ' ');
+          
+          console.log("🔍 [DEBUG] 行内代码解码后:", {
+            解码内容: decodedContent,
+            长度: decodedContent.length,
+            包含HTML标签: decodedContent.includes('<') || decodedContent.includes('>')
+          });
+          
+          // 重新转义HTML标签
+          const escapedContent = decodedContent
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+          
+          console.log("🔍 [DEBUG] 行内代码重新转义后:", {
+            转义内容: escapedContent,
+            长度: escapedContent.length
+          });
+          
+          return '<code>' + escapedContent + '</code>';
+        };
+
+        // 重写代码块渲染规则
+        md.renderer.rules.fence = function(tokens, idx, options, env, slf) {
+          const token = tokens[idx];
+          const info = token.info ? md.utils.unescapeAll(token.info.trim()) : '';
+          const lang = info ? info.split(/\s+/g)[0] : '';
+          
+          // 直接使用token的内容进行高亮，因为cleanHTML已经处理过转义
+          const highlighted = options.highlight(token.content, lang, '');
+          
+          return '<pre><code class="hljs language-' + lang + '">' + highlighted + '</code></pre>';
+        };
 
         if (window.markdownItMark) md.use(window.markdownItMark);
 
