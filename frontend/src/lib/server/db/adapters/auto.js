@@ -17,7 +17,7 @@ switch (dbType.toLowerCase()) {
 	
 	case 'sqlite':
 	default: {
-		const { db: sqliteDb } = await import('../sqlite.js');
+		const { db: sqliteDb } = await import('./sqlite.js');
 		db = sqliteDb;
 		console.log('📊 使用 SQLite 数据库');
 		break;

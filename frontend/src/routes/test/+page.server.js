@@ -1,98 +1,32 @@
-import { db } from '$lib/server/db';
-import * as table from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
-import { redirect } from '@sveltejs/kit';
+const pages = import.meta.glob('/src/routes/test/**/+page.svelte', { eager: true });
 
-// GET 请求 - 页面加载时执行
-export const load = async (event) => {
-	const loadStartTime = new Date();
+/** @type {import('./$types').PageServerLoad} */
+export async function load() {
+	const testPages = [];
+	
+	for (const path in pages) {
+		// 将文件路径转换为路由路径
+		let route =
+			path
+				.replace('/src/routes/', '')
+				.replace('/+page.svelte', '')
+				.replace(/\/\([^)]+\)/g, '') || // 移除路由组
+			'/';
+		console.log('route', route);
 
-	// 🔒 路由守卫：检查用户是否登录
-	//
-	if (!event.locals.user) {
-		throw redirect(302, '/settings/auth/login');
-	}
+		// 生成标题（从路径或映射）
+		const title = route.split('/').pop()?.replace(/-/g, ' ') || '页面';
+		console.log('title', title);
 
-	// 获取所有已保存的测试数据
-	const testData = await db.select().from(table.test);
-
-	const loadEndTime = new Date();
-	const loadDuration = loadEndTime.getTime() - loadStartTime.getTime();
-
-	return {
-		title: '测试页面',
-		testData: testData,
-		loadStartTime: loadStartTime.toISOString(),
-		loadEndTime: loadEndTime.toISOString(),
-		loadDuration: loadDuration,
-		currentTime: new Date().toISOString(),
-		user: event.locals.user, // 返回用户信息
-		serverInfo: {
-			nodeVersion: process.version,
-			environment: process.env.NODE_ENV
-		}
-	};
-};
-
-// POST 请求 - 表单提交时执行
-export const actions = {
-	// 提交数据
-	submit: async (event) => {
-		// 🔒 表单提交时也要检查权限
-		if (!event.locals.user) {
-			throw redirect(302, '/settings/auth/login');
-		}
-
-		const formData = await event.request.formData();
-		const testInput = formData.get('testInput');
-
-		// 插入数据到数据库
-		// const id = crypto.randomUUID();
-		await db.insert(table.test).values({
-			// id: id,
-			testInput: testInput
+		// 添加到测试页面数组
+		testPages.push({
+			path: route,
+			title: title
 		});
-
-		return {
-			success: true,
-			message: '数据保存成功',
-			savedInput: testInput,
-			// generatedId: id,
-			timestamp: new Date().toISOString()
-		};
-	},
-
-	// 删除数据
-	delete: async (event) => {
-		// 🔒 删除操作需要管理员权限
-		if (!event.locals.user || event.locals.user.username !== 'admin') {
-			return { success: false, message: '权限不足，只有管理员可以删除' };
-		}
-
-		const formData = await event.request.formData();
-		const id = formData.get('id');
-
-		await db.delete(table.test).where(eq(table.test.id, id));
-
-		return {
-			success: true,
-			message: '数据删除成功',
-			deletedId: id
-		};
-	},
-
-	// 清空所有数据
-	clear: async (event) => {
-		// 🔒 清空操作需要管理员权限
-		if (!event.locals.user || event.locals.user.username !== 'admin') {
-			return { success: false, message: '权限不足，只有管理员可以清空' };
-		}
-
-		await db.delete(table.test);
-
-		return {
-			success: true,
-			message: '所有数据已清空'
-		};
 	}
-};
+	
+	// 返回数据到前端
+	return {
+		testPages
+	};
+}
