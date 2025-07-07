@@ -231,13 +231,18 @@ export async function getAllUserPermissions(userId) {
 		const orgPermissions = await getUserOrganizationPermissions(userId, org.organizationId);
 		const subOrgs = await getUserSubOrganizations(userId, org.organizationId);
 		
+		// 获取每个子组织的权限
+		const subOrgsWithPermissions = await Promise.all(
+			subOrgs.map(async subOrg => ({
+				...subOrg,
+				permissions: await getUserSubOrganizationPermissions(userId, subOrg.subOrganizationId)
+			}))
+		);
+		
 		allPermissions.organizations.push({
 			...org,
 			permissions: orgPermissions,
-			subOrganizations: subOrgs.map(subOrg => ({
-				...subOrg,
-				permissions: [] // 这里可以添加子组织权限
-			}))
+			subOrganizations: subOrgsWithPermissions
 		});
 	}
 
