@@ -4,7 +4,7 @@
     import { toastState } from '$lib/state/global/toast.svelte.js';
 
     let { data } = $props();
-    
+
     // 当前选中的角色类型
     let selectedRoleType = $state('system');
     
@@ -65,17 +65,6 @@
         }
     }
 
-    // 派生当前角色列表
-    let currentRoles = $derived(() => {
-        if (!data) return [];
-        switch (selectedRoleType) {
-            case 'system': return data.systemRoles ?? [];
-            case 'organization': return data.organizationRoles ?? [];
-            case 'subOrganization': return data.subOrganizationRoles ?? [];
-            default: return [];
-        }
-    });
-
     // 获取角色类型名称
     function getRoleTypeName(type) {
         switch (type) {
@@ -91,12 +80,10 @@
     }
 
     // 调试信息
-    console.log('data:', data);
-    console.log('systemRoles:', data.systemRoles);
-    console.log('organizationRoles:', data.organizationRoles);
-    console.log('subOrganizationRoles:', data.subOrganizationRoles);
-    console.log('currentRoles:', currentRoles);
-    console.log('当前角色数量:', $currentRoles.length);
+    $inspect('data:', data);
+    $inspect('systemRoles:', data.systemRoles);
+    $inspect('organizationRoles:', data.organizationRoles);
+    $inspect('subOrganizationRoles:', data.subOrganizationRoles);
 </script>
 
 <svelte:head>
@@ -115,7 +102,6 @@
         <p>系统角色数量: {data.systemRoles?.length || 0}</p>
         <p>组织角色数量: {data.organizationRoles?.length || 0}</p>
         <p>子组织角色数量: {data.subOrganizationRoles?.length || 0}</p>
-        <p>当前角色数量: {$currentRoles.length}</p>
     </div>
 
     <!-- 角色类型切换 -->
@@ -170,21 +156,105 @@
                 </div>
 
                 <div class="p-6">
-                    {#if $currentRoles.length === 0}
+                    {#if selectedRoleType === 'system'}
+                        {#if data.systemRoles.length === 0}
                         <div class="text-center py-8">
                             <div class="mx-auto h-12 w-12 text-gray-400">
                                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
                             </div>
-                            <h3 class="mt-2 text-sm font-medium">暂无角色</h3>
-                            <p class="mt-1 text-sm text-gray-500">
-                                还没有创建任何{getRoleTypeName(selectedRoleType).toLowerCase()}
-                            </p>
+                                <h3 class="mt-2 text-sm font-medium">暂无系统角色</h3>
                         </div>
                     {:else}
                         <div class="space-y-4">
-                            {#each $currentRoles as role}
+                                {#each data.systemRoles as role}
+                                    <div class="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                        <div class="flex-1">
+                                            <h3 class="font-medium">{role.name}</h3>
+                                            {#if role.description}
+                                                <p class="text-sm text-gray-600 mt-1">{role.description}</p>
+                                            {/if}
+                                            <p class="text-xs text-gray-400 mt-1">
+                                                创建时间: {new Date(role.createdAt).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <button
+                                                type="button"
+                                                onclick={() => startEdit(role)}
+                                                class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors duration-200"
+                                            >
+                                                编辑
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onclick={() => deleteRole(role)}
+                                                class="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors duration-200"
+                                            >
+                                                删除
+                                            </button>
+                                        </div>
+                                    </div>
+                                {/each}
+                            </div>
+                        {/if}
+                    {:else if selectedRoleType === 'organization'}
+                        {#if data.organizationRoles.length === 0}
+                            <div class="text-center py-8">
+                                <div class="mx-auto h-12 w-12 text-gray-400">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </div>
+                                <h3 class="mt-2 text-sm font-medium">暂无组织角色</h3>
+                            </div>
+                        {:else}
+                            <div class="space-y-4">
+                                {#each data.organizationRoles as role}
+                                    <div class="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                        <div class="flex-1">
+                                            <h3 class="font-medium">{role.name}</h3>
+                                            {#if role.description}
+                                                <p class="text-sm text-gray-600 mt-1">{role.description}</p>
+                                            {/if}
+                                            <p class="text-xs text-gray-400 mt-1">
+                                                创建时间: {new Date(role.createdAt).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <button
+                                                type="button"
+                                                onclick={() => startEdit(role)}
+                                                class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors duration-200"
+                                            >
+                                                编辑
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onclick={() => deleteRole(role)}
+                                                class="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors duration-200"
+                                            >
+                                                删除
+                                            </button>
+                                        </div>
+                                    </div>
+                                {/each}
+                            </div>
+                        {/if}
+                    {:else if selectedRoleType === 'subOrganization'}
+                        {#if data.subOrganizationRoles.length === 0}
+                            <div class="text-center py-8">
+                                <div class="mx-auto h-12 w-12 text-gray-400">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </div>
+                                <h3 class="mt-2 text-sm font-medium">暂无子组织角色</h3>
+                            </div>
+                        {:else}
+                            <div class="space-y-4">
+                                {#each data.subOrganizationRoles as role}
                                 <div class="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
                                     <div class="flex-1">
                                         <h3 class="font-medium">{role.name}</h3>
@@ -214,6 +284,7 @@
                                 </div>
                             {/each}
                         </div>
+                        {/if}
                     {/if}
                 </div>
             </div>
