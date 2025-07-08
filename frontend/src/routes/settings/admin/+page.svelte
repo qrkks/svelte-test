@@ -218,34 +218,29 @@
 			</a>
 
 			<!-- 用户管理 -->
-			<div class="rounded-lg border p-6 opacity-50 shadow-sm">
-				<div class="mb-4 flex items-center">
-					<div class="rounded-lg bg-gray-100 p-2">
-						<svg
-							class="h-6 w-6 text-gray-400"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-							/>
-						</svg>
+			<a href="/settings/admin/users" class="block">
+				<div class="rounded-lg border p-6 shadow-sm transition-shadow duration-200 hover:shadow-md">
+					<div class="mb-4 flex items-center">
+						<div class="rounded-lg bg-blue-100 p-2">
+							<svg
+								class="h-6 w-6 text-blue-600"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+								/>
+							</svg>
+						</div>
+						<h3 class="ml-3 text-lg font-semibold">用户管理</h3>
 					</div>
-					<h3 class="ml-3 text-lg font-semibold text-gray-400">用户管理</h3>
+					<p class="text-gray-600">管理用户账户、状态和信息</p>
 				</div>
-				<p class="text-gray-400">管理用户账户、状态和信息</p>
-				<div class="mt-2">
-					<span
-						class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800"
-					>
-						开发中
-					</span>
-				</div>
-			</div>
+			</a>
 
 			<!-- 组织管理 -->
 			<div class="rounded-lg border p-6 opacity-50 shadow-sm">
