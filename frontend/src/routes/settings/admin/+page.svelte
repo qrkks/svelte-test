@@ -243,34 +243,29 @@
 			</a>
 
 			<!-- 组织管理 -->
-			<div class="rounded-lg border p-6 opacity-50 shadow-sm">
-				<div class="mb-4 flex items-center">
-					<div class="rounded-lg bg-gray-100 p-2">
-						<svg
-							class="h-6 w-6 text-gray-400"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-							/>
-						</svg>
+			<a href="/settings/admin/organizations" class="block">
+				<div class="rounded-lg border p-6 shadow-sm transition-shadow duration-200 hover:shadow-md">
+					<div class="mb-4 flex items-center">
+						<div class="rounded-lg bg-green-100 p-2">
+							<svg
+								class="h-6 w-6 text-green-600"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+								/>
+							</svg>
+						</div>
+						<h3 class="ml-3 text-lg font-semibold">组织管理</h3>
 					</div>
-					<h3 class="ml-3 text-lg font-semibold text-gray-400">组织管理</h3>
+					<p class="text-gray-600">管理主组织和子组织</p>
 				</div>
-				<p class="text-gray-400">管理主组织和子组织</p>
-				<div class="mt-2">
-					<span
-						class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800"
-					>
-						开发中
-					</span>
-				</div>
-			</div>
+			</a>
 
 			<!-- 角色管理 -->
 			<a href="/settings/admin/roles" class="block">
@@ -298,34 +293,29 @@
 			</a>
 
 			<!-- 权限测试 -->
-			<div class="rounded-lg border p-6 opacity-50 shadow-sm">
-				<div class="mb-4 flex items-center">
-					<div class="rounded-lg bg-gray-100 p-2">
-						<svg
-							class="h-6 w-6 text-gray-400"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-							/>
-						</svg>
+			<a href="/settings/admin/permission-test" class="block">
+				<div class="rounded-lg border p-6 shadow-sm transition-shadow duration-200 hover:shadow-md">
+					<div class="mb-4 flex items-center">
+						<div class="rounded-lg bg-purple-100 p-2">
+							<svg
+								class="h-6 w-6 text-purple-600"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+								/>
+							</svg>
+						</div>
+						<h3 class="ml-3 text-lg font-semibold">权限测试</h3>
 					</div>
-					<h3 class="ml-3 text-lg font-semibold text-gray-400">权限测试</h3>
+					<p class="text-gray-600">测试权限验证和调试权限问题</p>
 				</div>
-				<p class="text-gray-400">测试权限验证和调试权限问题</p>
-				<div class="mt-2">
-					<span
-						class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800"
-					>
-						开发中
-					</span>
-				</div>
-			</div>
+			</a>
 		</div>
 	{/if}
 </div>

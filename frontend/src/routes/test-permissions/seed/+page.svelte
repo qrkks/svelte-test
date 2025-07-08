@@ -98,7 +98,7 @@
     
     <div class="actions">
         <button 
-            on:click={createTestData} 
+            onclick={createTestData} 
             disabled={loading || users.length === 0}
             class="btn-primary"
         >

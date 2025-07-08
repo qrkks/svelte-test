@@ -41,7 +41,7 @@
         <h3>系统角色</h3>
         {#each data.systemRoles as role}
             <button type="button"
-                on:click={() => selectRole(role, 'system')}
+                onclick={() => selectRole(role, 'system')}
                 class:selected={selectedRole && selectedRole.id === role.id && selectedRoleType === 'system'}
                 style="display:block; width:100%; text-align:left; padding:4px; background:{selectedRole && selectedRole.id === role.id && selectedRoleType === 'system' ? '#eef' : 'transparent'}">
                 {role.name}
@@ -50,7 +50,7 @@
         <h3>主组织角色</h3>
         {#each data.organizationRoles as role}
             <button type="button"
-                on:click={() => selectRole(role, 'organization')}
+                onclick={() => selectRole(role, 'organization')}
                 class:selected={selectedRole && selectedRole.id === role.id && selectedRoleType === 'organization'}
                 style="display:block; width:100%; text-align:left; padding:4px; background:{selectedRole && selectedRole.id === role.id && selectedRoleType === 'organization' ? '#eef' : 'transparent'}">
                 {role.name}
@@ -59,7 +59,7 @@
         <h3>子组织角色</h3>
         {#each data.subOrganizationRoles as role}
             <button type="button"
-                on:click={() => selectRole(role, 'subOrganization')}
+                onclick={() => selectRole(role, 'subOrganization')}
                 class:selected={selectedRole && selectedRole.id === role.id && selectedRoleType === 'subOrganization'}
                 style="display:block; width:100%; text-align:left; padding:4px; background:{selectedRole && selectedRole.id === role.id && selectedRoleType === 'subOrganization' ? '#eef' : 'transparent'}">
                 {role.name}
