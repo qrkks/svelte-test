@@ -82,7 +82,7 @@
                                        name="permissions"
                                        value={permission}
                                        checked={rolePermissions.includes(permission)}
-                                       on:change={() => togglePermission(permission)} />
+                                       onchange={() => togglePermission(permission)} />
                                 {permission}
                             </label>
                         </li>
