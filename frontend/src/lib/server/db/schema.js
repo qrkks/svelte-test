@@ -1,5 +1,8 @@
 import { sqliteTable, integer, text, unique } from 'drizzle-orm/sqlite-core';
 
+// TODO: 中间表加标记
+// TODO: 加JSDoc
+
 // 用户表
 export const user = sqliteTable('user', {
 	id: integer('id').primaryKey({ autoIncrement: true }),

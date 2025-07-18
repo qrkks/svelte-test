@@ -4,7 +4,7 @@
 	import { toast } from '$lib/state/global/toast.svelte.js';
 
 	let { data, form } = $props();
-	// let { users, systemRoles, organizationRoles, subOrganizationRoles } = data;
+	// let { users, systemRoles, organizationRoles, subOrganizationRoles } = data; // 这样就不是响应式了
 	let users = $derived(data.users);
 	let systemRoles = $derived(data.systemRoles);
 	let organizationRoles = $derived(data.organizationRoles);
