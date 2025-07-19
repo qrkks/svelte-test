@@ -661,7 +661,7 @@ CODE:
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
 	default: async (event) => {
-		// TODO log the user in
+		
 	}
 };
 ```
@@ -706,10 +706,10 @@ CODE:
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
 	login: async (event) => {
-		// TODO log the user in
+		
 	},
 	register: async (event) => {
-		// TODO register the user
+		
 	}
 };
 ```
@@ -770,7 +770,7 @@ export const actions = {
 		return { success: true };
 	},
 	register: async (event) => {
-		// TODO register the user
+		
 	}
 };
 ```
@@ -853,7 +853,7 @@ export const actions = {
 		return { success: true };
 	},
 	register: async (event) => {
-		// TODO register the user
+		
 	}
 };
 ```

@@ -1555,7 +1555,7 @@ In the simplest case, a page declares a `default` action:
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
 	default: async (event) => {
-		// TODO log the user in
+		
 	}
 };
 ```
@@ -1600,10 +1600,10 @@ Instead of one `default` action, a page can have as many named actions as it nee
 export const actions = {
 ---	default: async (event) => {---
 +++	login: async (event) => {+++
-		// TODO log the user in
+		
 	},
 +++	register: async (event) => {
-		// TODO register the user
+		
 	}+++
 };
 ```
@@ -1672,7 +1672,7 @@ export const actions = {
 		return { success: true };
 	},
 	register: async (event) => {
-		// TODO register the user
+		
 	}
 };
 ```
@@ -1737,7 +1737,7 @@ export const actions = {
 		return { success: true };
 	},
 	register: async (event) => {
-		// TODO register the user
+		
 	}
 };
 ```
@@ -1804,7 +1804,7 @@ export const actions = {
 		return { success: true };
 	},
 	register: async (event) => {
-		// TODO register the user
+		
 	}
 };
 ```
@@ -6016,7 +6016,7 @@ export function GET({ params, url }) {
 ```js
 // @errors: 2322
 // @filename: ambient.d.ts
-declare module '@sveltejs/kit/vite'; // TODO this feels unnecessary, why can't it 'see' the declarations?
+declare module '@sveltejs/kit/vite'; 
 
 // @filename: index.js
 // ---cut---
