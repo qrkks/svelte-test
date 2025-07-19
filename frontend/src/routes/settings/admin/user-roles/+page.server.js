@@ -18,7 +18,7 @@ export async function load() {
 
     // 查询所有用户-角色分配
     const userSystemRoles = await db.select().from(table.userSystemRoleLink);
-    const userOrganizationRoles = await db.select().from(table.userOrganizationRole);
+    const userOrganizationRoles = await db.select().from(table.userOrganizationRoleMap);
     const userSubOrganizationRoles = await db.select().from(table.userSubOrganizationRole);
 
     return {
@@ -55,10 +55,10 @@ export const actions = {
         }
 
         // 2. 主组织角色分配
-        await db.delete(table.userOrganizationRole).where(eq(table.userOrganizationRole.userId, userId));
+        await db.delete(table.userOrganizationRoleMap).where(eq(table.userOrganizationRoleMap.userId, userId));
         for (const pair of organizationRolePairs) {
             const [orgId, roleId] = pair.split('-').map(Number);
-            await db.insert(table.userOrganizationRole).values({
+            await db.insert(table.userOrganizationRoleMap).values({
                 userId,
                 organizationId: orgId,
                 organizationRoleId: roleId

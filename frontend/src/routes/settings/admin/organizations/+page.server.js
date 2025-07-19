@@ -118,8 +118,8 @@ export const actions = {
 			// 检查是否有用户关联
 			const userRoles = await db
 				.select()
-				.from(table.userOrganizationRole)
-				.where(eq(table.userOrganizationRole.organizationId, id));
+				.from(table.userOrganizationRoleMap)
+				.where(eq(table.userOrganizationRoleMap.organizationId, id));
 
 			if (userRoles.length > 0) {
 				return fail(400, { error: '无法删除有用户关联的组织' });

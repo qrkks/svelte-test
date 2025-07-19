@@ -69,18 +69,18 @@ export async function getUserSystemPermissions(userId) {
 export async function getUserOrganizationPermissions(userId, organizationId) {
 	const result = await db
 		.select({ permission: table.organizationRolePermissionLink.permission })
-		.from(table.userOrganizationRole)
+		.from(table.userOrganizationRoleMap)
 		.innerJoin(
 			table.organizationRolePermissionLink,
 			eq(
-				table.userOrganizationRole.organizationRoleId,
+				table.userOrganizationRoleMap.organizationRoleId,
 				table.organizationRolePermissionLink.organizationRoleId
 			)
 		)
 		.where(
 			and(
-				eq(table.userOrganizationRole.userId, userId),
-				eq(table.userOrganizationRole.organizationId, organizationId)
+				eq(table.userOrganizationRoleMap.userId, userId),
+				eq(table.userOrganizationRoleMap.organizationId, organizationId)
 			)
 		);
 
@@ -134,16 +134,16 @@ export async function getUserOrganizations(userId) {
 			roleName: table.organizationRole.name,
 			roleDescription: table.organizationRole.description
 		})
-		.from(table.userOrganizationRole)
+		.from(table.userOrganizationRoleMap)
 		.innerJoin(
 			table.organization,
-			eq(table.userOrganizationRole.organizationId, table.organization.id)
+			eq(table.userOrganizationRoleMap.organizationId, table.organization.id)
 		)
 		.innerJoin(
 			table.organizationRole,
-			eq(table.userOrganizationRole.organizationRoleId, table.organizationRole.id)
+			eq(table.userOrganizationRoleMap.organizationRoleId, table.organizationRole.id)
 		)
-		.where(eq(table.userOrganizationRole.userId, userId));
+		.where(eq(table.userOrganizationRoleMap.userId, userId));
 
 	return result;
 }

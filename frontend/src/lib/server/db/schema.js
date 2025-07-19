@@ -47,7 +47,7 @@ export const organizationRole = sqliteTable('organization_role', {
 });
 
 // 用户-主组织-角色关联表
-export const userOrganizationRole = sqliteTable(
+export const userOrganizationRoleMap = sqliteTable(
 	'user_organization_role',
 	{
 		userId: integer('user_id')

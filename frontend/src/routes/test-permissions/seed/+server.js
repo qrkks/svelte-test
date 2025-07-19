@@ -121,7 +121,7 @@ export const POST = async ({ request }) => {
             systemRoleId: 1
         });
         
-        await db.insert(table.userOrganizationRole).values({
+        await db.insert(table.userOrganizationRoleMap).values({
             userId: userId,
             organizationId: 1,
             organizationRoleId: 1
