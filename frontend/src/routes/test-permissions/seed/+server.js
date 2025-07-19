@@ -68,7 +68,7 @@ export const POST = async ({ request }) => {
         ]);
         
         // 4. 创建系统权限
-        await db.insert(table.systemRolePermission).values([
+        await db.insert(table.systemRolePermissionLink).values([
             { systemRoleId: 1, permission: 'system:admin' },
             { systemRoleId: 1, permission: 'system:config' },
             { systemRoleId: 1, permission: 'system:user_manage' },

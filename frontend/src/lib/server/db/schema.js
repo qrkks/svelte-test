@@ -170,7 +170,7 @@ export const userSystemRoleLink = sqliteTable(
 );
 
 // 系统角色-权限关联表
-export const systemRolePermission = sqliteTable(
+export const systemRolePermissionLink = sqliteTable(
 	'system_role_permission',
 	{
 		systemRoleId: integer('system_role_id')
