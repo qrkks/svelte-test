@@ -32,7 +32,7 @@ export async function load() {
 
     // 加载所有角色的权限分配
     const systemRolePermissions = await db.select().from(table.systemRolePermission);
-    const organizationRolePermissions = await db.select().from(table.organizationRolePermission);
+    const organizationRolePermissions = await db.select().from(table.organizationRolePermissionLink);
     const subOrganizationRolePermissions = await db.select().from(table.subOrganizationRolePermission);
 
     return {
@@ -69,10 +69,10 @@ export const actions = {
                 );
             }
         } else if (roleType === 'organization') {
-            await db.delete(table.organizationRolePermission)
-                .where(eq(table.organizationRolePermission.organizationRoleId, roleId));
+            await db.delete(table.organizationRolePermissionLink)
+                .where(eq(table.organizationRolePermissionLink.organizationRoleId, roleId));
             if (permissions.length) {
-                await db.insert(table.organizationRolePermission).values(
+                await db.insert(table.organizationRolePermissionLink).values(
                     permissions.map(permission => ({ organizationRoleId: roleId, permission }))
                 );
             }

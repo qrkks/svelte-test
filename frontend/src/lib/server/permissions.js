@@ -68,13 +68,13 @@ export async function getUserSystemPermissions(userId) {
  */
 export async function getUserOrganizationPermissions(userId, organizationId) {
 	const result = await db
-		.select({ permission: table.organizationRolePermission.permission })
+		.select({ permission: table.organizationRolePermissionLink.permission })
 		.from(table.userOrganizationRole)
 		.innerJoin(
-			table.organizationRolePermission,
+			table.organizationRolePermissionLink,
 			eq(
 				table.userOrganizationRole.organizationRoleId,
-				table.organizationRolePermission.organizationRoleId
+				table.organizationRolePermissionLink.organizationRoleId
 			)
 		)
 		.where(

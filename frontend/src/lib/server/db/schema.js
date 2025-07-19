@@ -70,7 +70,7 @@ export const userOrganizationRole = sqliteTable(
 );
 
 // 主组织角色-权限关联表
-export const organizationRolePermission = sqliteTable(
+export const organizationRolePermissionLink = sqliteTable(
 	'organization_role_permission',
 	{
 		organizationRoleId: integer('organization_role_id')

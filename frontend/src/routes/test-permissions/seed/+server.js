@@ -78,7 +78,7 @@ export const POST = async ({ request }) => {
         ]);
         
         // 5. 创建主组织权限
-        await db.insert(table.organizationRolePermission).values([
+        await db.insert(table.organizationRolePermissionLink).values([
             { organizationRoleId: 1, permission: 'organization:manage' },
             { organizationRoleId: 1, permission: 'organization:view' },
             { organizationRoleId: 1, permission: 'organization:edit' },
