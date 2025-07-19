@@ -106,7 +106,7 @@ export const subOrganizationRole = sqliteTable('sub_organization_role', {
 });
 
 // 用户-子组织-角色关联表
-export const userSubOrganizationRole = sqliteTable(
+export const userSubOrganizationRoleMap = sqliteTable(
 	'user_sub_organization_role',
 	{
 		userId: integer('user_id')

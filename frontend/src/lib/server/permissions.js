@@ -96,18 +96,18 @@ export async function getUserOrganizationPermissions(userId, organizationId) {
 export async function getUserSubOrganizationPermissions(userId, subOrganizationId) {
 	const result = await db
 		.select({ permission: table.subOrganizationRolePermissionLink.permission })
-		.from(table.userSubOrganizationRole)
+		.from(table.userSubOrganizationRoleMap)
 		.innerJoin(
 			table.subOrganizationRolePermissionLink,
 			eq(
-				table.userSubOrganizationRole.subOrganizationRoleId,
+				table.userSubOrganizationRoleMap.subOrganizationRoleId,
 				table.subOrganizationRolePermissionLink.subOrganizationRoleId
 			)
 		)
 		.where(
 			and(
-				eq(table.userSubOrganizationRole.userId, userId),
-				eq(table.userSubOrganizationRole.subOrganizationId, subOrganizationId)
+				eq(table.userSubOrganizationRoleMap.userId, userId),
+				eq(table.userSubOrganizationRoleMap.subOrganizationId, subOrganizationId)
 			)
 		);
 
@@ -173,17 +173,17 @@ export async function getUserSubOrganizations(userId, organizationId = null) {
 			roleName: table.subOrganizationRole.name,
 			roleDescription: table.subOrganizationRole.description
 		})
-		.from(table.userSubOrganizationRole)
+		.from(table.userSubOrganizationRoleMap)
 		.innerJoin(
 			table.subOrganization,
-			eq(table.userSubOrganizationRole.subOrganizationId, table.subOrganization.id)
+			eq(table.userSubOrganizationRoleMap.subOrganizationId, table.subOrganization.id)
 		)
 		.innerJoin(table.organization, eq(table.subOrganization.organizationId, table.organization.id))
 		.innerJoin(
 			table.subOrganizationRole,
-			eq(table.userSubOrganizationRole.subOrganizationRoleId, table.subOrganizationRole.id)
+			eq(table.userSubOrganizationRoleMap.subOrganizationRoleId, table.subOrganizationRole.id)
 		)
-		.where(eq(table.userSubOrganizationRole.userId, userId));
+		.where(eq(table.userSubOrganizationRoleMap.userId, userId));
 
 	if (organizationId) {
 		query = query.where(eq(table.subOrganization.organizationId, organizationId));
