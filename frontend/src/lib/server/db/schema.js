@@ -154,7 +154,7 @@ export const systemRole = sqliteTable('system_role', {
 });
 
 // 用户-系统角色关联表
-export const userSystemRole = sqliteTable(
+export const userSystemRoleLink = sqliteTable(
 	'user_system_role',
 	{
 		userId: integer('user_id')

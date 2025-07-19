@@ -116,7 +116,7 @@ export const POST = async ({ request }) => {
         });
         
         // 9. 给指定用户分配角色
-        await db.insert(table.userSystemRole).values({
+        await db.insert(table.userSystemRoleLink).values({
             userId: userId,
             systemRoleId: 1
         });
