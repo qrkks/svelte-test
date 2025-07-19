@@ -90,7 +90,7 @@ export const POST = async ({ request }) => {
         ]);
         
         // 6. 创建子组织权限
-        await db.insert(table.subOrganizationRolePermission).values([
+        await db.insert(table.subOrganizationRolePermissionLink).values([
             { subOrganizationRoleId: 1, permission: 'sub_organization:manage' },
             { subOrganizationRoleId: 1, permission: 'sub_organization:view' },
             { subOrganizationRoleId: 1, permission: 'sub_organization:edit' },

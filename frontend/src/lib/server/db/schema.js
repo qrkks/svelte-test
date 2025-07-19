@@ -129,7 +129,7 @@ export const userSubOrganizationRole = sqliteTable(
 );
 
 // 子组织角色-权限关联表
-export const subOrganizationRolePermission = sqliteTable(
+export const subOrganizationRolePermissionLink = sqliteTable(
 	'sub_organization_role_permission',
 	{
 		subOrganizationRoleId: integer('sub_organization_role_id')
