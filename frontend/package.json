@@ -55,5 +55,8 @@
 			"esbuild",
 			"better-sqlite3"
 		]
+	},
+	"volta": {
+		"node": "22.17.1"
 	}
 }

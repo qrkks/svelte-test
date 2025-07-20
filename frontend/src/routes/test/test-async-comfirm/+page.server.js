@@ -10,7 +10,7 @@ export const load = async (event) => {
 	// 🔒 路由守卫：检查用户是否登录
 	//
 	if (!event.locals.user) {
-		throw redirect(302, '/settings/auth/login');
+		throw redirect(302, `/settings/auth/login?redirectTo=${event.url.pathname}`);
 	}
 
 	// 获取所有已保存的测试数据
@@ -40,7 +40,7 @@ export const actions = {
 	submit: async (event) => {
 		// 🔒 表单提交时也要检查权限
 		if (!event.locals.user) {
-			throw redirect(302, '/settings/auth/login');
+			throw redirect(302, `/settings/auth/login?redirectTo=${event.url.pathname}`);
 		}
 
 		const formData = await event.request.formData();

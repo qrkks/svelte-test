@@ -10,7 +10,7 @@ import { checkUserPermission } from '$lib/server/permissions';
 export function requirePermission(permission) {
 	return async (event, context = {}) => {
 		if (!event.locals.user) {
-			throw redirect(302, '/settings/auth/login');
+			throw redirect(302, `/settings/auth/login?redirectTo=${event.url.pathname}`);
 		}
 
 		// 合并 params 和传入的 context，保留 undefined
@@ -44,7 +44,7 @@ export function requirePermission(permission) {
 export function requireOrganizationPermission(permission) {
 	return async (event, context = {}) => {
 		if (!event.locals.user) {
-			throw redirect(302, '/settings/auth/login');
+			throw redirect(302, `/settings/auth/login?redirectTo=${event.url.pathname}`);
 		}
 
 		const organizationId = parseInt(event.params.organizationId);
@@ -78,7 +78,7 @@ export function requireOrganizationPermission(permission) {
 export function requireSubOrganizationPermission(permission) {
 	return async (event, context = {}) => {
 		if (!event.locals.user) {
-			throw redirect(302, '/settings/auth/login');
+			throw redirect(302, `/settings/auth/login?redirectTo=${event.url.pathname}`);
 		}
 
 		const organizationId = parseInt(event.params.organizationId);
@@ -115,7 +115,7 @@ export function requireSubOrganizationPermission(permission) {
 export function requireSystemPermission(permission) {
 	return async (event) => {
 		if (!event.locals.user) {
-			throw redirect(302, '/settings/auth/login');
+			throw redirect(302, `/settings/auth/login?redirectTo=${event.url.pathname}`);
 		}
 
 		const hasPermission = await checkUserPermission(event.locals.user.id, permission);
