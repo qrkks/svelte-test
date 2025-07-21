@@ -1,7 +1,14 @@
 const pages = import.meta.glob('/src/routes/test/**/+page.svelte', { eager: true });
 
+// 查看 pages 对象的结构
+console.log('pages keys:', Object.keys(pages));
+console.log('pages structure:', JSON.stringify(Object.keys(pages), null, 2));
+
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
+
+	console.log('pages', pages);
+	
 	const testPages = [];
 	
 	for (const path in pages) {

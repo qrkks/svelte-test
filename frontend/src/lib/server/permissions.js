@@ -3,6 +3,19 @@ import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 
 /**
+ * 权限管理模块
+ * 
+ * 本文件包含以下函数：
+ * 1. checkUserPermission - 三级权限验证函数
+ * 2. getUserSystemPermissions - 获取用户系统权限
+ * 3. getUserOrganizationPermissions - 获取用户主组织权限
+ * 4. getUserSubOrganizationPermissions - 获取用户子组织权限
+ * 5. getUserOrganizations - 获取用户所属的所有主组织
+ * 6. getUserSubOrganizations - 获取用户所属的所有子组织
+ * 7. getAllUserPermissions - 获取用户所有权限（用于调试）
+ */
+
+/**
  * 三级权限验证函数
  * @param {number} userId - 用户ID
  * @param {string} permission - 权限字符串
