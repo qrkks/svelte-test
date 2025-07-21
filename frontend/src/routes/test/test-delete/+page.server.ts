@@ -13,7 +13,7 @@ export const actions = {
 	delete: async ({ request }) => {
 		const formData = await request.formData();
 		console.log(formData);
-		const id = formData.get('id');
+		const id = Number(formData.get('id'));
 		await db.delete(schema.test).where(eq(schema.test.id, id));
 		return {
 			success: true
