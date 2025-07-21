@@ -1,8 +1,9 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import * as auth from '$lib/server/auth';
 import { paraglideMiddleware } from '$lib/paraglide/server';
+import type { Handle } from '@sveltejs/kit';
 
-const handleParaglide = ({ event, resolve }) =>
+const handleParaglide: Handle = async ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request, locale }) => {
 		event.request = request;
 
@@ -11,7 +12,7 @@ const handleParaglide = ({ event, resolve }) =>
 		});
 	});
 
-const handleAuth = async ({ event, resolve }) => {
+const handleAuth: Handle = async ({ event, resolve }) => {
 	const sessionToken = event.cookies.get(auth.sessionCookieName);
 
 	if (!sessionToken) {
