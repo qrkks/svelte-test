@@ -1,4 +1,4 @@
-import { sqliteTable, integer, text, unique, boolean } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, integer, text, unique } from 'drizzle-orm/sqlite-core';
 
 // TODO: 加JSDoc
 
@@ -199,7 +199,7 @@ export const notification = sqliteTable('notification', {
 	title: text('title').notNull(),
 	content: text('content').notNull(),
 	data: text('data'), // JSON string
-	  isImportant: boolean('is_important').default(false),
+	  isImportant: integer('is_important', { mode: 'boolean' }).default(false),
 	  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().defaultNow()
   });
   
@@ -224,7 +224,7 @@ export const notification = sqliteTable('notification', {
 	  notificationId: integer('notification_id')
 		  .notNull()
 		  .references(() => notification.id),
-	  isRead: boolean('is_read').default(false),
+	  isRead: integer('is_read', { mode: 'boolean' }).default(false),
 	  readAt: integer('read_at', { mode: 'timestamp' }),
 	  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().defaultNow()
   }, (table) => ({
