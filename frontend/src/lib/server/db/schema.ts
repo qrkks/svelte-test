@@ -47,7 +47,7 @@ export const organizationRole = sqliteTable('organization_role', {
 
 // 用户-主组织-角色关联表
 export const userOrganizationRoleMap = sqliteTable(
-	'user_organization_role',
+	'user_organization_role_map',
 	{
 		userId: integer('user_id')
 			.notNull()
@@ -70,7 +70,7 @@ export const userOrganizationRoleMap = sqliteTable(
 
 // 主组织角色-权限关联表
 export const organizationRolePermissionLink = sqliteTable(
-	'organization_role_permission',
+	'organization_role_permission_link',
 	{
 		organizationRoleId: integer('organization_role_id')
 			.notNull()
@@ -106,7 +106,7 @@ export const subOrganizationRole = sqliteTable('sub_organization_role', {
 
 // 用户-子组织-角色关联表
 export const userSubOrganizationRoleMap = sqliteTable(
-	'user_sub_organization_role',
+	'user_sub_organization_role_map',
 	{
 		userId: integer('user_id')
 			.notNull()
@@ -129,7 +129,7 @@ export const userSubOrganizationRoleMap = sqliteTable(
 
 // 子组织角色-权限关联表
 export const subOrganizationRolePermissionLink = sqliteTable(
-	'sub_organization_role_permission',
+	'sub_organization_role_permission_link',
 	{
 		subOrganizationRoleId: integer('sub_organization_role_id')
 			.notNull()
@@ -154,7 +154,7 @@ export const systemRole = sqliteTable('system_role', {
 
 // 用户-系统角色关联表
 export const userSystemRoleLink = sqliteTable(
-	'user_system_role',
+	'user_system_role_link',
 	{
 		userId: integer('user_id')
 			.notNull()
@@ -170,7 +170,7 @@ export const userSystemRoleLink = sqliteTable(
 
 // 系统角色-权限关联表
 export const systemRolePermissionLink = sqliteTable(
-	'system_role_permission',
+	'system_role_permission_link',
 	{
 		systemRoleId: integer('system_role_id')
 			.notNull()
@@ -199,34 +199,38 @@ export const notification = sqliteTable('notification', {
 	title: text('title').notNull(),
 	content: text('content').notNull(),
 	data: text('data'), // JSON string
-	  isImportant: integer('is_important', { mode: 'boolean' }).default(false),
-	  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().defaultNow()
-  });
-  
-  // 群体通知配置表
-  export const groupNotificationConfig = sqliteTable('group_notification_config', {
+	isImportant: integer('is_important', { mode: 'boolean' }).default(false),
+	createdAt: integer('created_at', { mode: 'timestamp' }).notNull().defaultNow()
+});
+
+// 群体通知配置表
+export const groupNotificationConfig = sqliteTable('group_notification_config', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
-	  notificationId: integer('notification_id')
-		  .notNull()
-		  .references(() => notification.id),
-	  targetType: text('target_type').notNull(),
-	  targetId: integer('target_id'),
-	  targetConditions: text('target_conditions'), // JSON string
-	  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().defaultNow()
-  });
-  
-  // 用户通知状态表
-  export const userNotification = sqliteTable('user_notification', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
-	  userId: integer('user_id')
-		  .notNull()
-		  .references(() => user.id),
-	  notificationId: integer('notification_id')
-		  .notNull()
-		  .references(() => notification.id),
-	  isRead: integer('is_read', { mode: 'boolean' }).default(false),
-	  readAt: integer('read_at', { mode: 'timestamp' }),
-	  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().defaultNow()
-  }, (table) => ({
-	  pk: unique('user_notification_pk').on(table.userId, table.notificationId)
-  }));
+	notificationId: integer('notification_id')
+		.notNull()
+		.references(() => notification.id),
+	targetType: text('target_type').notNull(),
+	targetId: integer('target_id'),
+	targetConditions: text('target_conditions'), // JSON string
+	createdAt: integer('created_at', { mode: 'timestamp' }).notNull().defaultNow()
+});
+
+// 用户通知状态表
+export const userNotification = sqliteTable(
+	'user_notification',
+	{
+		id: integer('id').primaryKey({ autoIncrement: true }),
+		userId: integer('user_id')
+			.notNull()
+			.references(() => user.id),
+		notificationId: integer('notification_id')
+			.notNull()
+			.references(() => notification.id),
+		isRead: integer('is_read', { mode: 'boolean' }).default(false),
+		readAt: integer('read_at', { mode: 'timestamp' }),
+		createdAt: integer('created_at', { mode: 'timestamp' }).notNull().defaultNow()
+	},
+	(table) => ({
+		pk: unique('user_notification_pk').on(table.userId, table.notificationId)
+	})
+);

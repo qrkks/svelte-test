@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "6b1443e2-6fbc-4a71-93b1-ea7914271a44",
-  "prevId": "a7ffc7b2-5719-430c-8414-e9b06a20a36d",
+  "id": "3ba4b09b-ea39-4275-9c43-f12d51e995df",
+  "prevId": "6b1443e2-6fbc-4a71-93b1-ea7914271a44",
   "tables": {
     "group_notification_config": {
       "name": "group_notification_config",
@@ -249,8 +249,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "organization_role_permission": {
-      "name": "organization_role_permission",
+    "organization_role_permission_link": {
+      "name": "organization_role_permission_link",
       "columns": {
         "organization_role_id": {
           "name": "organization_role_id",
@@ -278,9 +278,9 @@
         }
       },
       "foreignKeys": {
-        "organization_role_permission_organization_role_id_organization_role_id_fk": {
-          "name": "organization_role_permission_organization_role_id_organization_role_id_fk",
-          "tableFrom": "organization_role_permission",
+        "organization_role_permission_link_organization_role_id_organization_role_id_fk": {
+          "name": "organization_role_permission_link_organization_role_id_organization_role_id_fk",
+          "tableFrom": "organization_role_permission_link",
           "tableTo": "organization_role",
           "columnsFrom": [
             "organization_role_id"
@@ -479,8 +479,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "sub_organization_role_permission": {
-      "name": "sub_organization_role_permission",
+    "sub_organization_role_permission_link": {
+      "name": "sub_organization_role_permission_link",
       "columns": {
         "sub_organization_role_id": {
           "name": "sub_organization_role_id",
@@ -508,9 +508,9 @@
         }
       },
       "foreignKeys": {
-        "sub_organization_role_permission_sub_organization_role_id_sub_organization_role_id_fk": {
-          "name": "sub_organization_role_permission_sub_organization_role_id_sub_organization_role_id_fk",
-          "tableFrom": "sub_organization_role_permission",
+        "sub_organization_role_permission_link_sub_organization_role_id_sub_organization_role_id_fk": {
+          "name": "sub_organization_role_permission_link_sub_organization_role_id_sub_organization_role_id_fk",
+          "tableFrom": "sub_organization_role_permission_link",
           "tableTo": "sub_organization_role",
           "columnsFrom": [
             "sub_organization_role_id"
@@ -573,8 +573,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "system_role_permission": {
-      "name": "system_role_permission",
+    "system_role_permission_link": {
+      "name": "system_role_permission_link",
       "columns": {
         "system_role_id": {
           "name": "system_role_id",
@@ -602,9 +602,9 @@
         }
       },
       "foreignKeys": {
-        "system_role_permission_system_role_id_system_role_id_fk": {
-          "name": "system_role_permission_system_role_id_system_role_id_fk",
-          "tableFrom": "system_role_permission",
+        "system_role_permission_link_system_role_id_system_role_id_fk": {
+          "name": "system_role_permission_link_system_role_id_system_role_id_fk",
+          "tableFrom": "system_role_permission_link",
           "tableTo": "system_role",
           "columnsFrom": [
             "system_role_id"
@@ -838,8 +838,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "user_organization_role": {
-      "name": "user_organization_role",
+    "user_organization_role_map": {
+      "name": "user_organization_role_map",
       "columns": {
         "user_id": {
           "name": "user_id",
@@ -875,9 +875,9 @@
         }
       },
       "foreignKeys": {
-        "user_organization_role_user_id_user_id_fk": {
-          "name": "user_organization_role_user_id_user_id_fk",
-          "tableFrom": "user_organization_role",
+        "user_organization_role_map_user_id_user_id_fk": {
+          "name": "user_organization_role_map_user_id_user_id_fk",
+          "tableFrom": "user_organization_role_map",
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
@@ -888,9 +888,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "user_organization_role_organization_id_organization_id_fk": {
-          "name": "user_organization_role_organization_id_organization_id_fk",
-          "tableFrom": "user_organization_role",
+        "user_organization_role_map_organization_id_organization_id_fk": {
+          "name": "user_organization_role_map_organization_id_organization_id_fk",
+          "tableFrom": "user_organization_role_map",
           "tableTo": "organization",
           "columnsFrom": [
             "organization_id"
@@ -901,9 +901,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "user_organization_role_organization_role_id_organization_role_id_fk": {
-          "name": "user_organization_role_organization_role_id_organization_role_id_fk",
-          "tableFrom": "user_organization_role",
+        "user_organization_role_map_organization_role_id_organization_role_id_fk": {
+          "name": "user_organization_role_map_organization_role_id_organization_role_id_fk",
+          "tableFrom": "user_organization_role_map",
           "tableTo": "organization_role",
           "columnsFrom": [
             "organization_role_id"
@@ -919,8 +919,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "user_sub_organization_role": {
-      "name": "user_sub_organization_role",
+    "user_sub_organization_role_map": {
+      "name": "user_sub_organization_role_map",
       "columns": {
         "user_id": {
           "name": "user_id",
@@ -956,9 +956,9 @@
         }
       },
       "foreignKeys": {
-        "user_sub_organization_role_user_id_user_id_fk": {
-          "name": "user_sub_organization_role_user_id_user_id_fk",
-          "tableFrom": "user_sub_organization_role",
+        "user_sub_organization_role_map_user_id_user_id_fk": {
+          "name": "user_sub_organization_role_map_user_id_user_id_fk",
+          "tableFrom": "user_sub_organization_role_map",
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
@@ -969,9 +969,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "user_sub_organization_role_sub_organization_id_sub_organization_id_fk": {
-          "name": "user_sub_organization_role_sub_organization_id_sub_organization_id_fk",
-          "tableFrom": "user_sub_organization_role",
+        "user_sub_organization_role_map_sub_organization_id_sub_organization_id_fk": {
+          "name": "user_sub_organization_role_map_sub_organization_id_sub_organization_id_fk",
+          "tableFrom": "user_sub_organization_role_map",
           "tableTo": "sub_organization",
           "columnsFrom": [
             "sub_organization_id"
@@ -982,9 +982,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "user_sub_organization_role_sub_organization_role_id_sub_organization_role_id_fk": {
-          "name": "user_sub_organization_role_sub_organization_role_id_sub_organization_role_id_fk",
-          "tableFrom": "user_sub_organization_role",
+        "user_sub_organization_role_map_sub_organization_role_id_sub_organization_role_id_fk": {
+          "name": "user_sub_organization_role_map_sub_organization_role_id_sub_organization_role_id_fk",
+          "tableFrom": "user_sub_organization_role_map",
           "tableTo": "sub_organization_role",
           "columnsFrom": [
             "sub_organization_role_id"
@@ -1000,8 +1000,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "user_system_role": {
-      "name": "user_system_role",
+    "user_system_role_link": {
+      "name": "user_system_role_link",
       "columns": {
         "user_id": {
           "name": "user_id",
@@ -1029,9 +1029,9 @@
         }
       },
       "foreignKeys": {
-        "user_system_role_user_id_user_id_fk": {
-          "name": "user_system_role_user_id_user_id_fk",
-          "tableFrom": "user_system_role",
+        "user_system_role_link_user_id_user_id_fk": {
+          "name": "user_system_role_link_user_id_user_id_fk",
+          "tableFrom": "user_system_role_link",
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
@@ -1042,9 +1042,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "user_system_role_system_role_id_system_role_id_fk": {
-          "name": "user_system_role_system_role_id_system_role_id_fk",
-          "tableFrom": "user_system_role",
+        "user_system_role_link_system_role_id_system_role_id_fk": {
+          "name": "user_system_role_link_system_role_id_system_role_id_fk",
+          "tableFrom": "user_system_role_link",
           "tableTo": "system_role",
           "columnsFrom": [
             "system_role_id"
@@ -1065,7 +1065,14 @@
   "enums": {},
   "_meta": {
     "schemas": {},
-    "tables": {},
+    "tables": {
+      "\"organization_role_permission\"": "\"organization_role_permission_link\"",
+      "\"sub_organization_role_permission\"": "\"sub_organization_role_permission_link\"",
+      "\"system_role_permission\"": "\"system_role_permission_link\"",
+      "\"user_organization_role\"": "\"user_organization_role_map\"",
+      "\"user_sub_organization_role\"": "\"user_sub_organization_role_map\"",
+      "\"user_system_role\"": "\"user_system_role_link\""
+    },
     "columns": {}
   },
   "internal": {
