@@ -1,4 +1,4 @@
-<script>
+<script lang="js">
 	import '../app.css';
 	import { authState } from '$lib/state/global/auth.svelte.js';
 	import Toast from '$lib/components/ui/Toast.svelte';

@@ -1,7 +1,14 @@
 import { requirePermission } from '$lib/server/middleware/permissions.js';
 import { getUserSystemPermissions, getUserOrganizationPermissions, getUserSubOrganizationPermissions } from '$lib/server/permissions.js';
+import { error } from '@sveltejs/kit';
 
 export async function load(event) {
+	if (!event.locals.user) {
+		// 可以抛出错误，或者返回未登录提示
+		throw error(416, '未登录，无法获取权限');
+		// 或者 return { systemResult: '未登录', orgResult: '', subOrgResult: '' }
+		// FIXME: 这里需要一个统一的重定向到登录页面的方法
+	}
 	const systemPermission = await getUserSystemPermissions(event.locals.user.id);
 	const organizationPermission = await getUserOrganizationPermissions(event.locals.user.id, 1);
 	const subOrganizationPermission = await getUserSubOrganizationPermissions(event.locals.user.id, 1);

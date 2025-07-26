@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "0301278b-e5e8-425f-a201-27394d4832b5",
+  "id": "a7ffc7b2-5719-430c-8414-e9b06a20a36d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "organization": {
@@ -156,92 +156,6 @@
           "tableTo": "organization_role",
           "columnsFrom": [
             "organization_role_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "role": {
-      "name": "role",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "role_name_unique": {
-          "name": "role_name_unique",
-          "columns": [
-            "name"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "role_permission": {
-      "name": "role_permission",
-      "columns": {
-        "role_id": {
-          "name": "role_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "permission": {
-          "name": "permission",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "role_permission_pk": {
-          "name": "role_permission_pk",
-          "columns": [
-            "role_id",
-            "permission"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {
-        "role_permission_role_id_role_id_fk": {
-          "name": "role_permission_role_id_role_id_fk",
-          "tableFrom": "role_permission",
-          "tableTo": "role",
-          "columnsFrom": [
-            "role_id"
           ],
           "columnsTo": [
             "id"
@@ -775,66 +689,6 @@
           "tableTo": "organization_role",
           "columnsFrom": [
             "organization_role_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "user_role": {
-      "name": "user_role",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "role_id": {
-          "name": "role_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "user_role_pk": {
-          "name": "user_role_pk",
-          "columns": [
-            "user_id",
-            "role_id"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {
-        "user_role_user_id_user_id_fk": {
-          "name": "user_role_user_id_user_id_fk",
-          "tableFrom": "user_role",
-          "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "user_role_role_id_role_id_fk": {
-          "name": "user_role_role_id_role_id_fk",
-          "tableFrom": "user_role",
-          "tableTo": "role",
-          "columnsFrom": [
-            "role_id"
           ],
           "columnsTo": [
             "id"

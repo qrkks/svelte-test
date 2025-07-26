@@ -1,6 +1,5 @@
-import { sqliteTable, integer, text, unique } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, integer, text, unique, boolean } from 'drizzle-orm/sqlite-core';
 
-// TODO: 中间表加标记
 // TODO: 加JSDoc
 
 // 用户表
@@ -188,3 +187,46 @@ export const test = sqliteTable('test', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
 	testInput: text('test_input').notNull()
 });
+
+/**
+ * 通知系统
+ */
+
+// 通知内容表
+export const notification = sqliteTable('notification', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	type: text('type').notNull(), // 'individual' | 'group'
+	title: text('title').notNull(),
+	content: text('content').notNull(),
+	data: text('data'), // JSON string
+	  isImportant: boolean('is_important').default(false),
+	  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().defaultNow()
+  });
+  
+  // 群体通知配置表
+  export const groupNotificationConfig = sqliteTable('group_notification_config', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	  notificationId: integer('notification_id')
+		  .notNull()
+		  .references(() => notification.id),
+	  targetType: text('target_type').notNull(),
+	  targetId: integer('target_id'),
+	  targetConditions: text('target_conditions'), // JSON string
+	  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().defaultNow()
+  });
+  
+  // 用户通知状态表
+  export const userNotification = sqliteTable('user_notification', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	  userId: integer('user_id')
+		  .notNull()
+		  .references(() => user.id),
+	  notificationId: integer('notification_id')
+		  .notNull()
+		  .references(() => notification.id),
+	  isRead: boolean('is_read').default(false),
+	  readAt: integer('read_at', { mode: 'timestamp' }),
+	  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().defaultNow()
+  }, (table) => ({
+	  pk: unique('user_notification_pk').on(table.userId, table.notificationId)
+  }));
