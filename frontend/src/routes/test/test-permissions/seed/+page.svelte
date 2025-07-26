@@ -13,7 +13,7 @@
 
     async function loadUsers() {
         try {
-            const response = await fetch('/test-permissions/users');
+            const response = await fetch('/test/test-permissions/users');
             const data = await response.json();
             users = data.users || [];
             if (users.length > 0) {
@@ -36,7 +36,7 @@
         result = null;
         
         try {
-            const response = await fetch('/test-permissions/seed', {
+            const response = await fetch('/test/test-permissions/seed', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
