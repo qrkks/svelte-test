@@ -1,3 +1,23 @@
+CREATE TABLE `group_notification_config` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`notification_id` integer NOT NULL,
+	`target_type` text NOT NULL,
+	`target_id` integer,
+	`target_conditions` text,
+	`created_at` integer DEFAULT (cast((julianday('now') - 2440587.5)*86400000 as integer)) NOT NULL,
+	FOREIGN KEY (`notification_id`) REFERENCES `notification`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE TABLE `notification` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`type` text NOT NULL,
+	`title` text NOT NULL,
+	`content` text NOT NULL,
+	`data` text,
+	`is_important` integer DEFAULT false,
+	`created_at` integer DEFAULT (cast((julianday('now') - 2440587.5)*86400000 as integer)) NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE `organization` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`name` text NOT NULL,
@@ -17,13 +37,13 @@ CREATE TABLE `organization_role` (
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `organization_role_name_unique` ON `organization_role` (`name`);--> statement-breakpoint
-CREATE TABLE `organization_role_permission` (
+CREATE TABLE `organization_role_permission_link` (
 	`organization_role_id` integer NOT NULL,
 	`permission` text NOT NULL,
 	FOREIGN KEY (`organization_role_id`) REFERENCES `organization_role`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `organization_role_permission_pk` ON `organization_role_permission` (`organization_role_id`,`permission`);--> statement-breakpoint
+CREATE UNIQUE INDEX `organization_role_permission_pk` ON `organization_role_permission_link` (`organization_role_id`,`permission`);--> statement-breakpoint
 CREATE TABLE `session` (
 	`id` text PRIMARY KEY NOT NULL,
 	`user_id` integer NOT NULL,
@@ -52,13 +72,13 @@ CREATE TABLE `sub_organization_role` (
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `sub_organization_role_name_unique` ON `sub_organization_role` (`name`);--> statement-breakpoint
-CREATE TABLE `sub_organization_role_permission` (
+CREATE TABLE `sub_organization_role_permission_link` (
 	`sub_organization_role_id` integer NOT NULL,
 	`permission` text NOT NULL,
 	FOREIGN KEY (`sub_organization_role_id`) REFERENCES `sub_organization_role`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `sub_organization_role_permission_pk` ON `sub_organization_role_permission` (`sub_organization_role_id`,`permission`);--> statement-breakpoint
+CREATE UNIQUE INDEX `sub_organization_role_permission_pk` ON `sub_organization_role_permission_link` (`sub_organization_role_id`,`permission`);--> statement-breakpoint
 CREATE TABLE `system_role` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`name` text NOT NULL,
@@ -67,13 +87,13 @@ CREATE TABLE `system_role` (
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `system_role_name_unique` ON `system_role` (`name`);--> statement-breakpoint
-CREATE TABLE `system_role_permission` (
+CREATE TABLE `system_role_permission_link` (
 	`system_role_id` integer NOT NULL,
 	`permission` text NOT NULL,
 	FOREIGN KEY (`system_role_id`) REFERENCES `system_role`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `system_role_permission_pk` ON `system_role_permission` (`system_role_id`,`permission`);--> statement-breakpoint
+CREATE UNIQUE INDEX `system_role_permission_pk` ON `system_role_permission_link` (`system_role_id`,`permission`);--> statement-breakpoint
 CREATE TABLE `test` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`test_input` text NOT NULL
@@ -95,7 +115,19 @@ CREATE TABLE `user` (
 CREATE UNIQUE INDEX `user_username_unique` ON `user` (`username`);--> statement-breakpoint
 CREATE UNIQUE INDEX `user_mobile_unique` ON `user` (`mobile`);--> statement-breakpoint
 CREATE UNIQUE INDEX `user_email_unique` ON `user` (`email`);--> statement-breakpoint
-CREATE TABLE `user_organization_role` (
+CREATE TABLE `user_notification` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`user_id` integer NOT NULL,
+	`notification_id` integer NOT NULL,
+	`is_read` integer DEFAULT false,
+	`read_at` integer,
+	`created_at` integer DEFAULT (cast((julianday('now') - 2440587.5)*86400000 as integer)) NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`notification_id`) REFERENCES `notification`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE UNIQUE INDEX `user_notification_pk` ON `user_notification` (`user_id`,`notification_id`);--> statement-breakpoint
+CREATE TABLE `user_organization_role_map` (
 	`user_id` integer NOT NULL,
 	`organization_id` integer NOT NULL,
 	`organization_role_id` integer NOT NULL,
@@ -104,8 +136,8 @@ CREATE TABLE `user_organization_role` (
 	FOREIGN KEY (`organization_role_id`) REFERENCES `organization_role`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `user_organization_role_pk` ON `user_organization_role` (`user_id`,`organization_id`,`organization_role_id`);--> statement-breakpoint
-CREATE TABLE `user_sub_organization_role` (
+CREATE UNIQUE INDEX `user_organization_role_pk` ON `user_organization_role_map` (`user_id`,`organization_id`,`organization_role_id`);--> statement-breakpoint
+CREATE TABLE `user_sub_organization_role_map` (
 	`user_id` integer NOT NULL,
 	`sub_organization_id` integer NOT NULL,
 	`sub_organization_role_id` integer NOT NULL,
@@ -114,12 +146,12 @@ CREATE TABLE `user_sub_organization_role` (
 	FOREIGN KEY (`sub_organization_role_id`) REFERENCES `sub_organization_role`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `user_sub_organization_role_pk` ON `user_sub_organization_role` (`user_id`,`sub_organization_id`,`sub_organization_role_id`);--> statement-breakpoint
-CREATE TABLE `user_system_role` (
+CREATE UNIQUE INDEX `user_sub_organization_role_pk` ON `user_sub_organization_role_map` (`user_id`,`sub_organization_id`,`sub_organization_role_id`);--> statement-breakpoint
+CREATE TABLE `user_system_role_link` (
 	`user_id` integer NOT NULL,
 	`system_role_id` integer NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`system_role_id`) REFERENCES `system_role`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `user_system_role_pk` ON `user_system_role` (`user_id`,`system_role_id`);
+CREATE UNIQUE INDEX `user_system_role_pk` ON `user_system_role_link` (`user_id`,`system_role_id`);

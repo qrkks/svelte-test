@@ -1,9 +1,137 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "a7ffc7b2-5719-430c-8414-e9b06a20a36d",
+  "id": "c5364967-5690-40de-ac83-337c3eb605a4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "group_notification_config": {
+      "name": "group_notification_config",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "notification_id": {
+          "name": "notification_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "target_type": {
+          "name": "target_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "target_id": {
+          "name": "target_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "target_conditions": {
+          "name": "target_conditions",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast((julianday('now') - 2440587.5)*86400000 as integer))"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "group_notification_config_notification_id_notification_id_fk": {
+          "name": "group_notification_config_notification_id_notification_id_fk",
+          "tableFrom": "group_notification_config",
+          "tableTo": "notification",
+          "columnsFrom": [
+            "notification_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "notification": {
+      "name": "notification",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_important": {
+          "name": "is_important",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast((julianday('now') - 2440587.5)*86400000 as integer))"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "organization": {
       "name": "organization",
       "columns": {
@@ -121,8 +249,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "organization_role_permission": {
-      "name": "organization_role_permission",
+    "organization_role_permission_link": {
+      "name": "organization_role_permission_link",
       "columns": {
         "organization_role_id": {
           "name": "organization_role_id",
@@ -150,9 +278,9 @@
         }
       },
       "foreignKeys": {
-        "organization_role_permission_organization_role_id_organization_role_id_fk": {
-          "name": "organization_role_permission_organization_role_id_organization_role_id_fk",
-          "tableFrom": "organization_role_permission",
+        "organization_role_permission_link_organization_role_id_organization_role_id_fk": {
+          "name": "organization_role_permission_link_organization_role_id_organization_role_id_fk",
+          "tableFrom": "organization_role_permission_link",
           "tableTo": "organization_role",
           "columnsFrom": [
             "organization_role_id"
@@ -351,8 +479,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "sub_organization_role_permission": {
-      "name": "sub_organization_role_permission",
+    "sub_organization_role_permission_link": {
+      "name": "sub_organization_role_permission_link",
       "columns": {
         "sub_organization_role_id": {
           "name": "sub_organization_role_id",
@@ -380,9 +508,9 @@
         }
       },
       "foreignKeys": {
-        "sub_organization_role_permission_sub_organization_role_id_sub_organization_role_id_fk": {
-          "name": "sub_organization_role_permission_sub_organization_role_id_sub_organization_role_id_fk",
-          "tableFrom": "sub_organization_role_permission",
+        "sub_organization_role_permission_link_sub_organization_role_id_sub_organization_role_id_fk": {
+          "name": "sub_organization_role_permission_link_sub_organization_role_id_sub_organization_role_id_fk",
+          "tableFrom": "sub_organization_role_permission_link",
           "tableTo": "sub_organization_role",
           "columnsFrom": [
             "sub_organization_role_id"
@@ -445,8 +573,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "system_role_permission": {
-      "name": "system_role_permission",
+    "system_role_permission_link": {
+      "name": "system_role_permission_link",
       "columns": {
         "system_role_id": {
           "name": "system_role_id",
@@ -474,9 +602,9 @@
         }
       },
       "foreignKeys": {
-        "system_role_permission_system_role_id_system_role_id_fk": {
-          "name": "system_role_permission_system_role_id_system_role_id_fk",
-          "tableFrom": "system_role_permission",
+        "system_role_permission_link_system_role_id_system_role_id_fk": {
+          "name": "system_role_permission_link_system_role_id_system_role_id_fk",
+          "tableFrom": "system_role_permission_link",
           "tableTo": "system_role",
           "columnsFrom": [
             "system_role_id"
@@ -620,8 +748,98 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "user_organization_role": {
-      "name": "user_organization_role",
+    "user_notification": {
+      "name": "user_notification",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "notification_id": {
+          "name": "notification_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "is_read": {
+          "name": "is_read",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
+        },
+        "read_at": {
+          "name": "read_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast((julianday('now') - 2440587.5)*86400000 as integer))"
+        }
+      },
+      "indexes": {
+        "user_notification_pk": {
+          "name": "user_notification_pk",
+          "columns": [
+            "user_id",
+            "notification_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "user_notification_user_id_user_id_fk": {
+          "name": "user_notification_user_id_user_id_fk",
+          "tableFrom": "user_notification",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "user_notification_notification_id_notification_id_fk": {
+          "name": "user_notification_notification_id_notification_id_fk",
+          "tableFrom": "user_notification",
+          "tableTo": "notification",
+          "columnsFrom": [
+            "notification_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "user_organization_role_map": {
+      "name": "user_organization_role_map",
       "columns": {
         "user_id": {
           "name": "user_id",
@@ -657,9 +875,9 @@
         }
       },
       "foreignKeys": {
-        "user_organization_role_user_id_user_id_fk": {
-          "name": "user_organization_role_user_id_user_id_fk",
-          "tableFrom": "user_organization_role",
+        "user_organization_role_map_user_id_user_id_fk": {
+          "name": "user_organization_role_map_user_id_user_id_fk",
+          "tableFrom": "user_organization_role_map",
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
@@ -670,9 +888,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "user_organization_role_organization_id_organization_id_fk": {
-          "name": "user_organization_role_organization_id_organization_id_fk",
-          "tableFrom": "user_organization_role",
+        "user_organization_role_map_organization_id_organization_id_fk": {
+          "name": "user_organization_role_map_organization_id_organization_id_fk",
+          "tableFrom": "user_organization_role_map",
           "tableTo": "organization",
           "columnsFrom": [
             "organization_id"
@@ -683,9 +901,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "user_organization_role_organization_role_id_organization_role_id_fk": {
-          "name": "user_organization_role_organization_role_id_organization_role_id_fk",
-          "tableFrom": "user_organization_role",
+        "user_organization_role_map_organization_role_id_organization_role_id_fk": {
+          "name": "user_organization_role_map_organization_role_id_organization_role_id_fk",
+          "tableFrom": "user_organization_role_map",
           "tableTo": "organization_role",
           "columnsFrom": [
             "organization_role_id"
@@ -701,8 +919,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "user_sub_organization_role": {
-      "name": "user_sub_organization_role",
+    "user_sub_organization_role_map": {
+      "name": "user_sub_organization_role_map",
       "columns": {
         "user_id": {
           "name": "user_id",
@@ -738,9 +956,9 @@
         }
       },
       "foreignKeys": {
-        "user_sub_organization_role_user_id_user_id_fk": {
-          "name": "user_sub_organization_role_user_id_user_id_fk",
-          "tableFrom": "user_sub_organization_role",
+        "user_sub_organization_role_map_user_id_user_id_fk": {
+          "name": "user_sub_organization_role_map_user_id_user_id_fk",
+          "tableFrom": "user_sub_organization_role_map",
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
@@ -751,9 +969,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "user_sub_organization_role_sub_organization_id_sub_organization_id_fk": {
-          "name": "user_sub_organization_role_sub_organization_id_sub_organization_id_fk",
-          "tableFrom": "user_sub_organization_role",
+        "user_sub_organization_role_map_sub_organization_id_sub_organization_id_fk": {
+          "name": "user_sub_organization_role_map_sub_organization_id_sub_organization_id_fk",
+          "tableFrom": "user_sub_organization_role_map",
           "tableTo": "sub_organization",
           "columnsFrom": [
             "sub_organization_id"
@@ -764,9 +982,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "user_sub_organization_role_sub_organization_role_id_sub_organization_role_id_fk": {
-          "name": "user_sub_organization_role_sub_organization_role_id_sub_organization_role_id_fk",
-          "tableFrom": "user_sub_organization_role",
+        "user_sub_organization_role_map_sub_organization_role_id_sub_organization_role_id_fk": {
+          "name": "user_sub_organization_role_map_sub_organization_role_id_sub_organization_role_id_fk",
+          "tableFrom": "user_sub_organization_role_map",
           "tableTo": "sub_organization_role",
           "columnsFrom": [
             "sub_organization_role_id"
@@ -782,8 +1000,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "user_system_role": {
-      "name": "user_system_role",
+    "user_system_role_link": {
+      "name": "user_system_role_link",
       "columns": {
         "user_id": {
           "name": "user_id",
@@ -811,9 +1029,9 @@
         }
       },
       "foreignKeys": {
-        "user_system_role_user_id_user_id_fk": {
-          "name": "user_system_role_user_id_user_id_fk",
-          "tableFrom": "user_system_role",
+        "user_system_role_link_user_id_user_id_fk": {
+          "name": "user_system_role_link_user_id_user_id_fk",
+          "tableFrom": "user_system_role_link",
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
@@ -824,9 +1042,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "user_system_role_system_role_id_system_role_id_fk": {
-          "name": "user_system_role_system_role_id_system_role_id_fk",
-          "tableFrom": "user_system_role",
+        "user_system_role_link_system_role_id_system_role_id_fk": {
+          "name": "user_system_role_link_system_role_id_system_role_id_fk",
+          "tableFrom": "user_system_role_link",
           "tableTo": "system_role",
           "columnsFrom": [
             "system_role_id"

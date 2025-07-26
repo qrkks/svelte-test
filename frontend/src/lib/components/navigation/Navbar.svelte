@@ -3,6 +3,7 @@
     import NavLink from './NavLink.svelte';
     import MobileMenu from './MobileMenu.svelte';
     import UserMenu from './UserMenu.svelte';
+    import NotificationBell from '$lib/components/NotificationBell.svelte';
     import Dropdown from '$lib/components/ui/Dropdown.svelte';
     
     // 汉堡菜单切换
@@ -83,6 +84,9 @@
             
             <!-- 右侧：用户菜单 和 汉堡菜单 -->
             <div class="flex items-center gap-4">
+                <!-- 通知铃铛 -->
+                <NotificationBell />
+                
                 <!-- 🎯 使用新的用户组件 -->
                 <UserMenu />
                 
