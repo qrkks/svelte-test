@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GSAP 打字机效果</title>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3"></script>
+  <style>
+    body {
+      background: #111;
+      color: #0f0;
+      font-family: monospace;
+      padding: 50px;
+      font-size: 1.8rem;
+    }
+    #text::after {
+      content: "_";
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="text"></div>
+
+<script>
+  const target = document.getElementById("text");
+  const content = "console.log('Hello, world!');";
+
+  // 使用 GSAP timeline 模拟打字
+  const tl = gsap.timeline({ repeat: 0 });
+
+  content.split("").forEach((char, i) => {
+    tl.to(target, {
+      duration: 0.05,
+      onComplete: () => {
+        target.textContent += char;
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

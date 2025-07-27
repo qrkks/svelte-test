@@ -92,11 +92,16 @@ export class NotificationService {
 			.returning();
 
 		// 2. 存储多个群体选择信息
-		const configs = data.targets.map(target => ({
+		const configs: Array<{
+			notificationId: number;
+			targetType: 'all_users' | 'organization' | 'role' | 'sub_organization' | 'custom';
+			targetId: number | null;
+			targetConditions: string | null;
+		}> = data.targets.map((target: NotificationTarget) => ({
 			notificationId: newNotification.id,
 			targetType: target.type,
-			targetId: 'id' in target ? target.id : null,
-			targetConditions: 'conditions' in target ? JSON.stringify(target.conditions) : null
+			targetId: target.id ?? null,
+			targetConditions: target.conditions ? JSON.stringify(target.conditions) : null
 		}));
 
 		await db.insert(groupNotificationConfig).values(configs);

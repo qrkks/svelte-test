@@ -223,7 +223,6 @@ export const groupNotificationConfig = sqliteTable('group_notification_config', 
 export const userNotificationLink = sqliteTable(
 	'user_notification_link',
 	{
-		id: integer('id').primaryKey({ autoIncrement: true }),
 		userId: integer('user_id')
 			.notNull()
 			.references(() => user.id),
