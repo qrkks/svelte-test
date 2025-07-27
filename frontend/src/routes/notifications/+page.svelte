@@ -38,6 +38,13 @@
 						标记选中为已读 ({selectedNotifications.length})
 					</button>
 				</form>
+				<!-- 新增：标记选中为未读按钮 -->
+				<form method="POST" action="?/mark-unread" use:enhance>
+					<input type="hidden" name="notificationIds" value={selectedNotifications.join(',')} />
+					<button type="submit" class="btn btn-warning btn-sm">
+						标记选中为未读 ({selectedNotifications.length})
+					</button>
+				</form>
 			{/if}
 			<form method="POST" action="?/mark-all-read" use:enhance>
 				<button type="submit" class="btn btn-secondary btn-sm">

@@ -47,6 +47,21 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
+	'mark-unread': async ({ locals, request }) => {
+		const user = locals.user;
+		if (!user) {
+			return { success: false, error: '未登录' };
+		}
+
+		const formData = await request.formData();
+		const notificationIds = formData.get('notificationIds');
+		if (notificationIds) {
+			const ids = notificationIds.toString().split(',').map(id => parseInt(id));
+			await NotificationService.markMultipleAsUnread(ids, user.id);
+		}
+		return { success: true };
+	},
+
 	'mark-all-read': async ({ locals }) => {
 		const user = locals.user;
 		if (!user) {

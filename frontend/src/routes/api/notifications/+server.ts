@@ -10,7 +10,7 @@ export const GET: RequestHandler = async ({ locals, url }) => {
   }
 
   const page = parseInt(url.searchParams.get('page') || '1');
-  const limit = parseInt(url.searchParams.get('limit') || '20');
+  const limit = parseInt(url.searchParams.get('limit') || '10');
 
   const notifications = await NotificationService.getUserNotifications(user.id, page, limit);
   
@@ -37,7 +37,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
     await NotificationService.sendGroupNotification({
       title: data.title,
       content: data.content,
-      target: data.target,
+      targets: data.targets,
       data: data.data,
       isImportant: data.isImportant
     });

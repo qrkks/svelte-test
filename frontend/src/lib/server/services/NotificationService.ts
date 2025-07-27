@@ -3,12 +3,38 @@ import { db } from '$lib/server/db';
 import {
 	notification,
 	groupNotificationConfig,
-	userNotification,
+	userNotificationLink,
 	user,
 	userOrganizationRoleMap,
 	userSystemRoleLink
 } from '$lib/server/db/schema';
 import { eq, and, or, isNull, inArray, desc, sql } from 'drizzle-orm';
+
+/**
+ * 通知服务类 - 提供完整的通知管理功能
+ * 
+ * 可用方法列表：
+ * 
+ * 发送通知：
+ * - sendIndividualNotification() - 发送个人通知
+ * - sendGroupNotification() - 发送群体通知（支持多个目标群体）
+ * 
+ * 获取通知：
+ * - getUserNotifications() - 获取用户通知列表（支持分页）
+ * - getUnreadCount() - 获取用户未读通知数量
+ * - getTotalCount() - 获取用户通知总数
+ * 
+ * 标记通知状态：
+ * - markAsRead() - 标记单个通知为已读
+ * - markAsUnread() - 标记单个通知为未读
+ * - markMultipleAsRead() - 批量标记通知为已读
+ * - markMultipleAsUnread() - 批量标记通知为未读
+ * - markAllAsRead() - 标记所有通知为已读
+ * 
+ * 私有方法：
+ * - getTargetUsers() - 获取目标用户列表
+ * - getUsersByConditions() - 根据条件获取用户
+ */
 
 // 临时类型定义，后续可以移到单独的类型文件
 export type NotificationTarget = {
@@ -37,7 +63,7 @@ export class NotificationService {
 			})
 			.returning();
 
-		await db.insert(userNotification).values({
+		await db.insert(userNotificationLink).values({
 			userId: data.userId,
 			notificationId: newNotification.id
 		});
@@ -45,11 +71,11 @@ export class NotificationService {
 		return newNotification;
 	}
 
-	// 发送群体通知
+	// 发送群体通知（支持多个目标群体）
 	static async sendGroupNotification(data: {
 		title: string;
 		content: string;
-		target: NotificationTarget;
+		targets: NotificationTarget[]; // 改为数组，支持多个目标
 		data?: any;
 		isImportant?: boolean;
 	}) {
@@ -65,25 +91,31 @@ export class NotificationService {
 			})
 			.returning();
 
-		// 2. 存储群体选择信息
-		await db.insert(groupNotificationConfig).values({
+		// 2. 存储多个群体选择信息
+		const configs = data.targets.map(target => ({
 			notificationId: newNotification.id,
-			targetType: data.target.type,
-			targetId: 'id' in data.target ? data.target.id : null,
-			targetConditions: 'conditions' in data.target ? JSON.stringify(data.target.conditions) : null
-		});
+			targetType: target.type,
+			targetId: 'id' in target ? target.id : null,
+			targetConditions: 'conditions' in target ? JSON.stringify(target.conditions) : null
+		}));
 
-		// 3. 获取目标用户列表
-		const targetUsers = await this.getTargetUsers(data.target);
+		await db.insert(groupNotificationConfig).values(configs);
+
+		// 3. 获取所有目标用户列表（去重）
+		const allTargetUsers = new Set<number>();
+		for (const target of data.targets) {
+			const targetUsers = await this.getTargetUsers(target);
+			targetUsers.forEach(userId => allTargetUsers.add(userId));
+		}
 
 		// 4. 为每个目标用户创建通知状态记录
-		if (targetUsers.length > 0) {
-			const userNotifications = targetUsers.map((userId) => ({
+		if (allTargetUsers.size > 0) {
+			const userNotifications = Array.from(allTargetUsers).map((userId) => ({
 				userId: userId,
 				notificationId: newNotification.id
 			}));
 
-			await db.insert(userNotification).values(userNotifications);
+			await db.insert(userNotificationLink).values(userNotifications);
 		}
 
 		return newNotification;
@@ -141,12 +173,12 @@ export class NotificationService {
 				data: notification.data,
 				is_important: notification.isImportant,
 				created_at: notification.createdAt,
-				is_read: userNotification.isRead,
-				read_at: userNotification.readAt
+				is_read: userNotificationLink.isRead,
+				read_at: userNotificationLink.readAt
 			})
 			.from(notification)
-			.innerJoin(userNotification, eq(notification.id, userNotification.notificationId))
-			.where(eq(userNotification.userId, userId))
+			.innerJoin(userNotificationLink, eq(notification.id, userNotificationLink.notificationId))
+			.where(eq(userNotificationLink.userId, userId))
 			.orderBy(desc(notification.createdAt))
 			.limit(limit)
 			.offset(offset);
@@ -161,8 +193,8 @@ export class NotificationService {
 	static async getUnreadCount(userId: number): Promise<number> {
 		const [{ count }] = await db
 			.select({ count: sql<number>`count(*)` })
-			.from(userNotification)
-			.where(and(eq(userNotification.userId, userId), eq(userNotification.isRead, false)));
+			.from(userNotificationLink)
+			.where(and(eq(userNotificationLink.userId, userId), eq(userNotificationLink.isRead, false)));
 
 		return count;
 	}
@@ -171,8 +203,8 @@ export class NotificationService {
 	static async getTotalCount(userId: number): Promise<number> {
 		const [{ count }] = await db
 			.select({ count: sql<number>`count(*)` })
-			.from(userNotification)
-			.where(eq(userNotification.userId, userId));
+			.from(userNotificationLink)
+			.where(eq(userNotificationLink.userId, userId));
 
 		return count;
 	}
@@ -180,15 +212,31 @@ export class NotificationService {
 	// 标记通知为已读
 	static async markAsRead(notificationId: number, userId: number) {
 		await db
-			.update(userNotification)
+			.update(userNotificationLink)
 			.set({
 				isRead: true,
 				readAt: new Date()
 			})
 			.where(
 				and(
-					eq(userNotification.notificationId, notificationId),
-					eq(userNotification.userId, userId)
+					eq(userNotificationLink.notificationId, notificationId),
+					eq(userNotificationLink.userId, userId)
+				)
+			);
+	}
+
+	// 标记通知为未读
+	static async markAsUnread(notificationId: number, userId: number) {
+		await db
+			.update(userNotificationLink)
+			.set({
+				isRead: false,
+				readAt: null
+			})
+			.where(
+				and(
+					eq(userNotificationLink.notificationId, notificationId),
+					eq(userNotificationLink.userId, userId)
 				)
 			);
 	}
@@ -196,15 +244,31 @@ export class NotificationService {
 	// 批量标记为已读
 	static async markMultipleAsRead(notificationIds: number[], userId: number) {
 		await db
-			.update(userNotification)
+			.update(userNotificationLink)
 			.set({
 				isRead: true,
 				readAt: new Date()
 			})
 			.where(
 				and(
-					inArray(userNotification.notificationId, notificationIds),
-					eq(userNotification.userId, userId)
+					inArray(userNotificationLink.notificationId, notificationIds),
+					eq(userNotificationLink.userId, userId)
+				)
+			);
+	}
+
+	// 批量标记为未读
+	static async markMultipleAsUnread(notificationIds: number[], userId: number) {
+		await db
+			.update(userNotificationLink)
+			.set({
+				isRead: false,
+				readAt: null
+			})
+			.where(
+				and(
+					inArray(userNotificationLink.notificationId, notificationIds),
+					eq(userNotificationLink.userId, userId)
 				)
 			);
 	}
@@ -212,11 +276,11 @@ export class NotificationService {
 	// 标记所有为已读
 	static async markAllAsRead(userId: number) {
 		await db
-			.update(userNotification)
+			.update(userNotificationLink)
 			.set({
 				isRead: true,
 				readAt: new Date()
 			})
-			.where(eq(userNotification.userId, userId));
+			.where(eq(userNotificationLink.userId, userId));
 	}
 }

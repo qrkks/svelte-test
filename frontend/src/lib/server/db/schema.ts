@@ -45,6 +45,10 @@ export const organizationRole = sqliteTable('organization_role', {
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull().defaultNow()
 });
 
+/**
+ * 权限系统表
+ */
+
 // 用户-主组织-角色关联表
 export const userOrganizationRoleMap = sqliteTable(
 	'user_organization_role_map',
@@ -216,8 +220,8 @@ export const groupNotificationConfig = sqliteTable('group_notification_config', 
 });
 
 // 用户通知状态表
-export const userNotification = sqliteTable(
-	'user_notification',
+export const userNotificationLink = sqliteTable(
+	'user_notification_link',
 	{
 		id: integer('id').primaryKey({ autoIncrement: true }),
 		userId: integer('user_id')
