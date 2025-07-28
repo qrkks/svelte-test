@@ -1,4 +1,4 @@
-// src/lib/server/services/NotificationService.ts
+// src/lib/server/services/notificationService.ts
 import { db } from '$lib/server/db';
 import {
 	notification,

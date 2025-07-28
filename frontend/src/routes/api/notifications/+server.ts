@@ -34,10 +34,17 @@ export const POST: RequestHandler = async ({ locals, request }) => {
       isImportant: data.isImportant
     });
   } else if (data.type === 'group') {
+    // 兼容两种数据格式：target（单个）和 targets（数组）
+    const targets = data.targets || (data.target ? [data.target] : []);
+    
+    if (targets.length === 0) {
+      return json({ error: '缺少目标用户配置' }, { status: 400 });
+    }
+    
     await NotificationService.sendGroupNotification({
       title: data.title,
       content: data.content,
-      targets: data.targets,
+      targets: targets,
       data: data.data,
       isImportant: data.isImportant
     });

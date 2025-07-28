@@ -41,7 +41,7 @@ export const actions: Actions = {
 			await NotificationService.sendGroupNotification({
 				title,
 				content,
-				target,
+				targets: [target], // 将单个target包装成数组
 				isImportant
 			});
 
