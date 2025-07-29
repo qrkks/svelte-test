@@ -2,9 +2,10 @@
 	import { enhance } from '$app/forms';
 
 	let form = $state<any>();
-	let targetType = $state('all_users');
-	let targetId = $state('');
 	let isImportant = $state(false);
+	let targets = $state<Array<{ type: string; id?: string; conditions?: any }>>([
+		{ type: 'all_users' }
+	]);
 
 	const targetTypeOptions = [
 		{ value: 'all_users', label: '所有用户' },
@@ -13,6 +14,22 @@
 		{ value: 'sub_organization', label: '子组织' },
 		{ value: 'custom', label: '自定义条件' }
 	];
+
+	function addTarget() {
+		targets = [...targets, { type: 'all_users' }];
+	}
+
+	function removeTarget(index: number) {
+		if (targets.length > 1) {
+			targets = targets.filter((_, i) => i !== index);
+		}
+	}
+
+	function updateTarget(index: number, field: string, value: any) {
+		targets = targets.map((target, i) => 
+			i === index ? { ...target, [field]: value } : target
+		);
+	}
 </script>
 
 <svelte:head>
@@ -62,35 +79,86 @@
 			></textarea>
 		</div>
 
+		<!-- 多选目标 -->
 		<div class="form-control">
-			<label for="targetType" class="label">
-				<span class="label-text">目标类型 *</span>
-			</label>
-			<select id="targetType" name="targetType" bind:value={targetType} class="select select-bordered">
-				{#each targetTypeOptions as option}
-					<option value={option.value}>{option.label}</option>
-				{/each}
-			</select>
-		</div>
-
-		{#if targetType === 'organization' || targetType === 'role'}
-			<div class="form-control">
-				<label for="targetId" class="label">
-					<span class="label-text">
-						{targetType === 'organization' ? '组织ID' : '角色ID'} *
-					</span>
-				</label>
-				<input
-					type="number"
-					id="targetId"
-					name="targetId"
-					bind:value={targetId}
-					class="input input-bordered"
-					required
-					placeholder="请输入ID"
-				/>
+			<div class="label">
+				<span class="label-text">目标用户 *</span>
+				<button type="button" class="btn btn-sm btn-outline" onclick={addTarget}>
+					添加目标
+				</button>
 			</div>
-		{/if}
+			
+			<div class="space-y-4">
+				{#each targets as target, index}
+					<div class="card bg-base-200 p-4">
+						<div class="flex items-center justify-between mb-3">
+							<h3 class="font-medium">目标 {index + 1}</h3>
+							{#if targets.length > 1}
+								<button 
+									type="button" 
+									class="btn btn-sm btn-error btn-outline"
+									onclick={() => removeTarget(index)}
+								>
+									删除
+								</button>
+							{/if}
+						</div>
+						
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div class="form-control">
+								<label for="target-type-{index}" class="label">
+									<span class="label-text">目标类型</span>
+								</label>
+								<select 
+									id="target-type-{index}"
+									class="select select-bordered"
+									bind:value={target.type}
+									onchange={(e) => {
+										const target = e.target as HTMLSelectElement;
+										if (target) {
+											updateTarget(index, 'type', target.value);
+										}
+									}}
+								>
+									{#each targetTypeOptions as option}
+										<option value={option.value}>{option.label}</option>
+									{/each}
+								</select>
+							</div>
+
+							{#if target.type === 'organization' || target.type === 'role'}
+								<div class="form-control">
+									<label for="target-id-{index}" class="label">
+										<span class="label-text">
+											{target.type === 'organization' ? '组织ID' : '角色ID'}
+										</span>
+									</label>
+									<input
+										id="target-id-{index}"
+										type="number"
+										class="input input-bordered"
+										bind:value={target.id}
+										oninput={(e) => {
+											const target = e.target as HTMLInputElement;
+											if (target) {
+												updateTarget(index, 'id', target.value);
+											}
+										}}
+										placeholder="请输入ID"
+									/>
+								</div>
+							{/if}
+						</div>
+
+						<!-- 隐藏字段用于表单提交 -->
+						<input type="hidden" name="targets[{index}][type]" value={target.type} />
+						{#if target.id}
+							<input type="hidden" name="targets[{index}][id]" value={target.id} />
+						{/if}
+					</div>
+				{/each}
+			</div>
+		</div>
 
 		<div class="form-control">
 			<label class="label cursor-pointer">

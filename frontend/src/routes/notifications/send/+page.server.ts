@@ -24,24 +24,44 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const title = formData.get('title')?.toString();
 		const content = formData.get('content')?.toString();
-		const targetType = formData.get('targetType')?.toString();
-		const targetId = formData.get('targetId')?.toString();
 		const isImportant = formData.has('isImportant');
 
-		if (!title || !content || !targetType) {
+		if (!title || !content) {
 			return fail(400, { error: '请填写所有必填字段' });
 		}
 
 		try {
-			const target = {
-				type: targetType as any,
-				id: targetId ? parseInt(targetId) : undefined
-			};
+			// 解析多个targets
+			const targets: Array<{ type: 'all_users' | 'organization' | 'role' | 'sub_organization' | 'custom'; id?: number }> = [];
+			const targetEntries = Array.from(formData.entries()).filter(([key]) => 
+				key.startsWith('targets[') && key.includes('[type]')
+			);
+
+			for (const [key, value] of targetEntries) {
+				const match = key.match(/targets\[(\d+)\]\[type\]/);
+				if (match) {
+					const index = parseInt(match[1]);
+					const type = value.toString() as 'all_users' | 'organization' | 'role' | 'sub_organization' | 'custom';
+					
+					// 查找对应的id
+					const idKey = `targets[${index}][id]`;
+					const idValue = formData.get(idKey)?.toString();
+					
+					targets.push({
+						type,
+						id: idValue ? parseInt(idValue) : undefined
+					});
+				}
+			}
+
+			if (targets.length === 0) {
+				return fail(400, { error: '请至少选择一个目标' });
+			}
 
 			await NotificationService.sendGroupNotification({
 				title,
 				content,
-				targets: [target], // 将单个target包装成数组
+				targets,
 				isImportant
 			});
 
