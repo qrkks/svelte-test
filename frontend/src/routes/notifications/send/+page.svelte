@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
-	let form: any;
-	let targetType = 'all_users';
-	let targetId = '';
-	let isImportant = false;
+	let form = $state<any>();
+	let targetType = $state('all_users');
+	let targetId = $state('');
+	let isImportant = $state(false);
 
-	$: targetTypeOptions = [
+	const targetTypeOptions = [
 		{ value: 'all_users', label: '所有用户' },
 		{ value: 'organization', label: '指定组织' },
 		{ value: 'role', label: '指定角色' },
