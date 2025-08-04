@@ -58,12 +58,16 @@ export const actions: Actions = {
 				return fail(400, { error: '请至少选择一个目标' });
 			}
 
-			await NotificationService.sendGroupNotification({
+			const result = await NotificationService.sendGroupNotification({
 				title,
 				content,
 				targets,
 				isImportant
 			});
+
+			if (!result.success) {
+				return fail(400, { error: result.error });
+			}
 
 			return { success: true };
 		} catch (error) {

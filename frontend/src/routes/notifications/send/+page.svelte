@@ -1,22 +1,20 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { TARGET_TYPES, TARGET_TYPE_CONFIG } from '$lib/types/notification';
 
 	let form = $state<any>();
 	let isImportant = $state(false);
 	let targets = $state<Array<{ type: string; id?: string; conditions?: any }>>([
-		{ type: 'all_users' }
+		{ type: TARGET_TYPES.ALL_USERS }
 	]);
 
-	const targetTypeOptions = [
-		{ value: 'all_users', label: '所有用户' },
-		{ value: 'organization', label: '指定组织' },
-		{ value: 'role', label: '指定角色' },
-		{ value: 'sub_organization', label: '子组织' },
-		{ value: 'custom', label: '自定义条件' }
-	];
+	const targetTypeOptions = Object.entries(TARGET_TYPE_CONFIG).map(([value, config]) => ({
+		value,
+		label: config.label
+	}));
 
 	function addTarget() {
-		targets = [...targets, { type: 'all_users' }];
+		targets = [...targets, { type: TARGET_TYPES.ALL_USERS }];
 	}
 
 	function removeTarget(index: number) {
@@ -29,6 +27,10 @@
 		targets = targets.map((target, i) => 
 			i === index ? { ...target, [field]: value } : target
 		);
+	}
+
+	function getTargetConfig(type: string) {
+		return TARGET_TYPE_CONFIG[type as keyof typeof TARGET_TYPE_CONFIG];
 	}
 </script>
 
@@ -126,11 +128,11 @@
 								</select>
 							</div>
 
-							{#if target.type === 'organization' || target.type === 'role'}
+							{#if getTargetConfig(target.type)?.requiresId}
 								<div class="form-control">
 									<label for="target-id-{index}" class="label">
 										<span class="label-text">
-											{target.type === 'organization' ? '组织ID' : '角色ID'}
+											{getTargetConfig(target.type)?.label} ID
 										</span>
 									</label>
 									<input
