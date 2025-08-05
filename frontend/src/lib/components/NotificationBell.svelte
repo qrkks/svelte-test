@@ -72,7 +72,7 @@
 <div class="relative">
 	<button
 		class="btn btn-ghost btn-circle relative"
-		on:click={toggleDropdown}
+		onclick={toggleDropdown}
 		on:blur={() => setTimeout(closeDropdown, 200)}
 	>
 		<svg
@@ -103,7 +103,7 @@
 					<h3 class="font-semibold">通知</h3>
 					<button
 						class="text-sm text-primary hover:underline"
-						on:click={goToNotifications}
+						onclick={goToNotifications}
 					>
 						查看全部
 					</button>
@@ -144,7 +144,7 @@
 								{#if !notification.is_read}
 									<button
 										class="btn btn-xs btn-outline ml-2"
-										on:click={() => markAsRead(notification.id)}
+										onclick={() => markAsRead(notification.id)}
 									>
 										已读
 									</button>

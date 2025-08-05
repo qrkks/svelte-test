@@ -132,7 +132,7 @@
 				<div class="flex gap-4 flex-wrap">
 					<button
 						class="btn btn-primary"
-						on:click={sendTestNotification}
+						onclick={sendTestNotification}
 						disabled={loading}
 					>
 						{#if loading}
@@ -142,7 +142,7 @@
 					</button>
 					<button
 						class="btn btn-warning"
-						on:click={sendImportantNotification}
+						onclick={sendImportantNotification}
 						disabled={loading}
 					>
 						{#if loading}
@@ -152,7 +152,7 @@
 					</button>
 					<button
 						class="btn btn-info"
-						on:click={sendMultiTargetNotification}
+						onclick={sendMultiTargetNotification}
 						disabled={loading}
 					>
 						{#if loading}

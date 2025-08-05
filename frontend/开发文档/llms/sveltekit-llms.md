@@ -8049,7 +8049,7 @@ export async function load({ depends }) {
 </script>
 
 <p>{data.count}<p>
-<button on:click={increase}>Increase Count</button>
+<button onclick={increase}>Increase Count</button>
 ```
 
 </div>
@@ -9257,7 +9257,7 @@ export async function load({ depends }) {
 </script>
 
 <p>{data.count}<p>
-<button on:click={increase}>Increase Count</button>
+<button onclick={increase}>Increase Count</button>
 ```
 
 </div>
