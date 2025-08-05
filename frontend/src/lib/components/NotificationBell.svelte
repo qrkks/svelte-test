@@ -73,7 +73,7 @@
 	<button
 		class="btn btn-ghost btn-circle relative"
 		onclick={toggleDropdown}
-		on:blur={() => setTimeout(closeDropdown, 200)}
+		onblur={() => setTimeout(closeDropdown, 200)}
 	>
 		<svg
 			class="w-6 h-6"
